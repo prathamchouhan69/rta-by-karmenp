@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--
+      THESIS: KARM is a source-grounded command workspace; it refuses one dashboard composition dressed three ways.
+      OWN-WORLD: Day uses a light, angled field and horizontal navigation; Night uses an indigo rail and luminous topology; Classic keeps the supplied near-black, cyan, and violet template identity.
+      STORY: Users see the data boundary, record-backed status, and next action before exploring the wider workspace.
+      FIRST VIEWPORT: The home heading sits above live/practice source status, a real invoice-status visualization, and connected-source details; the nature reference remains a separate discovery surface.
+      FORM: Operate; candidate 5 of five, seed fd9b8ac2; staging is a source-link topology, with data facts kept legible and interactions in their native controls.
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#e5f4f3" />
+    <meta
+      name="description"
+      content="KARM OS connects day-to-day operations with your Zoho Books organization."
+    />
+    <title>KARM OS · Operations</title>
+    <script>
+      try {
+        const mode = localStorage.getItem("karm-visual-mode-v1");
+        document.documentElement.dataset.visualMode = ["day", "night", "classic"].includes(mode) ? mode : "day";
+      } catch {
+        document.documentElement.dataset.visualMode = "day";
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

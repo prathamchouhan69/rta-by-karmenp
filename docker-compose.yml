@@ -1,0 +1,113 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: karm
+      POSTGRES_USER: karm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U karm -d karm"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build: .
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8787
+      STATIC_ROOT: apps/web/dist
+      DATA_DIR: /data/proxy
+      FLUX_DATA_DIR: /data/flux
+      DATABASE_URL: postgresql://karm:${POSTGRES_PASSWORD}@db:5432/karm
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:8787}
+      SETUP_CODE: ${SETUP_CODE:?Set SETUP_CODE in .env.production}
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in .env.production}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      METRICS_TOKEN: ${METRICS_TOKEN:-}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
+      GATEWAY_RATE_LIMIT_MAX: ${GATEWAY_RATE_LIMIT_MAX:-600}
+      GATEWAY_RATE_LIMIT_WINDOW_MS: ${GATEWAY_RATE_LIMIT_WINDOW_MS:-60000}
+
+      ZOHO_MODE: ${ZOHO_MODE:-mock}
+      ZOHO_DC: ${ZOHO_DC:-in}
+      ZOHO_CLIENT_ID: ${ZOHO_CLIENT_ID:-}
+      ZOHO_CLIENT_SECRET: ${ZOHO_CLIENT_SECRET:-}
+      ZOHO_REFRESH_TOKEN: ${ZOHO_REFRESH_TOKEN:-}
+      ZOHO_ORG_ID: ${ZOHO_ORG_ID:-}
+      ZOHO_WRITE_ENABLED: ${ZOHO_WRITE_ENABLED:-false}
+      ZOHO_WRITE_CLIENT_ID: ${ZOHO_WRITE_CLIENT_ID:-}
+      ZOHO_WRITE_CLIENT_SECRET: ${ZOHO_WRITE_CLIENT_SECRET:-}
+      ZOHO_WRITE_REFRESH_TOKEN: ${ZOHO_WRITE_REFRESH_TOKEN:-}
+      FLUX_ZOHO_READ_FROM_PROXY: ${FLUX_ZOHO_READ_FROM_PROXY:-true}
+
+      FLUX_AUTH_SECRET: ${FLUX_AUTH_SECRET:?Set FLUX_AUTH_SECRET in .env.production}
+      FLUX_APPROVAL_SECRET: ${FLUX_APPROVAL_SECRET:?Set FLUX_APPROVAL_SECRET in .env.production}
+      FLUX_AUDIT_KEY: ${FLUX_AUDIT_KEY:?Set FLUX_AUDIT_KEY in .env.production}
+      FLUX_OWNER_ID: ${FLUX_OWNER_ID:-owner}
+      FLUX_OWNER_NAME: ${FLUX_OWNER_NAME:-Workspace owner}
+      FLUX_OWNER_PASSWORD: ${FLUX_OWNER_PASSWORD:-}
+      FLUX_ALLOWED_ORIGINS: ${APP_ORIGIN:-http://localhost:8787}
+      FLUX_COST_POLICY: ${FLUX_COST_POLICY:-free-only}
+      FLUX_FREE_DAILY_CAP: ${FLUX_FREE_DAILY_CAP:-}
+      FLUX_BRIEFING_ENABLED: ${FLUX_BRIEFING_ENABLED:-true}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      OMNIROUTE_BASE_URL: ${OMNIROUTE_BASE_URL:-}
+      OMNIROUTE_API_KEY: ${OMNIROUTE_API_KEY:-}
+    volumes:
+      - app-data:/data
+    ports:
+      - "127.0.0.1:${HOST_PORT:-8787}:8787"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    stop_grace_period: 20s
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/readyz').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  backup:
+    image: postgres:17-alpine
+    profiles: ["ops"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGUSER: karm
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production}
+      PGDATABASE: karm
+      BACKUP_INTERVAL_SECONDS: ${BACKUP_INTERVAL_SECONDS:-86400}
+    volumes:
+      - ./backups:/backups
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        while true; do
+          stamp=$$(date -u +%Y%m%dT%H%M%SZ)
+          pg_dump --format=custom --no-owner --no-acl --file="/backups/karm-$$stamp.dump" \
+            && echo "backup written: /backups/karm-$$stamp.dump"
+          sleep "$$BACKUP_INTERVAL_SECONDS"
+        done
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  app-data:

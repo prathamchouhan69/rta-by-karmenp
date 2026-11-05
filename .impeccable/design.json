@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T08:50:09Z",
+  "title": "Design System: KARM OS",
+  "extensions": {
+    "shadows": [
+      {
+        "name": "drawer-depth",
+        "value": "-20px 0 50px rgba(0, 0, 0, 0.35)",
+        "purpose": "Separate a focused drawer from the dark workspace."
+      },
+      {
+        "name": "toast-depth",
+        "value": "0 8px 26px rgba(0, 0, 0, 0.34)",
+        "purpose": "Keep brief status feedback legible above page content."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "160ms ease",
+        "purpose": "Brief color and border transitions for interactive states."
+      },
+      {
+        "name": "toast-entry",
+        "value": "220ms ease-out",
+        "purpose": "A short, non-blocking entrance for status feedback."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet",
+        "value": "1080px"
+      },
+      {
+        "name": "mobile",
+        "value": "760px"
+      },
+      {
+        "name": "narrow-mobile",
+        "value": "380px"
+      }
+    ],
+    "narrative": {
+      "northStar": "The Nature-Connected Command Center",
+      "overview": "KARM OS is an operations workspace, not a financial system of record. Its dark, precise working surface connects verified Zoho Books records to the wider business, while nature-derived patterns remain a distinct reference library rather than fabricated business intelligence.\n\nThe selected Figma Home Command Center anchors the desktop grid and mobile command feed. Cyan marks active data and actions; violet carries discovery and reference work. The supplied KARM mark stays light on dark surfaces. The composition is compact, but mobile controls must remain comfortable to touch and readable in Safari.",
+      "keyCharacteristics": [
+        "Source-first status and record counts.",
+        "Near-black surfaces, quiet dividers, cyan and violet signals.",
+        "Nature references are clearly separated from live business data.",
+        "Compact desktop density with safe-area-aware mobile navigation."
+      ],
+      "rules": [
+        {
+          "name": "The Source-State Rule",
+          "body": "Color never substitutes for the words “live,” “practice,” “unavailable,” or the source record itself.",
+          "section": "colors"
+        },
+        {
+          "name": "The Readable Control Rule",
+          "body": "On mobile Safari, form controls use at least 16px text to avoid automatic focus zoom; interactive targets are at least 44px high.",
+          "section": "typography"
+        },
+        {
+          "name": "The Flat-By-Default Rule",
+          "body": "Use surface tone and borders for ordinary hierarchy; reserve shadows for overlays.",
+          "section": "elevation"
+        }
+      ],
+      "dos": [
+        "Do keep Zoho Books as the accounting source of truth.",
+        "Do label practice data, unavailable sources, and reference-only charts clearly.",
+        "Do preserve the light KARM mark on dark surfaces.",
+        "Do keep touch targets, focus behavior, and safe areas usable on mobile Safari."
+      ],
+      "donts": [
+        "Don't infer or calculate accounting totals in the frontend.",
+        "Don't present catalog counts or concept charts as live business metrics.",
+        "Don't hide essential meaning in color, tiny metadata, or hover-only controls."
+      ]
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "High-contrast action for the main task on a dark surface.",
+      "html": "<button class=\"ds-btn-primary\">Open workspace</button>",
+      "css": ".ds-btn-primary { min-height: 44px; padding: 0 14px; color: #041317; background: var(--cyan); border: 1px solid var(--cyan); border-radius: 7px; font: 600 12px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 160ms ease, border-color 160ms ease; } .ds-btn-primary:hover { background: #4ee8f2; border-color: #4ee8f2; } .ds-btn-primary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "input-search",
+      "description": "Quiet secondary action with a visible boundary.",
+      "html": "<button class=\"ds-btn-secondary\">Refresh records</button>",
+      "css": ".ds-btn-secondary { min-height: 44px; padding: 0 14px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 7px; font: 600 12px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 160ms ease, border-color 160ms ease; } .ds-btn-secondary:hover { background: var(--surface-hover); border-color: #4a5362; } .ds-btn-secondary:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "navigation-item",
+      "description": "Compact workspace search with a clear focus treatment.",
+      "html": "<label class=\"ds-search\"><span>Search references</span><input aria-label=\"Search references\" placeholder=\"Search references…\"></label>",
+      "css": ".ds-search { display: grid; gap: 6px; color: var(--text-soft); font: 600 11px ui-sans-serif, system-ui, sans-serif; } .ds-search input { min-height: 44px; padding: 0 12px; color: var(--text); background: var(--sidebar); border: 1px solid var(--line); border-radius: 7px; font: 400 16px ui-sans-serif, system-ui, sans-serif; } .ds-search input::placeholder { color: #8390a3; opacity: 1; } .ds-search input:focus-visible { border-color: var(--cyan); outline: 2px solid var(--cyan); outline-offset: 2px; }"
+    },
+    {
+      "name": "Active Navigation Item",
+      "kind": "nav",
+      "refersTo": "status-chip",
+      "description": "Text-led workspace navigation with a restrained cyan active state.",
+      "html": "<button class=\"ds-nav-item\" aria-current=\"page\"><span aria-hidden=\"true\">⌂</span>Home</button>",
+      "css": ".ds-nav-item { display: flex; min-height: 44px; align-items: center; gap: 9px; padding: 0 11px; color: var(--text-soft); background: transparent; border: 1px solid transparent; border-radius: 7px; font: 500 12px ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-nav-item:hover { color: var(--text); background: var(--surface); } .ds-nav-item[aria-current='page'] { color: #dbffff; background: rgba(0, 217, 235, .08); border-color: rgba(0, 217, 235, .3); } .ds-nav-item:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "record-card",
+      "description": "Text and tint identify source state without relying on color alone.",
+      "html": "<span class=\"ds-status\"><i aria-hidden=\"true\"></i>Practice data</span>",
+      "css": ".ds-status { display: inline-flex; min-height: 28px; align-items: center; gap: 7px; padding: 0 9px; color: var(--amber); background: rgba(244, 186, 66, .08); border: 1px solid rgba(244, 186, 66, .2); border-radius: 20px; font: 700 10px ui-sans-serif, system-ui, sans-serif; letter-spacing: .06em; } .ds-status i { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }"
+    },
+    {
+      "name": "Record Signal Card",
+      "kind": "card",
+      "refersTo": "button-secondary",
+      "description": "Clickable metric card with source scope and a strong record count.",
+      "html": "<button class=\"ds-signal\"><span>Overdue invoices</span><strong>1</strong><small>Among loaded records</small></button>",
+      "css": ".ds-signal { display: flex; min-height: 96px; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; color: var(--text); text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: background 160ms ease, border-color 160ms ease; } .ds-signal:hover { background: var(--surface-hover); border-color: #424a56; } .ds-signal span { color: var(--text-soft); font: 500 11px ui-sans-serif, system-ui, sans-serif; } .ds-signal strong { font: 630 22px ui-sans-serif, system-ui, sans-serif; } .ds-signal small { color: #8e9aac; font: 400 10px ui-sans-serif, system-ui, sans-serif; } .ds-signal:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@karm/gateway",
+  "private": true,
+  "type": "module",
+  "description": "Single production edge for KARM OS: web + proxy API + full Flux API",
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=../proxy/.env --watch src/server.mjs",
+    "start": "node --env-file-if-exists=../proxy/.env src/server.mjs",
+    "build": "node --check src/server.mjs && node --check src/config.mjs && node --check src/bridge.mjs && node --check src/unify.mjs && node --check src/metrics.mjs",
+    "typecheck": "node --check src/server.mjs && node --check src/config.mjs && node --check src/bridge.mjs && node --check src/unify.mjs && node --check src/metrics.mjs",
+    "test": "node --test src/*.test.mjs"
+  },
+  "dependencies": {}
+}

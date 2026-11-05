@@ -1,0 +1,337 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="dark light"><title>Wonders of Nature & Physics — Business OS Edition</title>
+<style>
+:root{color-scheme:dark;--bg:#080b12;--p:#111826;--l:#26344a;--t:#e8eef8;--m:#93a3b9;--c:#7fb3ff;--g:#6ee7c8;--v:#c4a6ff;--a:#ffc27a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){color-scheme:light;--bg:#eef2f8;--p:#fff;--l:#cbd6e6;--t:#14202f;--m:#58687e;--c:#2f6fd6;--g:#0f9d7e;--v:#7c52d6;--a:#c07a1a}}
+html{height:auto;scroll-padding-top:150px}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:14px/1.5 Inter,system-ui,sans-serif;overflow-x:hidden}
+#fx{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:0 clamp(12px,3vw,28px) 110px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;margin:0 calc(-1*clamp(12px,3vw,28px));padding:14px clamp(12px,3vw,28px);background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid var(--l)}
+h1{margin:0;font:700 clamp(20px,3.4vw,32px)/1.1 "Space Grotesk",Inter,sans-serif;letter-spacing:-.03em;background:linear-gradient(90deg,var(--c),var(--g),var(--v),var(--a));background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gs 9s linear infinite}
+@keyframes gs{to{background-position:300% 0}}
+.eye{font:11px "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--c);text-transform:uppercase}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+input,textarea{font:inherit;color:var(--t);background:color-mix(in srgb,var(--p) 85%,transparent);border:1px solid var(--l);border-radius:9px;padding:9px 12px}
+input:focus,textarea:focus{outline:2px solid var(--c)}#q{flex:1;min-width:200px}
+.pill{font:11px "JetBrains Mono",monospace;border:1px solid var(--l);border-radius:99px;padding:7px 11px;background:var(--p)}.pill b{color:var(--g)}
+.prog{height:3px;background:var(--l);border-radius:4px;margin-top:10px;overflow:hidden}.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c),var(--g),var(--a));transition:width .5s cubic-bezier(.2,.9,.3,1)}
+button{font:inherit;cursor:pointer}.btn{background:linear-gradient(120deg,var(--c),var(--v));color:#071019;border:0;border-radius:9px;padding:9px 14px;font-weight:700;transition:transform .15s,box-shadow .2s}.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px -8px var(--c)}.btn:active{transform:scale(.96)}
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px 0}
+.card{background:color-mix(in srgb,var(--p) 70%,transparent);border:1px solid var(--l);border-radius:14px;padding:14px;backdrop-filter:blur(14px);box-shadow:0 10px 30px -18px #000;touch-action:none;cursor:grab;position:relative;transition:box-shadow .2s}
+.card.lift{cursor:grabbing;z-index:9;box-shadow:0 24px 50px -14px var(--c);transition:none}
+.card h3{margin:0 0 8px;font:600 11px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--m)}
+.gb{display:grid;grid-template-columns:78px 1fr 26px;gap:6px;align-items:center;font-size:10px;color:var(--m);margin:3px 0}.gb i{height:6px;border-radius:4px;background:var(--l);overflow:hidden}.gb i u{display:block;height:100%;background:linear-gradient(90deg,var(--c),var(--g));transition:width .6s;width:0}
+.st{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:12px}.dot{width:10px;height:10px;border-radius:50%;background:var(--x);position:relative;flex:none}.dot:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--x);animation:rip 1.8s ease-out infinite}
+@keyframes rip{to{transform:scale(2.8);opacity:0}}
+.stage{perspective:900px;height:150px;margin:10px 0 4px;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.ring{position:relative;width:110px;height:56px;transform-style:preserve-3d;animation:spY 26s linear infinite}.stage:hover .ring{animation-play-state:paused}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:4px;font:600 10px/1.15 "Space Grotesk",sans-serif;border:1px solid var(--l);border-radius:10px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 30%,var(--p)),color-mix(in srgb,var(--v) 25%,var(--p)));backface-visibility:hidden;cursor:pointer;transform:rotateY(calc(var(--i)*(360deg/var(--n))))translateZ(var(--z))}
+.ring b.on{outline:2px solid var(--g)}
+@keyframes spY{to{transform:rotateY(-360deg)}}@keyframes spX{to{transform:rotateX(360deg)}}@keyframes sw{from{transform:rotateY(-40deg)}to{transform:rotateY(40deg)}}
+.grp{display:flex;align-items:center;gap:9px;margin:26px 0 8px;font:700 15px "Space Grotesk",sans-serif;border-bottom:1px solid var(--l);padding-bottom:8px}.grp small{margin-left:auto;font:10px "JetBrains Mono",monospace;color:var(--m)}
+.item{background:color-mix(in srgb,var(--p) 78%,transparent);border:1px solid var(--l);border-radius:12px;margin:8px 0;overflow:hidden;transition:border-color .25s,box-shadow .25s}.item.sel{border-color:var(--g);box-shadow:0 0 0 1px var(--g) inset,0 8px 28px -16px var(--g)}
+.hd{all:unset;box-sizing:border-box;width:100%;display:flex;gap:11px;align-items:center;padding:11px 13px;cursor:pointer}.hd:hover{background:color-mix(in srgb,var(--c) 7%,transparent)}.hd:focus-visible{outline:2px solid var(--c)}
+.no{font:10px "JetBrains Mono",monospace;color:var(--c);border:1px solid var(--l);border-radius:6px;padding:3px 6px;min-width:46px;text-align:center}.nm{flex:1;min-width:0}.nm b{font-size:13px}.nm span{display:block;font-size:11px;color:var(--m)}.stt{font-size:10px;color:var(--m);text-align:right}.item.sel .stt{color:var(--g)}.chv{transition:transform .3s;color:var(--m)}.item.open .chv{transform:rotate(180deg)}
+.body{display:none;padding:0 12px 14px}.item.open .body{display:block}.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:10px}
+.op{background:var(--bg);border:1px solid var(--l);border-radius:12px;overflow:hidden;transform-style:preserve-3d;transition:transform .25s,border-color .2s,box-shadow .25s;animation:in .5s both;animation-delay:calc(var(--k)*70ms)}
+@keyframes in{from{opacity:0;transform:translateY(14px) scale(.96)}}
+.op:hover{border-color:var(--c);box-shadow:0 14px 34px -18px var(--c)}.op.ch{border-color:var(--g);box-shadow:0 0 0 2px var(--g) inset}
+.pv{height:112px;position:relative;overflow:hidden;background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--cc) 22%,#0b1220),#070b13);display:grid;place-items:center;color:#e8eef8}
+.ob{padding:9px 11px 11px}.bd{font:9px "JetBrains Mono",monospace;color:var(--c);letter-spacing:.06em}.ot{font-weight:650;font-size:12px;margin:3px 0}.od{font-size:11px;color:var(--m);line-height:1.4;min-height:44px}
+.pick{width:100%;margin-top:8px;background:transparent;border:1px solid var(--l);color:var(--t);border-radius:8px;padding:6px;font-size:11px;transition:.2s}.pick:hover{border-color:var(--g)}.op.ch .pick{background:var(--g);color:#05140f;border-color:var(--g);font-weight:700}
+.note{margin-top:10px}.note label{font:10px "JetBrains Mono",monospace;color:var(--m);letter-spacing:.1em}.note textarea{width:100%;min-height:64px;margin-top:5px;resize:vertical}
+.foot{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px clamp(12px,3vw,28px) calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--l);font-size:12px;color:var(--m)}
+.ov{position:fixed;inset:0;z-index:50;background:#000a;display:none;place-items:center;padding:14px}.ov.show{display:grid}.dl{background:var(--p);border:1px solid var(--l);border-radius:14px;width:min(720px,100%);max-height:85vh;display:flex;flex-direction:column;padding:14px}.dl pre{overflow:auto;white-space:pre-wrap;font:11px/1.5 "JetBrains Mono",monospace;flex:1;margin:10px 0}.dl div{display:flex;gap:8px;justify-content:flex-end}
+.mb{border:1px solid var(--cc);background:transparent;color:var(--cc);padding:9px 18px;font-weight:700;position:relative;overflow:hidden;transition:transform .25s cubic-bezier(.3,1.8,.5,1),background .25s,color .25s,border-radius .3s;border-radius:99px}
+.mb:active{transform:scale(.88)}.mb.on{background:var(--cc);color:#07101a}.mb.m1{width:64px;height:32px;padding:0;border-radius:99px}.mb.m1:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--cc);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}.mb.m1.on:after{transform:translateX(32px);background:#07101a}
+.mb.m2{font-size:26px;border:0;padding:4px 10px}.mb.m2.on{background:transparent;animation:pop .5s}.mb.m3{border-radius:8px}.mb.m3.on{border-radius:99px;letter-spacing:.15em}.mb.m4{border-radius:12px;animation:mag 3s ease-in-out infinite}
+@keyframes pop{40%{transform:scale(1.6) rotate(-10deg)}}@keyframes mag{50%{transform:translate(5px,-4px)}}
+.pv svg{width:100%;height:100%}.br{transform-box:fill-box;transform-origin:bottom;animation:bg 2.6s ease-in-out infinite alternate;animation-delay:calc(var(--d)*.18s)}@keyframes bg{from{transform:scaleY(.15)}}
+.ld{stroke-dasharray:400;animation:ldr 3s ease-in-out infinite}@keyframes ldr{0%{stroke-dashoffset:400}60%,100%{stroke-dashoffset:0}}.dn{animation:dnr 3.2s ease-in-out infinite;transform-origin:50% 50%}@keyframes dnr{0%{stroke-dasharray:0 200}70%,100%{stroke-dasharray:120 200}}.sp{animation:spl 2s ease-in-out infinite;animation-delay:calc(var(--d)*.2s);transform-box:fill-box;transform-origin:center}@keyframes spl{50%{transform:scale(1.9);opacity:.5}}
+.gl{width:100%;height:100%;position:relative}.gl i{position:absolute;width:64px;height:64px;border-radius:50%;filter:blur(14px);animation:fl 5s ease-in-out infinite alternate}.gl i:nth-child(1){background:var(--cc);left:12%;top:8%}.gl i:nth-child(2){background:#c4a6ff;right:12%;bottom:0;animation-delay:-2s}.gl i:nth-child(3){background:#ffc27a;left:42%;top:40%;animation-delay:-3s;width:40px;height:40px}.gl.h i{animation-name:fl,hr}@keyframes fl{to{transform:translate(34px,16px) scale(1.3)}}@keyframes hr{to{filter:blur(14px) hue-rotate(160deg)}}
+.gl p{position:absolute;inset:22px 26px;margin:0;border-radius:14px;background:#ffffff1f;border:1px solid #ffffff44;backdrop-filter:blur(10px);display:grid;place-items:center;font:600 10px "JetBrains Mono",monospace;letter-spacing:.1em;box-shadow:0 10px 30px -10px #0008}.gl.pr p{border:2px solid transparent;background:linear-gradient(#ffffff1f,#ffffff1f) padding-box,conic-gradient(var(--cc),#c4a6ff,#ffc27a,var(--cc)) border-box;animation:bs 6s linear infinite}.gl.fl p{animation:fp 3s ease-in-out infinite alternate}.gl.du p:nth-of-type(1){inset:16px 60px 40px 16px}.gl.du p:nth-of-type(2){inset:40px 16px 14px 60px;background:#ffffff33}@keyframes fp{to{transform:translateY(-10px) rotateX(14deg)}}@keyframes bs{to{filter:hue-rotate(360deg)}}
+.pc{position:absolute;inset:0}.pc s{position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;background:var(--cc);box-shadow:0 0 8px var(--cc)}
+.pt0{animation:spY2 9s linear infinite}.pt0 s{transform:rotate(var(--a))translateX(var(--r))}@keyframes spY2{to{transform:rotate(360deg)}}
+.pt1 s{top:100%;left:var(--l);animation:ri 2.6s linear infinite;animation-delay:var(--dl)}@keyframes ri{to{transform:translateY(-130px);opacity:0}}
+.pt2 s{animation:bu 2.2s ease-out infinite;animation-delay:var(--dl)}@keyframes bu{to{transform:translate(var(--dx),var(--dy));opacity:0}}
+.pt3 s{left:var(--l);top:var(--tp);animation:dr 4s ease-in-out infinite alternate;animation-delay:var(--dl)}@keyframes dr{to{transform:translate(var(--dx),var(--dy))}}
+.pt4 s{transform:rotate(var(--a))translateX(36px);animation:pu 1.8s ease-in-out infinite;animation-delay:var(--dl)}@keyframes pu{50%{transform:rotate(var(--a))translateX(52px) scale(1.7)}}
+.zone{position:absolute;inset:0}.dg{position:absolute;padding:7px 10px;border-radius:9px;background:#ffffff18;border:1px solid var(--cc);font:600 10px "JetBrains Mono",monospace;cursor:grab;touch-action:none;transition:box-shadow .2s,filter .2s}.dg.lift{cursor:grabbing;box-shadow:0 14px 26px -6px var(--cc);z-index:5}.zone.tl .dg:hover{transform:perspective(200px) rotateX(14deg) rotateY(-12deg)}
+.sr{position:absolute;inset:14px 18px;display:flex;flex-direction:column;justify-content:center;gap:9px;font:600 10px "JetBrains Mono",monospace}.sr div{display:flex;align-items:center;gap:8px}.sd{width:9px;height:9px;border-radius:50%;background:var(--x);position:relative}.sd:after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--x)}.s0 .sd:after{animation:rip 1.6s infinite}.s1 .sd{box-shadow:0 0 0 3px #fff2}.s1 .sd:after{animation:rip 2.4s infinite;border:2px solid var(--x);background:none}.s2 .sd{animation:bk 1s steps(2) infinite}.s3 i{flex:1;height:5px;background:#fff2;border-radius:4px;overflow:hidden}.s3 i u{display:block;height:100%;background:var(--x);animation:pb 2.4s ease-in-out infinite alternate}.s4 span{display:inline-block;animation:tk 2s infinite}
+@keyframes bk{50%{opacity:.2}}@keyframes pb{from{width:12%}to{width:92%}}@keyframes tk{0%,45%{transform:translateY(0)}55%,100%{transform:translateY(-100%);opacity:0}}
+.cs{perspective:420px;width:100%;height:100%;display:grid;place-items:center}.cr{position:relative;width:62px;height:38px;transform-style:preserve-3d;animation:var(--an) 12s linear infinite}.cs:hover .cr{animation-play-state:paused}.cr i{position:absolute;inset:0;border-radius:8px;border:1px solid var(--cc);background:color-mix(in srgb,var(--cc) 24%,#0a1220);display:grid;place-items:center;font:700 10px sans-serif;backface-visibility:hidden;transform:var(--ax)(calc(var(--i)*var(--s)))translateZ(var(--z))}
+.hm{animation:hmp 2.4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}@keyframes hmp{from{opacity:.1;transform:scale(.6)}to{opacity:1}}
+.orb,.ow{position:absolute;inset:0}.orb{perspective:420px}.ow{transform-style:preserve-3d}.rg{position:absolute;left:50%;top:50%;border:1px solid;border-radius:50%;animation:rgs 6s linear infinite}.rg b{position:absolute;left:50%;top:-4px;width:8px;height:8px;margin-left:-4px;border-radius:50%;box-shadow:0 0 8px currentColor}.rg b.bt{top:auto;bottom:-4px}.sun{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;box-shadow:0 0 18px currentColor}@keyframes rgs{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.gl:not(.fl) p{transform:perspective(260px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s}
+.pc s{width:var(--sz,5px);height:var(--sz,5px);border-radius:var(--br,50%);animation-duration:var(--du,2.4s)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}#fx{display:none}}
+</style></head><body><canvas id="fx"></canvas>
+<div class="wrap">
+<header><div class="eye">Business OS Edition · Nature & Physics Motion Specs</div><h1>KARM: 169-Point Procedural Checklist</h1>
+<div class="bar"><input id="q" type="search" placeholder="Search ledgers, quantum, logistics, biology…" aria-label="Search"><span class="pill">CHOSEN <b id="cn">0</b>/169</span><span class="pill"><b id="pc">0%</b> done</span><span class="pill">AUTOSAVED <b id="sv">●</b></span></div><div class="prog"><i id="pg"></i></div></header>
+<section class="dash" id="dash">
+<div class="card"><h3>Progress donut</h3><svg viewBox="0 0 120 90" width="100%" height="120"><circle cx="60" cy="45" r="32" fill="none" stroke="var(--l)" stroke-width="11"/><circle id="dn" cx="60" cy="45" r="32" fill="none" stroke="url(#gg)" stroke-width="11" stroke-linecap="round" stroke-dasharray="0 201" transform="rotate(-90 60 45)" style="transition:stroke-dasharray .8s cubic-bezier(.2,.9,.3,1)"/><defs><linearGradient id="gg"><stop offset="0" stop-color="#7fb3ff"/><stop offset="1" stop-color="#6ee7c8"/></linearGradient></defs><text id="dt" x="60" y="49" text-anchor="middle" fill="currentColor" font-size="14" font-weight="700">0%</text></svg></div>
+<div class="card"><h3>Completion by section</h3><div id="gbars"></div></div>
+<div class="card"><h3>Status indicators</h3><div id="stat"></div></div>
+<div class="card"><h3>Route map · sections</h3><svg viewBox="0 0 240 110" width="100%" id="rt"></svg></div>
+</section>
+<div class="eye" style="text-align:center">3D section carousel · click to filter · hover to pause</div>
+<div class="stage"><div class="ring" id="ring"></div></div>
+<div id="app"></div></div>
+<div class="foot"><span id="ft">Pick one option per row, add a note — everything saves automatically.</span><span><button class="btn" onclick="ex()">Export choices</button></span></div>
+<div class="ov" id="ov"><div class="dl"><b>Your selections &amp; notes</b><pre id="ext"></pre><div><button class="btn" onclick="cp()">Copy</button><button class="btn" onclick="ov.classList.remove('show')">Close</button></div></div></div>
+<script>
+const RAW=`Immortal Jellyfish — Reverts from adult back to juvenile and restarts its life cycle.
+Tardigrade — Survives vacuum, radiation, extreme cold, heat, and years without water.
+Tardigrade Cryptobiosis — Enters a death-like suspended state and revives later.
+Mantis Shrimp Punch — Strikes so fast it creates a shockwave and flashes of light.
+Mantis Shrimp Vision — Sees polarized light and colors humans cannot perceive.
+Peacock Mantis Shrimp Club — Hits with extreme force using a biological spring mechanism.
+Bombardier Beetle — Mixes chemicals inside its body to spray a hot, explosive mist.
+Electric Eel — Generates powerful electric shocks to stun prey and defend itself.
+Electric Eel Hunting — Coordinates prey capture using synchronized electric pulses.
+Anglerfish Lure — Grows a glowing lure powered by light-producing bacteria.
+Deep-Sea Anglerfish Males — Males fuse permanently to females and become part of her body.
+Barreleye Fish — Has a transparent head and tubular eyes that rotate upward.
+Dragonfish Black Skin — Absorbs almost all light, appearing darker than black.
+Dragonfish Transparent Teeth — Has nearly invisible teeth to avoid reflecting light.
+Vampire Squid — Lives in extremely low-oxygen deep ocean water.
+Giant Siphonophore — A colony of cloned bodies functions as one huge animal.
+Siphonophore Length — Can grow longer than a blue whale.
+Comb Jelly Rainbow Light — Creates moving rainbow colors with beating cilia.
+Comb Jelly Ancient Lineage — May represent one of the earliest branches of animal life.
+Box Jellyfish Eyes — Has 24 eyes and a nerve ring that processes visual information.
+Hydra Regeneration — Regrows a complete body from tiny fragments.
+Planarian Regeneration — Regrows its head, brain, and body from small pieces.
+Planarian Memory — Can retain learned behavior after regrowing its brain.
+Axolotl Regeneration — Regrows limbs, jaws, spinal cord, and parts of the heart.
+Axolotl Transplants — Can accept limb transplants without normal rejection.
+Deer Antler Regrowth — Regrows an entire set of bone antlers every year.
+Sea Star Regeneration — Can regrow lost arms; some can regrow a whole body.
+Sea Cucumber Organ Ejection — Expels internal organs to escape, then regrows them.
+Lizard Tail Autotomy — Drops its tail deliberately to escape predators.
+Octopus Arm Regrowth — Regrows lost arms with functioning suckers.
+Octopus RNA Editing — Edits its own RNA to adapt to temperature changes.
+Cuttlefish Camouflage — Changes color and skin texture in less than a second.
+Cuttlefish Colorblind Camouflage — Matches surroundings despite being colorblind.
+Mimic Octopus — Impersonates lionfish, sea snakes, flatfish, and other animals.
+Chameleon Tongue — Fires its tongue faster than the blink of an eye.
+Gecko Feet — Climbs smooth glass using molecular-scale adhesive forces.
+Basilisk Lizard — Runs across the surface of water.
+Flying Fish — Launches from water and glides long distances through air.
+Mudskipper — Walks on land and breathes through its skin.
+Saharan Silver Ant — Survives desert heat that would kill most animals.
+Namib Desert Beetle — Harvests drinking water directly from fog.
+Naked Mole Rat — Shows extreme longevity and unusual cancer resistance.
+Antarctic Icefish — Has clear blood lacking hemoglobin.
+Icefish Antifreeze Blood — Survives in water colder than the normal freezing point of fish blood.
+Arctic Woolly Bear Caterpillar — Freezes solid and thaws repeatedly before becoming a moth.
+Wood Frog Freeze Tolerance — Freezes most of its body and restarts its heartbeat.
+Painted Turtle Oxygen-Free Survival — Survives months underwater beneath ice without oxygen.
+Brine Shrimp Cysts — Revive after years of complete dryness.
+Resurrection Plant — Dries into a dead-looking ball, then revives after rain.
+Desert Snail Aestivation — Seals itself inside its shell for years and revives.
+Spiny Mouse Regeneration — Regrows skin, hair follicles, and cartilage.
+Zebrafish Heart Repair — Repairs damaged heart muscle after injury.
+Salamander Retina Regrowth — Regenerates retinal neurons.
+High-Altitude Deer Mice — Evolved more efficient oxygen use at extreme elevations.
+Tibetan Adaptation — Humans and yaks share genetic adaptations for low oxygen.
+Bioluminescent Plankton — Turns ocean waves electric blue when disturbed.
+Bioluminescent Bay — Glows brightly when water is moved.
+Milky Sea — Creates vast glowing ocean areas visible from satellites.
+Firefly Squid — Lights up shorelines with thousands of blue glowing bodies.
+Foxfire Fungus — Makes decaying wood glow in darkness.
+Ghost Mushroom — Produces green bioluminescent light at night.
+Deep-Sea Bioluminescence — Uses living light for camouflage, lures, alarms, and communication.
+Anglerfish Bacterial Symbiosis — Hosts glowing bacteria inside its lure.
+Lanternfish Light Show — Forms one of Earth’s largest synchronized bioluminescent displays.
+Synchronous Fireflies — Flash together in coordinated forest-wide rhythms.
+Coral Spawning — Releases eggs and sperm in synchronized, moon-timed events.
+Horseshoe Crab — Has survived nearly unchanged for hundreds of millions of years.
+Horseshoe Crab Blood — Clots around bacterial contamination, making it medically valuable.
+Coelacanth — An “extinct” ancient fish rediscovered alive.
+Tuatara Third Eye — Has a light-sensitive parietal-eye structure on its head.
+Ginkgo Survivor Tree — Trees survived the atomic bombing of Hiroshima and still live.
+Welwitschia — Survives decades without rain using only two permanent leaves.
+Pando — Tens of thousands of trees share one root system and one genetic identity.
+Armillaria Fungus — Spreads through enormous underground fungal networks.
+Mycorrhizal Network — Connects trees and transfers nutrients and chemical signals.
+Slime Mold Maze Solving — Finds efficient paths through mazes without a brain.
+Slime Mold Memory — Remembers routes despite having no neurons.
+Ant Colony Intelligence — Makes collective decisions with no central leader.
+Termite Mound Climate Control — Maintains internal temperature like a living ventilation system.
+Weaver Bird Nest — Ties living grass into intricate waterproof nests.
+Bowerbird Gallery — Builds and decorates color-sorted courtship structures.
+Lyrebird Mimicry — Copies chainsaws, camera shutters, and other birds.
+Bird-of-Paradise Display — Transforms its body into impossible-looking shapes.
+Peacock Spider Dance — Performs vivid color-and-vibration courtship displays.
+Orchid Mantis — Resembles a flower so closely that insects land on it.
+Ophrys Orchid Mimicry — Imitates female wasps to trick males into pollination.
+Corpse Flower — Heats itself and releases a corpse-like odor to attract pollinators.
+Fig–Wasp Coevolution — Fig trees and fig wasps cannot reproduce without each other.
+Cordyceps Control — Infects insects and alters their behavior before killing them.
+Parasitic Wasp Mind Control — Turns caterpillars into living bodyguards for its young.
+Sacculina Barnacle — Takes over a crab’s body and controls its behavior.
+Toxoplasma Behavior Change — Alters fear responses in infected rodents.
+Viral Gene Insertion — Viruses have inserted genes into host genomes across evolution.
+Cyanobacteria Oxygen Revolution — Produced Earth’s oxygen and transformed the planet.
+Hydrothermal Vent Life — Supports entire ecosystems without sunlight.
+Chemosynthesis — Makes life using chemicals instead of sunlight.
+Giant Tube Worm — Lives at crushing pressure beside superheated vent fluid.
+Yeti Crab Farming — Grows bacteria on its hairy arms for food.
+Whale Fall Ecosystem — A dead whale feeds deep-sea life for decades.
+Brinicle — A descending ice tube freezes the seabed like an “icy finger of death.”
+Underwater Brine Lake — Dense salty water forms lakes and rivers on the ocean floor.
+Methane Seep Ecosystem — Chemosynthetic life thrives around leaking methane.
+Deep Subsurface Microbes — Live kilometers underground without sunlight.
+Rock-Deep Microbes — Survive inside solid rock far beneath the seafloor.
+Extremophile Life — Lives in acid, alkali, radiation, heat, cold, and pressure extremes.
+Fibonacci Spiral — Appears in sunflowers, pinecones, shells, and galaxies.
+Golden Angle Phyllotaxis — Arranges leaves for optimal light and packing.
+Romanesco Fractal — Repeats its spiral pattern at multiple scales.
+Natural Fractal Branching — Appears in lungs, rivers, lightning, and neurons.
+Starling Murmuration — Thousands of birds move like one shifting liquid organism.
+Honeybee Waggle Dance — Encodes direction, distance, and food quality through movement.
+Tesla Coil Arcs — Sends violet plasma arcs leaping through the air.
+Rotating Magnetic Field — Makes alternating-current motors possible.
+Wireless Power Transmission — Transfers electrical energy without wires.
+Resonance — Small timed inputs can build enormous oscillations.
+Plasma Globe Filaments — Electric filaments follow a hand placed near the glass.
+High-Frequency Discharge — Creates miniature lightning-like electrical patterns.
+Schrödinger’s Cat — A quantum thought experiment where a cat is described as alive and dead until observed.
+EPR Paradox — Entangled particles show correlations that seem to defy classical locality.
+Quantum Zeno Effect — Continuously observing a quantum system can prevent it from changing.
+Double-Slit Experiment — A particle behaves like a wave and a particle depending on measurement.
+Delayed-Choice Experiment — A later measurement appears to influence how a photon behaved earlier.
+Quantum Eraser — Erasing path information changes interference patterns.
+Quantum Entanglement — Linked particles remain correlated across distance.
+Quantum Superposition — A particle exists in multiple possible states until measured.
+Quantum Tunneling — Particles pass through barriers that classical physics forbids.
+Heisenberg Uncertainty Principle — Position and momentum cannot both be known exactly.
+Wave–Particle Duality — Light and matter behave as both waves and particles.
+Quantum Probability Cloud — Electrons occupy probability regions rather than fixed orbits.
+Bose–Einstein Condensate — Many atoms cool until they behave as one quantum object.
+Superfluid Helium — Flows without viscosity and can climb container walls.
+Superconductor Meissner Effect — Expels magnetic fields from its interior.
+Antimatter Annihilation — Matter and antimatter destroy each other into energy.
+Neutrino Passage — Trillions of neutrinos pass through your body every second.
+Time Dilation — Time passes more slowly at extreme speeds or gravity.
+Twin Paradox — A fast-traveling twin returns younger than the twin who stayed on Earth.
+Length Contraction — Objects moving near light speed appear shorter along direction of motion.
+Relativity of Simultaneity — Two events can be simultaneous for one observer but not another.
+Gravitational Lensing — Gravity bends light and can create multiple images of one galaxy.
+Black Hole Event Horizon — A boundary beyond which nothing can escape.
+Spaghettification — Extreme tidal forces stretch objects falling toward a black hole.
+Gravitational Waves — Ripples in spacetime caused by accelerating massive objects.
+Black Hole Merger — Two black holes collide and shake spacetime itself.
+Neutron Star Density — A teaspoon would weigh billions of tons.
+Pulsar Lighthouse — A spinning neutron star sends regular beams of radiation across space.
+Magnetar — Has a magnetic field strong enough to distort atoms.
+Hawking Radiation — Black holes can slowly emit radiation and lose mass.
+Information Paradox — Raises the question of whether information entering a black hole is lost.
+Cosmological Horizon — Regions of the universe exist beyond what we can ever observe.
+Dark Matter — Invisible mass shapes galaxies through gravity.
+Dark Energy — A mysterious effect accelerates the universe’s expansion.
+Fast Radio Burst — Intense radio flashes arrive from billions of light-years away.
+Cosmic Microwave Background — The oldest detectable light in the universe.
+Saturn Hexagon — A six-sided jet stream circles Saturn’s north pole.
+Diamond Rain — Extreme pressure may cause diamond formation inside Neptune and Uranus.
+Enceladus Geysers — Water erupts into space from an ocean beneath the ice.
+Europa Subsurface Ocean — A global ocean may exist beneath Europa’s icy crust.
+Titan Methane Lakes — Has lakes, rain, and rivers made of liquid methane.
+Rogue Planet — A planet drifts through space without orbiting a star.
+Zeno’s Achilles Paradox — Achilles can never mathematically overtake a tortoise if motion is endlessly divided.
+Zeno’s Dichotomy Paradox — Before moving any distance, one must first complete infinitely many smaller distances.
+Russell’s Paradox — The set of all sets that do not contain themselves creates a logical contradiction.
+Banach–Tarski Paradox — A sphere can be mathematically divided and rearranged into two identical spheres.
+Cantor’s Infinity — Some infinities are larger than others.
+Hilbert’s Hotel — A fully occupied infinite hotel can still make room for more guests.
+Gödel Incompleteness — Some true mathematical statements cannot be proved within a consistent formal system.
+Halting Problem — No general algorithm can decide whether every possible program eventually stops.
+Simpson’s Paradox — A trend can reverse when separate groups are combined into one dataset.
+Four Color Theorem — Any map can be colored using no more than four colors without adjacent regions matching.`;
+const GR=[["Survivors & Strikers",9],["Deep-Sea Creatures",20],["Regeneration",31],["Camouflage & Motion",39],["Extreme Climates",55],["Living Light",66],["Ancient Life & Plants",75],["Collective Minds & Mimics",92],["Vents & Deep Earth",105],["Nature’s Patterns",111],["Electricity & Waves",117],["Quantum World",134],["Relativity & Black Holes",149],["Cosmos & Planets",159],["Paradoxes & Math",169]];
+const TY=["Invoice Microinteraction","Financial Data Chart","Audit Glassmorphism","Logistics Particle Flow","Supply Chain Map","Draggable Ledger Card","KPI Status Indicator","Org 3D Carousel","Cashflow Waveform","Risk Radar Chart","Fraud Heatmap Grid","Entity Orbit System"];
+const BL=["Payment feedback revealing “{k}”","Animated revenue graph scaling by “{k}”","Frosted audit panel floating with “{k}” physics","Inventory particle field mimicking “{k}”","Delivery route traced using “{k}” mapping","Draggable expense card with “{k}” inertia","Live financial readout pulsing like “{k}”","Approval carousel stepping via “{k}” phases","Income waveform morphing as “{k}”","Liability radar tracking “{k}” dimensions","Fraud heatmap mapping “{k}” intensity","Subsidiary system orbiting around “{k}”"];
+const SN=[
+  ["Payment Ripple","Toggle Reconciliation","Approve Burst","Verify Draw","Sync Pill"],
+  ["Profit Bar","Revenue Line","Cashflow Area","Margin Donut","Forecast Scatter"],
+  ["Frosted Ledger","Audit Aurora","Secure Prism","Floating Invoice","Dual Ledger"],
+  ["Stock Swarm","Deficit Embers","Fulfillment Bloom","Logistics Drift","Alert Pulse"],
+  ["Vendor Path","Audit Trail","Multi-hop Route","Hub Grid","Cycle Circuit"],
+  ["Free Drag Row","Snap-back Invoice","Stacked Receipts","Tilt Expense","Pinned Ledger"],
+  ["Health Dot","Alert Ring","Overdue Blink","Target Bar","Live P&L"],
+  ["Team Cylinder","Approval Coverflow","Hierarchy Wheel","Entity Cube","Workflow Fan"],
+  ["Income Sine","Expense Swell","Net Tide","Tax Equalizer","Budget Morph"],
+  ["Market Radar","Twin Asset Radar","Filled Liability","Credit Dot Radar","Risk Web"],
+  ["Ledger Grid","QTR Sweep","Fiscal Pulse","Anomaly Matrix","Tax Glow"],
+  ["Subsidiary Orbits","Tilted Vendors","Client Ellipse","Counter Audit","Merger Dance"]
+];
+const VN=["Corporate","Fiscal","Ledger","Audit","Equity","Asset","Liquid","Margin","Metric","Capital","Yield","Tax","Entity","Vault","Reserve","Credit","Debit","Trust","Prime","Apex"];
+const OFF=[];let _a=0;for(let i=1;i<=169;i++){OFF[i]=_a;_a+=i%3?5:4}
+const rnd=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const STOP=new Set("about above after again along also among because before being below between both could does each every first from have having into just like made make makes many more most much must only other over same should since some still such than that their them then there these they this those through under until upon using very were what when where which while will with within without would across".split(" "));
+const kwsOf=it=>{const seen=new Set(),o=[],add=w=>{w=w.replace(/^[-–]+|[-–]+$/g,"");const k=w.toLowerCase();if(w.length>3&&!STOP.has(k)&&!seen.has(k)){seen.add(k);o.push(w[0].toUpperCase()+w.slice(1))}};it.d.split(/[^A-Za-zÀ-ÿ\-–]+/).forEach(add);it.t.split(/[^A-Za-zÀ-ÿ\-–]+/).forEach(add);["Core","Origin","Signal","Pattern","Pulse","Trace"].forEach(p=>{if(o.length<8)o.push(it.t.split(" ")[0]+" "+p)});return o};
+const optsOf=n=>{const it=IT[n-1],ks=kwsOf(it),cnt=n%3?5:4;return Array.from({length:cnt},(_,k)=>{const g=OFF[n]+k,ty=g%12,t=Math.floor(g/12)%5,v=Math.floor(g/20);return{ty,t,k,v,g,sn:SN[ty][t],vn:VN[v],kw:ks[k],ks:ks.slice(k).concat(ks.slice(0,k))}})};
+function pv(n,o){const{ty,t,v,g,kw,ks}=o,r=rnd(g*7919+13),R=(a,b)=>a+r()*(b-a),hue=(g*47.3)%360,H=x=>`hsl(${(x%360+360)%360|0} 85% 66%)`,c=H(hue),c2=H(hue+60+R(0,80)),lab=kw.slice(0,10),dur=R(2.2,5.5).toFixed(2),SV=b=>`<svg viewBox="0 0 240 112">${b}</svg>`,f1=x=>x.toFixed(1);let h="";
+switch(ty){
+case 0:h=`<button class="mb m${t}" style="padding:${t==1?0:9}px ${t==1?0:R(14,30)|0}px;${t==0?`border-radius:${R(6,30)|0}px;`:""}" onclick="this.classList.toggle('on')">${[lab.toUpperCase(),"","♥",lab,lab][t]}</button>`;break;
+case 1:{const N=Math.round(R(5,9)),hs=Array.from({length:N},()=>R(14,84)|0),W=220/N,pts=hs.map((q,i)=>`${12+i*(216/(N-1))},${104-q}`).join(" ");
+if(t==0)h=SV(hs.map((q,i)=>`<rect class="br" style="--d:${i};animation-duration:${R(1.6,3.6).toFixed(2)}s" x="${f1(10+i*W+W*.1)}" y="${104-q}" width="${f1(W*.7)}" height="${q}" rx="${R(1,5)|0}" fill="${i%2?c2:c}"/>`).join(""));
+else if(t<3)h=SV((t==2?`<path d="M12,104 L${pts.replace(/ /g," L")} L228,104Z" fill="${c}" opacity=".25"/>`:"")+`<polyline class="ld" fill="none" stroke="${c}" stroke-width="${R(2,4).toFixed(1)}" points="${pts}" style="animation-duration:${dur}s"/><circle cx="228" cy="${104-hs[N-1]}" r="4" fill="${c2}"/>`);
+else if(t==3){const sg=3+g%3,vs=Array.from({length:sg},()=>R(1,5)),tot=vs.reduce((a,b)=>a+b);let st=0;h=SV(`<circle cx="120" cy="56" r="32" fill="none" stroke="#fff2" stroke-width="12"/>`+vs.map((q,i)=>{const L=Math.max(3,q/tot*201-2),o=st;st+=q/tot*201;return`<circle cx="120" cy="56" r="32" fill="none" stroke="${H(hue+i*(360/sg)*.5)}" stroke-width="${R(8,14)|0}" stroke-dasharray="0 201" stroke-dashoffset="${f1(-o)}" transform="rotate(-90 120 56)"><animate attributeName="stroke-dasharray" values="0 201;${f1(L)} ${f1(201-L)};${f1(L)} ${f1(201-L)}" keyTimes="0;.6;1" dur="${dur}s" repeatCount="indefinite"/></circle>`}).join(""))}
+else h=SV(Array.from({length:N*3},(_,i)=>`<circle class="sp" style="--d:${i%9};animation-duration:${R(1.2,3).toFixed(2)}s" cx="${R(14,226)|0}" cy="${R(10,100)|0}" r="${R(2,7).toFixed(1)}" fill="${i%3?c:c2}"/>`).join(""));break}
+case 2:{const ps=t==4?"":`style="inset:${R(14,28)|0}px ${R(16,40)|0}px;border-radius:${R(8,24)|0}px;backdrop-filter:blur(${R(6,16)|0}px)"`,bl=(a,b)=>`left:${R(0,50)|0}%;top:${R(0,50)|0}%;background:${a};width:${R(40,80)|0}px;height:${R(40,80)|0}px;animation-duration:${R(3,7).toFixed(1)}s`;
+h=`<div class="gl ${["","h","pr","fl","du"][t]}"><i style="${bl(c)}"></i><i style="${bl(c2)}"></i><i style="${bl(H(hue+R(120,240)))}"></i><p ${ps}>${t==4?esc(ks[0].slice(0,9).toUpperCase()):esc(lab.toUpperCase())}</p>${t==4?`<p>${esc(ks[1].slice(0,9).toUpperCase())}</p>`:""}</div>`;break}
+case 3:{const N=Math.round(R(9,26)),sh=["50%","2px","50% 0 50% 0","0"][g%4];h=`<div class="pc pt${t}" style="--br:${sh};--sz:${R(3,8).toFixed(1)}px;--du:${R(1.6,5).toFixed(2)}s;animation-duration:${R(5,14).toFixed(1)}s">`+Array.from({length:N},(_,i)=>{const a=i*R(100,160),q=R(20,52);return`<s style="--a:${f1(a)}deg;--r:${f1(q)}px;--l:${R(2,96)|0}%;--tp:${R(5,90)|0}%;--dl:${-R(0,3).toFixed(2)}s;--dx:${Math.cos(a*Math.PI/180)*q*1.8|0}px;--dy:${Math.sin(a*Math.PI/180)*q*1.6|0}px;${i%3==0?`background:${c2};box-shadow:0 0 8px ${c2}`:""}"></s>`}).join("")+`</div>`;break}
+case 4:{const K=Math.round(R(4,7)),pp=Array.from({length:K},(_,i)=>[f1(16+i*(208/(K-1))),R(18,96)|0]),mid=(a,b)=>`${f1((+a[0]+ +b[0])/2)},${f1((+a[1]+ +b[1])/2)}`;let P;
+if(t==3)P=`M${pp[0]}`+pp.slice(1).map(q=>`H${q[0]}V${q[1]}`).join("");
+else if(t==4){const q=Array.from({length:6},(_,i)=>[120+Math.cos(i*Math.PI/3)*R(50,100),56+Math.sin(i*Math.PI/3)*R(24,44)]);P=`M${mid(q[5],q[0])}`+q.map((a,i)=>`Q${f1(a[0])},${f1(a[1])} ${mid(a,q[(i+1)%6])}`).join("")+"Z"}
+else{P=`M${pp[0]}`;for(let i=1;i<K-1;i++)P+=`Q${pp[i]} ${mid(pp[i],pp[i+1])}`;P+=`L${pp[K-1]}`}
+h=SV(`<path d="${P}" fill="none" stroke="#fff3" stroke-width="7" stroke-linecap="round"/><path d="${P}" pathLength="400" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" ${t==1?'stroke-dasharray="6 7"':'class="ld" style="animation-duration:'+dur+'s"'}/><circle r="5" fill="${c2}"><animateMotion dur="${(+dur+2).toFixed(1)}s" repeatCount="indefinite" path="${P}"/></circle>`+(t==2||t==3?pp.map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="${t==2?5:3.5}" fill="${c}"/>${t==2?`<text x="${q[0]}" y="${q[1]+2.5}" font-size="6" text-anchor="middle" fill="#06101a">${i+1}</text>`:""}`).join(""):"")+`<text x="10" y="108" font-size="8" fill="${c}">${esc(lab)}</text>`);break}
+case 5:{const N=3+g%2;h=`<div class="zone ${t==3?"tl":""}" ${t==1?'data-snap="1"':""}>${Array.from({length:N},(_,i)=>`<div class="dg" style="left:${t==2?18+i*12:R(4,150)|0}px;top:${t==2?14+i*14:R(6,72)|0}px;border-color:${i%2?c2:c};${t==4?"border-style:dashed;":""}">${esc(ks[i%ks.length].slice(0,9).toUpperCase())}</div>`).join("")}</div>`;break}
+case 6:h=`<div class="sr s${t}">${[0,1,2].map(i=>{const x=H(hue+i*70),s=esc(ks[i%ks.length].slice(0,9).toUpperCase());return`<div style="--x:${x}">${t==3?`<span>${s}</span><i><u style="animation-delay:${-i}s;animation-duration:${R(1.6,3.6).toFixed(2)}s"></u></i>`:`<span class="sd"></span>${t==4?`<span>${s} ${R(10,99)|0}ms</span>`:s}`}</div>`}).join("")}</div>`;break;
+case 7:{const F=[6+g%3,0,7+g%2,4+g%3,7+g%3][t],tn=Math.tan(Math.PI/F),cfg=[["spY","rotateY",360/F,F,31/tn+R(4,16)],["sw","rotateY",R(22,40),F+1,R(70,110)],["spX","rotateX",360/F,F,19/tn+R(4,14)],["spY","rotateY",360/F,F,31/tn+3],["sw","rotateY",R(12,22),F,R(110,160)]][t];if(t==1)cfg[3]=6+g%3;
+h=`<div class="cs"><div class="cr" style="--an:${cfg[0]};--ax:${cfg[1]};--s:${f1(cfg[2])}deg;--z:${f1(cfg[4])}px;animation-duration:${R(7,18).toFixed(1)}s">${Array.from({length:cfg[3]},(_,i)=>{const q=H(hue+i*(360/cfg[3]));return`<i style="--i:${i};border-color:${q};background:color-mix(in srgb,${q} 24%,#0a1220)">${esc(ks[i%ks.length].slice(0,8))}</i>`}).join("")}</div></div>`;break}
+case 8:{const L=36,mk=()=>{const a=R(1,4),b=R(3,8),A=R(10,30),B=R(3,12),p=R(0,6.28),q=R(0,6.28);return Array.from({length:L+1},(_,i)=>{const x=i/L;return`${i?"L":"M"}${f1(10+x*220)} ${f1(56+Math.sin(x*a*6.28+p)*A+Math.sin(x*b*6.28+q)*B)}`}).join("")},an=(F,ex)=>`<animate attributeName="d" values="${[F[0],F[1],F[2],F[0]].map(d=>d+(ex||"")).join(";")}" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.33;.66;1" keySplines=".4 0 .2 1;.4 0 .2 1;.4 0 .2 1"/>`,fs=()=>[mk(),mk(),mk()];
+if(t==0){const F=fs();h=SV(`<path d="${F[0]}" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round">${an(F)}</path>`)}
+else if(t==1){const F=fs(),e="L230 112L10 112Z";h=SV(`<path d="${F[0]+e}" fill="${c}" fill-opacity=".35" stroke="${c}" stroke-width="2">${an(F,e)}</path>`)}
+else if(t==2){h=SV([0,1,2].map(i=>{const F=fs();return`<path d="${F[0]}" fill="none" stroke="${H(hue+i*50)}" stroke-width="${3-i*.6}" opacity="${1-i*.25}">${an(F)}</path>`}).join(""))}
+else if(t==3){const N=Math.round(R(14,22)),w=220/N;h=SV(Array.from({length:N},(_,i)=>{const a=[R(8,80)|0,R(8,80)|0,R(8,80)|0],d=R(.8,1.8).toFixed(2);return`<rect x="${f1(10+i*w+1)}" y="${104-a[0]}" width="${f1(w-2)}" height="${a[0]}" rx="2" fill="${i%2?c:c2}"><animate attributeName="height" values="${a[0]};${a[1]};${a[2]};${a[0]}" dur="${d}s" repeatCount="indefinite"/><animate attributeName="y" values="${104-a[0]};${104-a[1]};${104-a[2]};${104-a[0]}" dur="${d}s" repeatCount="indefinite"/></rect>`}).join(""))}
+else{const K=R(2,5),ph=R(0,6),A=R(10,26),mkb=()=>{const p=R(0,6.28),a=R(8,A);return Array.from({length:L},(_,i)=>{const th=i/L*6.2832,rr=34+Math.sin(th*K+p)*a;return`${i?"L":"M"}${f1(120+Math.cos(th)*rr*1.5)} ${f1(56+Math.sin(th)*rr*.95)}`}).join("")+"Z"},F=[mkb(),mkb(),mkb()];h=SV(`<path d="${F[0]}" fill="${c}" fill-opacity=".4" stroke="${c2}" stroke-width="2.5">${an(F)}</path>`)}break}
+case 9:{const M=Math.round(R(5,8)),an=i=>-Math.PI/2+i*2*Math.PI/M,fr=()=>Array.from({length:M},(_,i)=>{const q=R(12,46);return[120+Math.cos(an(i))*q,56+Math.sin(an(i))*q]}),P=a=>a.map(p=>p.map(f1).join(",")).join(" "),V=F=>[F[0],F[1],F[2],F[0]].map(P).join(";"),ring=q=>P(Array.from({length:M},(_,i)=>[120+Math.cos(an(i))*q,56+Math.sin(an(i))*q])),grid=[18,32,46].map(q=>`<polygon fill="none" stroke="#fff3" points="${ring(q)}"/>`).join("")+Array.from({length:M},(_,i)=>`<path d="M120 56L${f1(120+Math.cos(an(i))*46)} ${f1(56+Math.sin(an(i))*46)}" stroke="#fff2"/><text x="${f1(120+Math.cos(an(i))*54)}" y="${f1(58+Math.sin(an(i))*54)}" font-size="6" text-anchor="middle" fill="#cbd5e1">${esc(ks[i%ks.length].slice(0,6))}</text>`).join(""),poly=(F,col,fo)=>`<polygon fill="${col}" fill-opacity="${fo}" stroke="${col}" stroke-width="2" points="${P(F[0])}"><animate attributeName="points" values="${V(F)}" dur="${dur}s" repeatCount="indefinite"/></polygon>`,F=[fr(),fr(),fr()];let b;
+if(t==0)b=poly(F,c,.28);else if(t==1)b=poly(F,c,.2)+poly([fr(),fr(),fr()],c2,.2);else if(t==2)b=poly(F,c,.6);
+else b=poly(F,c,0)+F[0].map((_,i)=>`<circle r="3.5" fill="${c2}"><animate attributeName="cx" values="${[F[0],F[1],F[2],F[0]].map(f=>f1(f[i][0])).join(";")}" dur="${dur}s" repeatCount="indefinite"/><animate attributeName="cy" values="${[F[0],F[1],F[2],F[0]].map(f=>f1(f[i][1])).join(";")}" dur="${dur}s" repeatCount="indefinite"/></circle>`).join("");
+h=SV(`<g transform="translate(120 56) scale(.8) translate(-120 -56)">`+(t==4?`<g style="transform-origin:120px 56px;animation:spY2 ${R(8,20).toFixed(1)}s linear infinite">${grid}${b}</g>`:grid+b)+"</g>");break}
+case 10:{const rw=Math.round(R(4,6)),cl=Math.round(R(8,14)),cw=220/cl,ch=92/rw,x0=R(0,cl),y0=R(0,rw);let q="";for(let y=0;y<rw;y++)for(let x=0;x<cl;x++){const b=r(),dl=t==1?(x+y)*.12:t==2?Math.hypot(x-x0,y-y0)*.18:r()*2.4,col=H(hue+b*70),st=`animation-delay:-${dl.toFixed(2)}s;animation-duration:${dur}s`;q+=t==3?`<circle class="hm" cx="${f1(10+x*cw+cw/2)}" cy="${f1(10+y*ch+ch/2)}" r="${f1(Math.min(cw,ch)/2-1)}" fill="${col}" style="${st}"/>`:`<rect class="hm" x="${f1(10+x*cw+1)}" y="${f1(10+y*ch+1)}" width="${f1(cw-2)}" height="${f1(ch-2)}" rx="${t==4?f1(ch/3):2}" fill="${col}" ${t==4&&x==(x0|0)&&y==(y0|0)?'stroke="#fff" stroke-width="1.5"':""} style="${st}"/>`}h=SV(q);break}
+case 11:{const N=2+g%3;h=`<div class="orb"><div class="ow" style="transform:rotateX(${t==1?62:0}deg) rotateZ(${R(0,60)|0}deg)"><b class="sun" style="background:${c2};color:${c2}"></b>${Array.from({length:N},(_,i)=>{const w=40+i*R(22,34),eh=w*(t==0||t==4?1:t==2?R(.35,.55):R(.5,.9)),q=H(hue+i*40),pl=`<b style="background:${q};color:${q};width:${R(5,9)|0}px;height:${R(5,9)|0}px"></b>`;return`<i class="rg" style="width:${f1(w)}px;height:${f1(eh)}px;border-color:${q};border-style:${t==2?"dashed":"solid"};animation-duration:${R(3,12).toFixed(1)}s;animation-direction:${t==3&&i%2?"reverse":"normal"}">${pl}${t==4?pl.replace("<b ",'<b class="bt" '):""}</i>`}).join("")}</div></div>`}}
+return`<div class="pv" style="--cc:${c}">${h}</div>`}
+function render(n){const it=IT[n-1],box=$("b"+n);if(box.dataset.r)return;box.dataset.r=1;const os=optsOf(n);
+box.innerHTML=`<div class="opts">${os.map((o,k)=>`<div class="op" style="--k:${k}" id="o${n}_${k}"><div onpointerdown="event.stopPropagation()">${pv(n,o)}</div><div class="ob"><div class="bd">OPTION ${"ABCDE"[k]} · ${TY[o.ty].toUpperCase()}</div><div class="ot">${esc(o.vn+" "+o.sn)} · ${esc(o.kw)}</div><div class="od">${esc(BL[o.ty].replace("{k}",o.kw))} for “${esc(it.t)}” · ID ${o.ty+1}.${o.t+1}.${String(o.v+1).padStart(2,"0")}</div><button class="pick" onclick="pick(${n},${k})">${S.c[n]===k?"✓ Chosen":"Choose this"}</button></div></div>`).join("")}</div><div class="note"><label for="nt${n}">NOTE</label><textarea id="nt${n}" placeholder="Your note for ${esc(it.t)}…" oninput="S.n[${n}]=this.value;save()">${esc(S.n[n]||"")}</textarea></div>`;mark(n);if(matchMedia("(prefers-reduced-motion:reduce)").matches)box.querySelectorAll("svg").forEach(x=>x.pauseAnimations&&x.pauseAnimations())}
+function mark(n){const c=S.c[n],it=$("i"+n);it.classList.toggle("sel",c!=null);it.querySelector(".stt").textContent=c!=null?"Option "+"ABCDE"[c]:"Not chosen";const b=$("b"+n);if(b.dataset.r)optsOf(n).forEach((o,k)=>{const e=$("o"+n+"_"+k);e.classList.toggle("ch",c===k);e.querySelector(".pick").textContent=c===k?"✓ Chosen":"Choose this"})}
+function pick(n,k){if(S.c[n]===k)delete S.c[n];else S.c[n]=k;mark(n);save();stats()}
+function openI(n){const it=$("i"+n),o=!it.classList.contains("open");it.classList.toggle("open",o);it.querySelector(".hd").setAttribute("aria-expanded",o);if(o){render(n);S.o=n}else S.o=null;save()}
+const IT=RAW.split("\n").map((l,i)=>{const [t,...d]=l.split(" — ");const g=GR.findIndex(x=>i+1<=x[1]);return{n:i+1,t,d:d.join(" — "),g}});
+let S={c:{},n:{},o:null};try{S=Object.assign(S,JSON.parse(localStorage.getItem("wnp1")||"{}"))}catch(e){}
+function save(){try{localStorage.setItem("wnp1",JSON.stringify(S))}catch(e){}const s=document.getElementById("sv");s.textContent="✓";clearTimeout(save.t);save.t=setTimeout(()=>s.textContent="●",900)}
+const $=id=>document.getElementById(id),esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function build(){$("app").innerHTML=GR.map((g,gi)=>{const its=IT.filter(i=>i.g==gi);return`<section class="grp-s" data-g="${gi}"><div class="grp">${esc(g[0])}<small>${its.length} ITEMS</small></div>${its.map(i=>`<article class="item" id="i${i.n}" data-s="${esc((i.t+" "+i.d).toLowerCase())}"><button class="hd" aria-expanded="false" onclick="openI(${i.n})"><span class="no">#${i.n}</span><span class="nm"><b>${esc(i.t)}</b><span>${esc(i.d)}</span></span><span class="stt">Not chosen</span><span class="chv">⌄</span></button><div class="body" id="b${i.n}"></div></article>`).join("")}</section>`}).join("");
+IT.forEach(i=>mark(i.n))}
+let GF=null;
+function stats(){const tot=Object.keys(S.c).length,p=Math.round(tot/169*100);$("cn").textContent=tot;$("pc").textContent=p+"%";$("pg").style.width=p+"%";$("dt").textContent=p+"%";$("dn").setAttribute("stroke-dasharray",(p*2.01)+" 201");
+const gc=GR.map((g,gi)=>{const a=IT.filter(i=>i.g==gi);return[a.filter(i=>S.c[i.n]!=null).length,a.length]});
+$("gbars").innerHTML=gc.map((v,i)=>`<div class="gb"><span>${esc(GR[i][0].slice(0,12))}</span><i><u style="width:${v[0]/v[1]*100}%"></u></i><span>${v[0]}</span></div>`).join("");
+const done=gc.filter(v=>v[0]==v[1]).length,part=gc.filter(v=>v[0]>0&&v[0]<v[1]).length;
+$("stat").innerHTML=[["Sections complete",done,"#6ee7c8"],["In progress",part,"#ffc27a"],["Not started",15-done-part,"#ff8fab"],["Notes written",Object.values(S.n).filter(x=>x.trim()).length,"#7fb3ff"]].map(([l,v,x])=>`<div class="st"><span class="dot" style="--x:${x}"></span>${l} <b style="margin-left:auto">${v}</b></div>`).join("");
+$("rt").innerHTML=`<path d="${gc.map((_,i)=>`${i?"L":"M"}${14+i*15.5} ${55+Math.sin(i*.9)*34}`).join(" ")}" fill="none" stroke="var(--l)" stroke-width="3" stroke-linecap="round"/>`+gc.map((v,i)=>`<circle cx="${14+i*15.5}" cy="${55+Math.sin(i*.9)*34}" r="${v[0]?5:3.5}" fill="${v[0]==v[1]?"#6ee7c8":v[0]?"#ffc27a":"var(--l)"}"/>`).join("")+`<text x="120" y="106" text-anchor="middle" fill="var(--m)" font-size="8">15 sections · start → finish</text>`}
+function filt(){const q=$("q").value.toLowerCase().trim();document.querySelectorAll(".grp-s").forEach(s=>{let v=0;s.querySelectorAll(".item").forEach(i=>{const ok=(!q||i.dataset.s.includes(q))&&(GF==null||GF==+s.dataset.g);i.style.display=ok?"":"none";v+=ok});s.style.display=v?"":"none"});document.querySelectorAll("#ring b").forEach(b=>b.classList.toggle("on",GF==+b.dataset.g))}
+function ex(){const L=["WONDERS OF NATURE & PHYSICS — BUSINESS OS SELECTIONS",""];IT.forEach(i=>{const c=S.c[i.n];if(c!=null||(S.n[i.n]||"").trim()){const o=optsOf(i.n)[c];L.push(`#${i.n} ${i.t}: ${o?`Option ${"ABCDE"[c]} (${o.vn} ${o.sn} · ${o.kw} · ${TY[o.ty]})`:"no option"}${S.n[i.n]?` | Note: ${S.n[i.n]}`:""}`)}});L.push("",`Chosen ${Object.keys(S.c).length}/169`);$("ext").textContent=L.join("\n");$("ov").classList.add("show")}
+function cp(){navigator.clipboard&&navigator.clipboard.writeText($("ext").textContent).catch(()=>{})}
+document.addEventListener("pointerdown",e=>{const d=e.target.closest(".dg,.card");if(!d)return;if(e.target.closest("textarea,input,button"))return;const z=d.parentElement,sx=e.clientX-(d._x||0),sy=e.clientY-(d._y||0);d.classList.add("lift");const mv=ev=>{d._x=ev.clientX-sx;d._y=ev.clientY-sy;d.style.transform=`translate(${d._x}px,${d._y}px)`},up=()=>{d.classList.remove("lift");removeEventListener("pointermove",mv);removeEventListener("pointerup",up);if(z.dataset.snap){d._x=d._y=0;d.style.transform=""}};addEventListener("pointermove",mv);addEventListener("pointerup",up)});
+document.addEventListener("pointermove",e=>{const q=e.target.closest&&e.target.closest(".pv");if(!q)return;const b=q.getBoundingClientRect();q.style.setProperty("--rx",((e.clientY-b.top)/b.height-.5)*-24+"deg");q.style.setProperty("--ry",((e.clientX-b.left)/b.width-.5)*24+"deg")});
+document.addEventListener("dblclick",e=>{const d=e.target.closest(".card");if(d){d._x=d._y=0;d.style.transform=""}});
+$("ring").innerHTML=GR.map((g,i)=>`<b data-g="${i}" style="--i:${i};--n:15;--z:150px" onclick="GF=GF==${i}?null:${i};filt()">${esc(g[0])}</b>`).join("");$("q").oninput=filt;
+build();stats();if(S.o)openI(S.o);
+(function(){const c=$("fx"),x=c.getContext("2d");let W,H,P=[],m={x:-9,y:-9};const R=()=>{W=c.width=innerWidth;H=c.height=innerHeight;P=Array.from({length:Math.min(70,W/18|0)},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}))};R();addEventListener("resize",R);addEventListener("pointermove",e=>{m.x=e.clientX;m.y=e.clientY});
+(function f(){x.clearRect(0,0,W,H);const col=getComputedStyle(document.documentElement).getPropertyValue("--c").trim()||"#7fb3ff";x.fillStyle=x.strokeStyle=col;P.forEach((p,i)=>{p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;const dx=p.x-m.x,dy=p.y-m.y,d=Math.hypot(dx,dy);if(d<110){p.x+=dx/d*1.4;p.y+=dy/d*1.4}x.globalAlpha=.55;x.beginPath();x.arc(p.x,p.y,1.4,0,7);x.fill();for(let j=i+1;j<P.length;j++){const q=P[j],l=Math.hypot(p.x-q.x,p.y-q.y);if(l<100){x.globalAlpha=(1-l/100)*.25;x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}});requestAnimationFrame(f)})()})();
+</script></body></html>

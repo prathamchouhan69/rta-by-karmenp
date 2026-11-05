@@ -1,0 +1,2 @@
+http://127.0.0.1:8787/api/v1/health 200 {"ok":true,"data":{"mode":"mock","service":"karm-proxy"}}
+http://127.0.0.1:4010 200 {"code":0,"message":"success","invoices":[{"invoice_id":"inv-golden","invoice_number":"INV-KE-270031","total":"64944.84","total_formatted":"₹64,944.84","status":"overdue"}],"data":{"invoice_id":"inv-golden","invoice_number":"INV-KE-270031","total":"64944.84","total_formatted":"₹64,944.84","status":"overdue"}}

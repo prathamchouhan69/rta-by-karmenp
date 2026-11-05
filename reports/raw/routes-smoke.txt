@@ -1,0 +1,15 @@
+/ 200
+/today 200
+/money 200
+/documents 200
+/documents/invoices/new 200
+/charts 200
+/atlas 200
+/settings 200
+/selftest 200
+/agent 200
+/gallery 200
+/motion-lab 200
+/lock 200
+/customers 200
+/vendors 200

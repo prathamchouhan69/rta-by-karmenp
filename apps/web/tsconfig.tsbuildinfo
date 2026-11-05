@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/AutomationsPage.tsx","./src/DocumentsPage.tsx","./src/FluxAssistant.tsx","./src/FluxBriefingPage.tsx","./src/GoalsExecutionPage.tsx","./src/NatureOS.tsx","./src/SourceTopology3D.tsx","./src/TasksPage.tsx","./src/api.test.ts","./src/api.ts","./src/charts.ts","./src/main.tsx","./src/references.ts","./src/useDialogFocus.ts"],"version":"5.7.3"}

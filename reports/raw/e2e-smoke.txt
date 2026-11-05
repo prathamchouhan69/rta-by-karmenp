@@ -1,0 +1,5 @@
+
+> test:e2e
+> node scripts/e2e-smoke.mjs
+
+E2E smoke PASS: proxy health and golden invoice

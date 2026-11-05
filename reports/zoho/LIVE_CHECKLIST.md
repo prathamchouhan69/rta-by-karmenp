@@ -1,0 +1,26 @@
+# First live run
+
+- [ ] Store client secrets, refresh token, session secret, and setup code in the deployment secret manager; do not commit them.
+- [ ] Verify owner sign-in and bearer-token access over HTTPS.
+- [ ] Confirm the organisation and data centre.
+- [ ] Confirm the proxy health endpoint.
+- [ ] Confirm the granted OAuth scopes cover each enabled endpoint.
+- [ ] Read one customer and one vendor.
+- [ ] Read one item and one tax.
+- [ ] Create a test invoice with raw line inputs only.
+- [ ] Compare its number with Zoho's own screen.
+- [ ] Check the total and formatted total are received from Zoho.
+- [ ] Send the test invoice.
+- [ ] Download the Zoho PDF.
+- [ ] Void or delete the test invoice according to the organisation policy.
+- [ ] Read one estimate.
+- [ ] Read one purchase order.
+- [ ] Read one bill.
+- [ ] Read one customer payment.
+- [ ] Read one vendor payment.
+- [ ] Check a GST report in Zoho.
+- [ ] Check bank balances in Zoho.
+- [ ] Check the KARM activity log.
+- [ ] Confirm idempotent retry behavior after a safe, read-only failure simulation.
+- [ ] Confirm production API uses PostgreSQL and the protected backup/restore procedure has been rehearsed.
+- [ ] Confirm no secret appears in logs.

@@ -1,0 +1,16 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+!.env.production.example
+coverage
+.tools
+.source
+.data
+reports/raw/*.har
+*.pem
+*.key
+
+# Personal documents
+Pratham Chouhan student verification documents.pdf

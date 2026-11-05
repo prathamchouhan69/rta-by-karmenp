@@ -1,0 +1,1 @@
+{"name":"@karm/mock-zoho","private":true,"type":"module","scripts":{"dev":"node src/server.mjs","build":"node --check src/server.mjs","test":"node --check src/server.mjs"},"dependencies":{}}
