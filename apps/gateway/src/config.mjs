@@ -1,10 +1,46 @@
 import { createHmac } from 'node:crypto';
+import { isIP } from 'node:net';
 
 const derive = (base, label) => createHmac('sha256', base).update(`karm-gateway:${label}`).digest('hex');
 const integer = (value, fallback) => {
   const number = Number(value);
   return Number.isInteger(number) && number >= 0 ? number : fallback;
 };
+
+function validateProductionOrigin(value) {
+  let origin;
+  try {
+    origin = new URL(value);
+  } catch {
+    throw new Error('Production requires APP_ORIGIN to be an exact public HTTPS origin');
+  }
+  const hostname = origin.hostname.toLowerCase();
+  const reserved = ['.localhost', '.local', '.internal', '.test', '.example', '.invalid', '.onion', '.arpa'];
+  const isDnsHostname = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(hostname);
+  if (
+    origin.protocol !== 'https:' ||
+    origin.origin !== value ||
+    origin.username ||
+    origin.password ||
+    origin.port ||
+    origin.pathname !== '/' ||
+    origin.search ||
+    origin.hash ||
+    isIP(hostname) ||
+    !isDnsHostname ||
+    !hostname.includes('.') ||
+    hostname === 'localhost' ||
+    hostname === 'example.com' ||
+    hostname.endsWith('.example.com') ||
+    hostname === 'example.net' ||
+    hostname.endsWith('.example.net') ||
+    hostname === 'example.org' ||
+    hostname.endsWith('.example.org') ||
+    reserved.some((suffix) => hostname.endsWith(suffix))
+  ) {
+    throw new Error('Production requires APP_ORIGIN to be an exact public HTTPS origin');
+  }
+}
 
 /**
  * One process needs both backends configured before either module is imported.
@@ -74,6 +110,7 @@ export function gatewaySettings(env = process.env) {
     ownerPassword: env.FLUX_OWNER_PASSWORD || '',
     production: env.NODE_ENV === 'production',
   };
+  if (settings.production) validateProductionOrigin(settings.appOrigin);
   if (settings.port < 1 || settings.port > 65_535) throw new Error('PORT must be an integer from 1 to 65535');
   if (settings.rateLimitMax < 0) throw new Error('GATEWAY_RATE_LIMIT_MAX must be zero or greater');
   if (settings.rateLimitWindowMs < 1_000) throw new Error('GATEWAY_RATE_LIMIT_WINDOW_MS must be at least 1000');

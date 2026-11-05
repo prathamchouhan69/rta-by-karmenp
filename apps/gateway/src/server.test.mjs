@@ -102,6 +102,15 @@ describe('KARM production gateway', () => {
     assert.match(page.text, /KARM test/);
   });
 
+  it('preserves safe request IDs and replaces malformed caller values', async () => {
+    const safe = await call('/healthz', { headers: { 'x-request-id': 'client.req-123' } });
+    assert.equal(safe.headers.get('x-request-id'), 'client.req-123');
+
+    const malformed = await call('/healthz', { headers: { 'x-request-id': 'bad request id' } });
+    assert.match(malformed.headers.get('x-request-id'), /^[0-9a-f-]{36}$/);
+    assert.notEqual(malformed.headers.get('x-request-id'), 'bad request id');
+  });
+
   it('bridges the owner session into real Flux RBAC', async () => {
     const fluxHealth = await call('/flux/health');
     assert.equal(fluxHealth.status, 200);

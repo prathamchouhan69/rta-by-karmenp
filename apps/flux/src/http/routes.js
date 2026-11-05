@@ -1,5 +1,5 @@
 import { signToken, verifyToken } from '../security/tokens.js';
-import { can, permissionsFor } from '../security/roles.js';
+import { can, permissionsFor, ROLES } from '../security/roles.js';
 import { validateGstin } from '../checks/gstin.js';
 import { fuelTrip } from '../calc/fuel.js';
 import { rankDues } from '../calc/ageing.js';
@@ -21,6 +21,7 @@ export function buildRoutes(f) {
     const h = String(req.headers.authorization || ''); if (!h.startsWith('Bearer ')) return null;
     const t = verifyToken(h.slice(7), config.authSecret, 'session', f.now().getTime()); if (!t) return null;
     const u = users.get(t.sub); if (!u) return null; // deactivated or deleted users lose access at once
+    if ((t.ver || 0) !== (u.sessionVersion || 0)) return null;
     return { ...u, can: (p) => can(u.role, p) };
   };
 
@@ -32,9 +33,62 @@ export function buildRoutes(f) {
       const u = await users.authenticate(body.id, body.password);
       if (!u) { audit.append({ actor: 'anonymous', action: 'login.failed', data: { id: String(body.id).slice(0, 40), ip } }); throw new HttpError(401, 'BAD_LOGIN', 'Wrong id or password'); }
       limiter.reset(k); audit.append({ actor: u.id, action: 'login.ok', data: { ip } });
-      return { token: signToken({ typ: 'session', sub: u.id, role: u.role }, config.authSecret, SESSION_SEC, f.now().getTime()), expiresInSec: SESSION_SEC, user: u, permissions: permissionsFor(u.role) };
+      return { token: signToken({ typ: 'session', sub: u.id, role: u.role, ver: u.sessionVersion || 0 }, config.authSecret, SESSION_SEC, f.now().getTime()), expiresInSec: SESSION_SEC, user: { id: u.id, name: u.name, role: u.role }, permissions: permissionsFor(u.role) };
     }, { public: true }),
     R('GET', '/v1/me', async ({ user }) => ({ id: user.id, name: user.name, role: user.role, permissions: permissionsFor(user.role) })),
+    R('GET', '/v1/users', async () => ({ users: users.list() }), { permission: 'users:admin' }),
+    R('POST', '/v1/users', async ({ user, body }) => {
+      need(body, 'id', 'role', 'password');
+      if (typeof body.id !== 'string' || !/^[a-z0-9._-]{3,40}$/.test(body.id)) throw new HttpError(422, 'INVALID_ID', 'id must be 3 to 40 lower-case letters, digits, dots, dashes or underscores');
+      if (!ROLES.includes(body.role)) throw new HttpError(422, 'INVALID_ROLE', `role must be one of ${ROLES.join(', ')}`);
+      if (body.name != null && (typeof body.name !== 'string' || body.name.trim().length > 100)) throw new HttpError(422, 'INVALID_NAME', 'name must be a string of at most 100 characters');
+      if (typeof body.password !== 'string' || body.password.length < 12 || body.password.length > 1024) throw new HttpError(422, 'INVALID_PASSWORD', 'password must contain 12 to 1024 characters');
+      if (users.getRecord(body.id)) throw new HttpError(409, 'USER_EXISTS', 'User already exists');
+      let created;
+      try {
+        created = await users.create({ id: body.id, name: body.name?.trim(), role: body.role, password: body.password });
+      } catch (error) {
+        if (error.message === 'User already exists') throw new HttpError(409, 'USER_EXISTS', error.message);
+        throw error;
+      }
+      audit.append({ actor: user.id, action: 'users.created', data: { id: created.id, role: created.role } });
+      return created;
+    }, { permission: 'users:admin' }),
+    R('POST', '/v1/users/:id/active', async ({ params, user, body }) => {
+      if (typeof body.active !== 'boolean') throw new HttpError(422, 'INVALID_STATUS', 'active must be a boolean');
+      const target = users.getRecord(params.id);
+      if (!target) throw new HttpError(404, 'NOT_FOUND', 'User not found');
+      if (params.id === user.id && !body.active) throw new HttpError(422, 'SELF_DEACTIVATION', 'You cannot deactivate your own account');
+      if (params.id === config.ownerId && !body.active) throw new HttpError(422, 'GATEWAY_OWNER_REQUIRED', 'The configured gateway owner account must remain active');
+      if (target.role === 'owner' && target.active && !body.active && users.activeOwnerCount() <= 1) {
+        throw new HttpError(422, 'LAST_OWNER', 'At least one active owner account must remain');
+      }
+      const updated = users.setActive(params.id, body.active);
+      audit.append({ actor: user.id, action: body.active ? 'users.activated' : 'users.deactivated', data: { id: params.id } });
+      return updated;
+    }, { permission: 'users:admin' }),
+    R('POST', '/v1/users/:id/role', async ({ params, user, body }) => {
+      if (!ROLES.includes(body.role)) throw new HttpError(422, 'INVALID_ROLE', `role must be one of ${ROLES.join(', ')}`);
+      if (params.id === user.id) throw new HttpError(422, 'SELF_ROLE_CHANGE', 'You cannot change your own role');
+      const target = users.getRecord(params.id);
+      if (!target) throw new HttpError(404, 'NOT_FOUND', 'User not found');
+      if (params.id === config.ownerId && body.role !== 'owner') throw new HttpError(422, 'GATEWAY_OWNER_REQUIRED', 'The configured gateway owner must keep the owner role');
+      if (target.active && target.role === 'owner' && body.role !== 'owner' && users.activeOwnerCount() <= 1) {
+        throw new HttpError(422, 'LAST_OWNER', 'At least one active owner account must remain');
+      }
+      const updated = users.setRole(params.id, body.role);
+      audit.append({ actor: user.id, action: 'users.role_changed', data: { id: params.id, role: body.role } });
+      return updated;
+    }, { permission: 'users:admin' }),
+    R('POST', '/v1/users/:id/password', async ({ params, user, body }) => {
+      need(body, 'password');
+      if (params.id === user.id) throw new HttpError(422, 'USE_ACCOUNT_RECOVERY', 'Use owner recovery procedures for your own account');
+      if (!users.getRecord(params.id)) throw new HttpError(404, 'NOT_FOUND', 'User not found');
+      if (typeof body.password !== 'string' || body.password.length < 12 || body.password.length > 1024) throw new HttpError(422, 'INVALID_PASSWORD', 'password must contain 12 to 1024 characters');
+      const updated = await users.resetPassword(params.id, body.password);
+      audit.append({ actor: user.id, action: 'users.password_reset', data: { id: params.id } });
+      return { id: updated.id, reset: true };
+    }, { permission: 'users:admin' }),
 
     R('POST', '/v1/chat', async ({ user, body }) => { need(body, 'message'); return orchestrator.answer({ actor: user, message: body.message, context: body.context || null, deep: !!body.deep, verify: !!body.verify }); }, { permission: 'chat', limit: AI }),
 

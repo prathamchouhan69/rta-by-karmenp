@@ -1,0 +1,9 @@
+FROM node:22-alpine
+
+RUN apk add --no-cache postgresql-client
+
+COPY scripts/backup-all.sh /scripts/backup-all.sh
+COPY scripts/backup-loop.sh /scripts/backup-loop.sh
+COPY scripts/backup-crypto.mjs /scripts/backup-crypto.mjs
+
+ENTRYPOINT ["/bin/sh", "/scripts/backup-loop.sh"]

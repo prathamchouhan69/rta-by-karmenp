@@ -25,7 +25,7 @@ export function createAuthBridge({
   const proxyAuth = createAuth({ setupCode, secret: sessionSecret, required: false });
   const owner = () => users.get(ownerId);
   const mint = (user) => signToken(
-    { typ: 'session', sub: user.id, role: user.role },
+    { typ: 'session', sub: user.id, role: user.role, ver: user.sessionVersion || 0 },
     fluxAuthSecret,
     ttlSec,
     now(),
@@ -45,7 +45,7 @@ export function createAuthBridge({
       const fluxClaims = verifyToken(token, fluxAuthSecret, 'session', now());
       if (fluxClaims) {
         const user = users.get(fluxClaims.sub);
-        if (user) return { token, user };
+        if (user && (fluxClaims.ver || 0) === (user.sessionVersion || 0)) return { token, user };
       }
       if (proxyAuth.verifyToken(token)) {
         const user = owner();
@@ -57,8 +57,11 @@ export function createAuthBridge({
 }
 
 export async function ensureFluxOwner(users, { id, name, password = '' }) {
-  const existing = users.get(id);
-  if (existing) return existing;
+  const existing = users.getRecord(id);
+  if (existing) {
+    if (!existing.active || existing.role !== 'owner') throw new Error(`Configured Flux owner "${id}" must exist and remain active with the owner role`);
+    return users.get(id);
+  }
   const secret = password.length >= 12 ? password : randomBytes(24).toString('hex');
   try {
     await users.create({ id, name, role: 'owner', password: secret });

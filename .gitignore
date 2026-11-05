@@ -8,6 +8,7 @@ coverage
 .tools
 .source
 .data
+/backups/
 reports/raw/*.har
 *.pem
 *.key

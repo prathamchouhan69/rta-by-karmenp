@@ -16,7 +16,7 @@
     "build": "npm run build -w apps/web && npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho && npm run build -w packages/shared",
     "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w apps/web && npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway",
     "lint": "npm run lint -w apps/web && npm run lint -w apps/proxy && npm run typecheck -w apps/gateway",
-    "test": "npm run test -w packages/shared && npm run test -w apps/web && npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway",
+    "test": "npm run test -w packages/shared && npm run test -w apps/web && npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && node --test scripts/*.test.mjs",
     "scan:money": "node scripts/zero-math-scan.mjs",
     "test:e2e": "node scripts/e2e-smoke.mjs",
     "verify": "npm run typecheck && npm run lint && npm run scan:money && npm test && npm run build && npm run test:e2e"
@@ -34,5 +34,10 @@
     "typescript": "5.7.3",
     "vite": "^6.4.5",
     "vitest": "^5.1.0"
+  },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.1"
+    }
   }
 }

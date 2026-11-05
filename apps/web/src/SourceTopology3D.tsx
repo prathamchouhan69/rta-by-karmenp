@@ -1,4 +1,27 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  AmbientLight,
+  BufferGeometry,
+  Color,
+  CubicBezierCurve3,
+  Float32BufferAttribute,
+  Group,
+  Mesh,
+  MeshBasicMaterial,
+  MeshStandardMaterial,
+  PerspectiveCamera,
+  PointLight,
+  Points,
+  PointsMaterial,
+  Scene,
+  ShaderMaterial,
+  SphereGeometry,
+  SRGBColorSpace,
+  TubeGeometry,
+  Vector3,
+  WebGLRenderer,
+  type Material,
+} from "three";
 
 type Props = { mode: "mock" | "live"; visualMode: "day" | "night" | "classic" };
 
@@ -19,17 +42,17 @@ export function SourceTopology3D({ mode, visualMode }: Props) {
     let frame = 0;
     let resizeObserver: ResizeObserver | undefined;
     let intersectionObserver: IntersectionObserver | undefined;
-    let renderer: import("three").WebGLRenderer | undefined;
-    let scene: import("three").Scene | undefined;
-    let geometry: import("three").BufferGeometry[] = [];
-    let materials: import("three").Material[] = [];
-    let topology: import("three").Group | undefined;
+    let renderer: WebGLRenderer | undefined;
+    let scene: Scene | undefined;
+    let geometry: BufferGeometry[] = [];
+    let materials: Material[] = [];
+    let topology: Group | undefined;
     let contextLostHandler: ((event: Event) => void) | undefined;
     let contextRestoredHandler: (() => void) | undefined;
     let motionChangeHandler: (() => void) | undefined;
     let reducedMotion: MediaQueryList | undefined;
 
-    void import("three").then((THREE) => {
+    void Promise.resolve().then(() => {
       if (disposed) return;
       try {
         const context = canvas.getContext("webgl2", { alpha: true, antialias: true, powerPreference: "low-power" });
@@ -39,33 +62,33 @@ export function SourceTopology3D({ mode, visualMode }: Props) {
         const height = Math.max(bounds.height, 1);
 
         const rootStyle = getComputedStyle(document.documentElement);
-        const signal = new THREE.Color(readColor(rootStyle.getPropertyValue("--cyan"), 0x00d9eb));
-        const secondary = new THREE.Color(readColor(rootStyle.getPropertyValue("--violet"), 0xbd68f6));
-        const source = new THREE.Color(mode === "live" ? rootStyle.getPropertyValue("--green").trim() || "#22d3a6" : rootStyle.getPropertyValue("--amber").trim() || "#f4ba42");
+        const signal = new Color(readColor(rootStyle.getPropertyValue("--cyan"), 0x00d9eb));
+        const secondary = new Color(readColor(rootStyle.getPropertyValue("--violet"), 0xbd68f6));
+        const source = new Color(mode === "live" ? rootStyle.getPropertyValue("--green").trim() || "#22d3a6" : rootStyle.getPropertyValue("--amber").trim() || "#f4ba42");
 
-        renderer = new THREE.WebGLRenderer({ canvas, context, alpha: true, antialias: true, powerPreference: "low-power" });
+        renderer = new WebGLRenderer({ canvas, context, alpha: true, antialias: true, powerPreference: "low-power" });
         setUnavailable(false);
         setFailureReason("");
         renderer.debug.onShaderError = () => setUnavailable(true);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
         renderer.setSize(width, height, false);
-        renderer.outputColorSpace = THREE.SRGBColorSpace;
-        scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 30);
+        renderer.outputColorSpace = SRGBColorSpace;
+        scene = new Scene();
+        const camera = new PerspectiveCamera(34, width / height, 0.1, 30);
         camera.position.set(0, 0, 6);
 
-        topology = new THREE.Group();
+        topology = new Group();
         scene.add(topology);
-        const ambient = new THREE.AmbientLight(0xffffff, visualMode === "day" ? 1.5 : 1.1);
-        const key = new THREE.PointLight(signal, 2.4, 9);
+        const ambient = new AmbientLight(0xffffff, visualMode === "day" ? 1.5 : 1.1);
+        const key = new PointLight(signal, 2.4, 9);
         key.position.set(-2.5, 2.7, 3.2);
-        const rim = new THREE.PointLight(secondary, 1.8, 8);
+        const rim = new PointLight(secondary, 1.8, 8);
         rim.position.set(2.4, -1.5, -2);
         scene.add(ambient, key, rim);
 
-        const coreGeometry = new THREE.SphereGeometry(0.43, 32, 24);
-        const coreMaterial = new THREE.ShaderMaterial({
-          uniforms: { uBase: { value: visualMode === "day" ? new THREE.Color("#b5d5c6") : new THREE.Color("#142333") }, uAccent: { value: signal }, uTime: { value: 0 } },
+        const coreGeometry = new SphereGeometry(0.43, 32, 24);
+        const coreMaterial = new ShaderMaterial({
+          uniforms: { uBase: { value: visualMode === "day" ? new Color("#b5d5c6") : new Color("#142333") }, uAccent: { value: signal }, uTime: { value: 0 } },
           vertexShader: `
             varying vec3 vNormal;
             varying vec3 vPosition;
@@ -94,42 +117,42 @@ export function SourceTopology3D({ mode, visualMode }: Props) {
           `,
           transparent: true,
         });
-        const core = new THREE.Mesh(coreGeometry, coreMaterial);
+        const core = new Mesh(coreGeometry, coreMaterial);
         topology.add(core);
         geometry.push(coreGeometry);
         materials.push(coreMaterial);
 
-        const shellGeometry = new THREE.SphereGeometry(0.59, 24, 16);
-        const shellMaterial = new THREE.MeshBasicMaterial({ color: signal, wireframe: true, transparent: true, opacity: visualMode === "day" ? 0.17 : 0.3 });
-        const shell = new THREE.Mesh(shellGeometry, shellMaterial);
+        const shellGeometry = new SphereGeometry(0.59, 24, 16);
+        const shellMaterial = new MeshBasicMaterial({ color: signal, wireframe: true, transparent: true, opacity: visualMode === "day" ? 0.17 : 0.3 });
+        const shell = new Mesh(shellGeometry, shellMaterial);
         shell.rotation.set(0.3, 0.15, 0.2);
         topology.add(shell);
         geometry.push(shellGeometry);
         materials.push(shellMaterial);
 
         const points = [
-          new THREE.Vector3(-1.42, 0.58, 0.12),
-          new THREE.Vector3(-1.3, -0.62, -0.18),
-          new THREE.Vector3(1.34, 0.12, -0.24),
+          new Vector3(-1.42, 0.58, 0.12),
+          new Vector3(-1.3, -0.62, -0.18),
+          new Vector3(1.34, 0.12, -0.24),
         ];
         const edgeColors = [source, signal, secondary];
         points.forEach((point, index) => {
-          const curve = new THREE.CubicBezierCurve3(
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(point.x * 0.28, point.y * 1.22, 0.55),
-            new THREE.Vector3(point.x * 0.78, point.y * 0.7, -0.15),
+          const curve = new CubicBezierCurve3(
+            new Vector3(0, 0, 0),
+            new Vector3(point.x * 0.28, point.y * 1.22, 0.55),
+            new Vector3(point.x * 0.78, point.y * 0.7, -0.15),
             point,
           );
-          const edgeGeometry = new THREE.TubeGeometry(curve, 28, 0.008, 5, false);
-          const edgeMaterial = new THREE.MeshBasicMaterial({ color: edgeColors[index], transparent: true, opacity: visualMode === "day" ? 0.56 : 0.74 });
-          const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);
+          const edgeGeometry = new TubeGeometry(curve, 28, 0.008, 5, false);
+          const edgeMaterial = new MeshBasicMaterial({ color: edgeColors[index], transparent: true, opacity: visualMode === "day" ? 0.56 : 0.74 });
+          const edge = new Mesh(edgeGeometry, edgeMaterial);
           topology?.add(edge);
           geometry.push(edgeGeometry);
           materials.push(edgeMaterial);
 
-          const nodeGeometry = new THREE.SphereGeometry(index === 0 ? 0.105 : 0.08, 18, 12);
-          const nodeMaterial = new THREE.MeshStandardMaterial({ color: edgeColors[index], emissive: edgeColors[index], emissiveIntensity: visualMode === "night" ? 0.55 : 0.22, roughness: 0.35, metalness: 0.12 });
-          const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+          const nodeGeometry = new SphereGeometry(index === 0 ? 0.105 : 0.08, 18, 12);
+          const nodeMaterial = new MeshStandardMaterial({ color: edgeColors[index], emissive: edgeColors[index], emissiveIntensity: visualMode === "night" ? 0.55 : 0.22, roughness: 0.35, metalness: 0.12 });
+          const node = new Mesh(nodeGeometry, nodeMaterial);
           node.position.copy(point);
           topology?.add(node);
           geometry.push(nodeGeometry);
@@ -143,10 +166,10 @@ export function SourceTopology3D({ mode, visualMode }: Props) {
           const angle = Math.PI * (3 - Math.sqrt(5)) * index;
           referenceVertices.push(Math.cos(angle) * radius * 1.05, y * 1.05, Math.sin(angle) * radius * 1.05);
         }
-        const referenceGeometry = new THREE.BufferGeometry();
-        referenceGeometry.setAttribute("position", new THREE.Float32BufferAttribute(referenceVertices, 3));
-        const referenceMaterial = new THREE.PointsMaterial({ color: secondary, size: 0.022, transparent: true, opacity: visualMode === "day" ? 0.32 : 0.48, sizeAttenuation: true });
-        topology.add(new THREE.Points(referenceGeometry, referenceMaterial));
+        const referenceGeometry = new BufferGeometry();
+        referenceGeometry.setAttribute("position", new Float32BufferAttribute(referenceVertices, 3));
+        const referenceMaterial = new PointsMaterial({ color: secondary, size: 0.022, transparent: true, opacity: visualMode === "day" ? 0.32 : 0.48, sizeAttenuation: true });
+        topology.add(new Points(referenceGeometry, referenceMaterial));
         geometry.push(referenceGeometry);
         materials.push(referenceMaterial);
 

@@ -28,10 +28,10 @@ services:
       DATA_DIR: /data/proxy
       FLUX_DATA_DIR: /data/flux
       DATABASE_URL: postgresql://karm:${POSTGRES_PASSWORD}@db:5432/karm
-      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:8787}
+      APP_ORIGIN: https://${CADDY_DOMAIN:?Set CADDY_DOMAIN in .env.production}
       SETUP_CODE: ${SETUP_CODE:?Set SETUP_CODE in .env.production}
       SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in .env.production}
-      TRUST_PROXY: ${TRUST_PROXY:-false}
+      TRUST_PROXY: "true"
       METRICS_TOKEN: ${METRICS_TOKEN:-}
       LOG_FORMAT: ${LOG_FORMAT:-json}
       GATEWAY_RATE_LIMIT_MAX: ${GATEWAY_RATE_LIMIT_MAX:-600}
@@ -55,7 +55,7 @@ services:
       FLUX_OWNER_ID: ${FLUX_OWNER_ID:-owner}
       FLUX_OWNER_NAME: ${FLUX_OWNER_NAME:-Workspace owner}
       FLUX_OWNER_PASSWORD: ${FLUX_OWNER_PASSWORD:-}
-      FLUX_ALLOWED_ORIGINS: ${APP_ORIGIN:-http://localhost:8787}
+      FLUX_ALLOWED_ORIGINS: https://${CADDY_DOMAIN:?Set CADDY_DOMAIN in .env.production}
       FLUX_COST_POLICY: ${FLUX_COST_POLICY:-free-only}
       FLUX_FREE_DAILY_CAP: ${FLUX_FREE_DAILY_CAP:-}
       FLUX_BRIEFING_ENABLED: ${FLUX_BRIEFING_ENABLED:-true}
@@ -84,7 +84,9 @@ services:
     restart: unless-stopped
 
   backup:
-    image: postgres:17-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.backup
     profiles: ["ops"]
     depends_on:
       db:
@@ -95,19 +97,44 @@ services:
       PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.production}
       PGDATABASE: karm
       BACKUP_INTERVAL_SECONDS: ${BACKUP_INTERVAL_SECONDS:-86400}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+      BACKUP_ROOT: /backups
+      DATA_DIR: /data
+      BACKUP_ENCRYPTION_KEY: ${BACKUP_ENCRYPTION_KEY:?Set BACKUP_ENCRYPTION_KEY in .env.production}
     volumes:
       - ./backups:/backups
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        while true; do
-          stamp=$$(date -u +%Y%m%dT%H%M%SZ)
-          pg_dump --format=custom --no-owner --no-acl --file="/backups/karm-$$stamp.dump" \
-            && echo "backup written: /backups/karm-$$stamp.dump"
-          sleep "$$BACKUP_INTERVAL_SECONDS"
-        done
+      - app-data:/data:ro
+      - ./scripts/backup-all.sh:/scripts/backup-all.sh:ro
+      - ./scripts/backup-loop.sh:/scripts/backup-loop.sh:ro
+    entrypoint: ["/bin/sh", "/scripts/backup-loop.sh"]
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      CADDY_DOMAIN: ${CADDY_DOMAIN:?Set CADDY_DOMAIN in .env.production}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
     restart: unless-stopped
 
 volumes:
   postgres-data:
   app-data:
+  caddy-data:
+  caddy-config:

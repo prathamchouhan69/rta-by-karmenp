@@ -63,6 +63,22 @@ the advisory board, memory, documents, and briefings according to their role, bu
 Zoho execution plane is still the owner's. Do not grant Zoho credentials to other
 users until the proxy has a real multi-user identity model.
 
+The Flux owner can manage those Flux accounts through the owner-only API:
+
+- `GET /flux/v1/users` lists account IDs, roles, and active state without credential data.
+- `POST /flux/v1/users` creates an account with an existing Flux role and a password of
+  at least 12 characters.
+- `POST /flux/v1/users/:id/role` changes a role and invalidates that account's sessions.
+- `POST /flux/v1/users/:id/active` activates or deactivates an account; deactivation
+  immediately revokes its sessions.
+- `POST /flux/v1/users/:id/password` resets another account's password and revokes its
+  sessions. Passwords are never returned or written to the audit log.
+
+The API prevents self-deactivation and prevents removing the final active owner. The
+configured gateway owner cannot be deactivated or demoted. The proxy setup code remains
+the gateway owner's recovery path; rotating `SETUP_CODE` and
+`SESSION_SECRET` invalidates all proxy sessions.
+
 ## Unified briefing and assistant
 
 `GET /api/v1/flux/briefing`:
@@ -109,24 +125,35 @@ npm run dev
 
 1. `cp .env.production.example .env.production` and replace every placeholder.
 2. Generate three different Flux secrets of at least 32 characters.
-3. Keep `ZOHO_MODE=mock` for the first smoke test.
-4. `docker compose --env-file .env.production up --build -d`
-5. Verify:
-   - `http://127.0.0.1:8787/healthz`
-   - `http://127.0.0.1:8787/readyz`
-   - `http://127.0.0.1:8787/api/v1/health`
-   - `http://127.0.0.1:8787/flux/health`
+3. Generate a separate `BACKUP_ENCRYPTION_KEY` of at least 32 characters.
+4. Keep `ZOHO_MODE=mock` for the first smoke test.
+5. Point `CADDY_DOMAIN` at this host in DNS and allow inbound TCP ports 80/443
+   (plus UDP 443 for HTTP/3).
+6. `docker compose --env-file .env.production up --build -d`
+7. Verify over the configured HTTPS origin:
+   - `https://$CADDY_DOMAIN/healthz`
+   - `https://$CADDY_DOMAIN/readyz`
+   - `https://$CADDY_DOMAIN/api/v1/health`
+   - `https://$CADDY_DOMAIN/flux/health`
    - owner sign-in in the web app, then Briefing & advisor board.
-6. Put HTTPS in front of `127.0.0.1:8787`. Set `TRUST_PROXY=true` only when that
-   reverse proxy overwrites `X-Forwarded-For`.
 7. Scrape `/metrics` with `Authorization: Bearer $METRICS_TOKEN`.
-8. Start scheduled backups with `docker compose --profile ops up -d backup`, or run
-   `scripts/backup-postgres.sh` from a host with `pg_dump`.
+9. Start scheduled encrypted database and app-file backups with
+   `docker compose --profile ops up -d backup`. Backups are stored under `backups/`,
+   excluded from Git, encrypted with AES-256-GCM, and retained for
+   `BACKUP_RETENTION_DAYS`. Keep `BACKUP_ENCRYPTION_KEY` separate from backup files.
+10. Rehearse a restore into a temporary database and temporary directory with
+   `DATABASE_URL=... BACKUP_ENCRYPTION_KEY=... scripts/restore-rehearsal.sh backups/<backup-folder>`.
+
+The Caddy container obtains and renews the HTTPS certificate automatically after DNS
+and ports 80/443 are correct. `APP_ORIGIN` is derived from `CADDY_DOMAIN` and must be
+an exact public HTTPS origin. Do not expose port 8787 publicly.
 
 The app container runs read-only with a writable `/data` volume for Flux's audit,
 approvals, users, briefings, and the proxy JSON fallback. Production accounting data
-stays in PostgreSQL. The Flux audit file is hash-chained and keyed; back up `/data`
-together with PostgreSQL.
+stays in PostgreSQL. Each scheduled backup stores an AES-256-GCM-encrypted PostgreSQL
+dump and `/data` archive together, with checksums. The restore rehearsal verifies both
+without overwriting the live database or app-data volume. Keep the encryption key
+separate from backup files and store a copy of backups off-host.
 
 ## Verification
 

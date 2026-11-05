@@ -597,7 +597,7 @@ function StatusBadge({ status }: { status: string }) {
   return <span className={`status-badge tone-${statusTone(status)}`}><span className={`status-dot dot-${statusTone(status)}`} />{statusLabel(status)}</span>;
 }
 
-function ContactList({ title, contacts, emptyLabel, mode }: { title: string; contacts: ZohoRecord[]; emptyLabel: string; mode: "mock" | "live" }) {
+export function ContactList({ title, contacts, emptyLabel, mode }: { title: string; contacts: ZohoRecord[]; emptyLabel: string; mode: "mock" | "live" }) {
   if (!contacts.length) return <section className="panel full-panel"><EmptyState title={emptyLabel} detail={`Records of type ${title.toLowerCase()} will appear when ${mode === "live" ? "Zoho Books returns them" : "practice data is available"}.`} /></section>;
   return (
     <section className="panel full-panel">

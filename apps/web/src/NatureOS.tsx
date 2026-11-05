@@ -1,16 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { apiGet, clearAccessToken, getAccessToken, invoiceStatus, recordId, signIn, stringField, type ZohoRecord } from "./api";
 import { charts, type ChartDefinition } from "./charts";
 import { references, type NatureReference, type ReferenceCategory } from "./references";
-import { ZohoBooksPanel } from "./App";
-import { GoalsExecutionPage } from "./GoalsExecutionPage";
-import { SourceTopology3D } from "./SourceTopology3D";
 import { FluxAssistant } from "./FluxAssistant";
-import { FluxBriefingPage } from "./FluxBriefingPage";
-import { TasksPage } from "./TasksPage";
-import { DocumentsPage } from "./DocumentsPage";
-import { AutomationsPage } from "./AutomationsPage";
 import { useDialogFocus } from "./useDialogFocus";
+
+const SourceTopology3D = lazy(() => import("./SourceTopology3D").then(({ SourceTopology3D: component }) => ({ default: component })));
+const ContactList = lazy(() => import("./App").then(({ ContactList: component }) => ({ default: component })));
+const ZohoBooksPanel = lazy(() => import("./App").then(({ ZohoBooksPanel: component }) => ({ default: component })));
+const GoalsExecutionPage = lazy(() => import("./GoalsExecutionPage").then(({ GoalsExecutionPage: component }) => ({ default: component })));
+const FluxBriefingPage = lazy(() => import("./FluxBriefingPage").then(({ FluxBriefingPage: component }) => ({ default: component })));
+const TasksPage = lazy(() => import("./TasksPage").then(({ TasksPage: component }) => ({ default: component })));
+const DocumentsPage = lazy(() => import("./DocumentsPage").then(({ DocumentsPage: component }) => ({ default: component })));
+const AutomationsPage = lazy(() => import("./AutomationsPage").then(({ AutomationsPage: component }) => ({ default: component })));
 
 type Page = "home" | "library" | "selections" | "business" | "projects" | "files" | "tasks" | "goals" | "accounting" | "transportation" | "people" | "relationships" | "charts" | "briefing" | "documents" | "automations" | "notifications" | "settings";
 type Health = { mode: "mock" | "live"; authenticated: boolean; service: string };
@@ -358,7 +360,7 @@ function App() {
           <a className="mobile-brand" href="#" onClick={(event) => { event.preventDefault(); setPage("home"); }}><img src="/karm-logo.png" alt="" /><b>RTA BY KARM</b></a>
           <div className="topbar-crumb"><span>RTA BY KARM</span><i>/</i><b>{activeTitle}</b></div>
           <div className="topbar-tools">
-            <label className="nature-search"><Icon name="search" size={16} /><input ref={searchInput} value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => { if (event.key === "Escape") setQuery(""); if (event.key === "Enter") setPage("library"); }} placeholder="Search nature references…" aria-label="Search nature references" /><kbd>/</kbd></label>
+            <label className="nature-search"><Icon name="search" size={16} /><input ref={searchInput} value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => { if (event.key === "Escape") setQuery(""); if (event.key === "Enter" && page !== "accounting" && page !== "relationships") setPage("library"); }} placeholder={page === "accounting" || page === "relationships" ? "Search connected records…" : "Search nature references…"} aria-label={page === "accounting" || page === "relationships" ? "Search connected records" : "Search nature references"} /><kbd>/</kbd></label>
             <span className={`mode-chip ${health?.mode === "live" ? "live" : "practice"}`}><i />{health?.mode === "live" ? "LIVE DATA" : "PRACTICE"}</span>
             <VisualModePicker mode={visualMode} onChange={changeVisualMode} compact />
             <button className="top-icon" aria-label="Notifications" onClick={() => setPage("notifications")}><Icon name="bell" size={18} /></button>
@@ -367,20 +369,23 @@ function App() {
         </header>
         <div className="nature-content" data-page={page}>
           {loadError && <div className="nature-alert" role="status">{loadError}<button onClick={() => void refreshWorkspace()}>Retry</button></div>}
-          {page === "home" && <HomePage health={health} workspace={workspace} busy={busy} visualMode={visualMode} onRefresh={() => void refreshWorkspace()} onNavigate={setPage} onOpenReference={(reference) => setSelectedRef(reference)} selectedCount={selectedReferences.length} />}
-          {page === "library" && <LibraryPage references={visibleReferences} category={category} query={query} selections={selections} onCategory={setCategory} onOpen={setSelectedRef} onChoose={updateSelection} />}
-          {page === "selections" && <SelectionsPage references={selectedReferences} selections={selections} onOpen={setSelectedRef} onRemove={(id) => persistSelections(Object.fromEntries(Object.entries(selections).filter(([key]) => Number(key) !== id)))} onCopy={() => void copySelections()} onExport={exportSelections} />}
-          {page === "charts" && <ChartsPage group={chartGroup} onGroup={setChartGroup} onOpen={setSelectedChart} />}
-          {page === "briefing" && <FluxBriefingPage onNavigate={setPage} />}
-          {page === "accounting" && <AccountingPage health={health} workspace={workspace} busy={busy} search={query} onRefresh={() => void refreshWorkspace()} onInvoiceUpdated={(updated) => setWorkspace((current) => ({ ...current, invoices: current.invoices.map((invoice) => recordId(invoice) === recordId(updated) ? updated : invoice) }))} onInvoiceCreated={(created) => setWorkspace((current) => ({ ...current, invoices: [created, ...current.invoices.filter((invoice) => recordId(invoice) !== recordId(created))] }))} />}
-          {page === "business" && <BusinessPage health={health} workspace={workspace} onNavigate={setPage} onOpenReference={setSelectedRef} />}
-          {page === "tasks" && <TasksPage onToast={setToast} />}
-          {page === "documents" && <DocumentsPage onToast={setToast} />}
-          {page === "automations" && <AutomationsPage onToast={setToast} />}
-          {(["projects", "files", "transportation", "people", "relationships"] as Page[]).includes(page) && <ModulePage page={page} health={health} selections={selections} onOpenReference={setSelectedRef} onNavigate={setPage} />}
-          {page === "notifications" && <NotificationsPage health={health} workspace={workspace} />}
-          {page === "goals" && <GoalsExecutionPage onToast={setToast} />}
-          {page === "settings" && <SettingsPage health={health} visualMode={visualMode} onVisualMode={changeVisualMode} onSignOut={() => { clearAccessToken(); setHealth((current) => current ? { ...current, authenticated: true } : current); }} />}
+          <Suspense fallback={<div className="route-loading" role="status">Loading {pageTitles[page].toLowerCase()}…</div>}>
+            {page === "home" && <HomePage health={health} workspace={workspace} busy={busy} visualMode={visualMode} onRefresh={() => void refreshWorkspace()} onNavigate={setPage} onOpenReference={(reference) => setSelectedRef(reference)} selectedCount={selectedReferences.length} />}
+            {page === "library" && <LibraryPage references={visibleReferences} category={category} query={query} selections={selections} onCategory={setCategory} onOpen={setSelectedRef} onChoose={updateSelection} />}
+            {page === "selections" && <SelectionsPage references={selectedReferences} selections={selections} onOpen={setSelectedRef} onRemove={(id) => persistSelections(Object.fromEntries(Object.entries(selections).filter(([key]) => Number(key) !== id)))} onCopy={() => void copySelections()} onExport={exportSelections} />}
+            {page === "charts" && <ChartsPage group={chartGroup} onGroup={setChartGroup} onOpen={setSelectedChart} />}
+            {page === "briefing" && <FluxBriefingPage onNavigate={setPage} />}
+            {page === "accounting" && <AccountingPage health={health} workspace={workspace} busy={busy} search={query} onRefresh={() => void refreshWorkspace()} onInvoiceUpdated={(updated) => setWorkspace((current) => ({ ...current, invoices: current.invoices.map((invoice) => recordId(invoice) === recordId(updated) ? updated : invoice) }))} onInvoiceCreated={(created) => setWorkspace((current) => ({ ...current, invoices: [created, ...current.invoices.filter((invoice) => recordId(invoice) !== recordId(created))] }))} />}
+            {page === "business" && <BusinessPage health={health} workspace={workspace} onNavigate={setPage} onOpenReference={setSelectedRef} />}
+            {page === "tasks" && <TasksPage onToast={setToast} />}
+            {page === "documents" && <DocumentsPage onToast={setToast} />}
+            {page === "automations" && <AutomationsPage onToast={setToast} />}
+            {page === "relationships" && <RelationshipsPage health={health} workspace={workspace} query={query} onNavigate={setPage} />}
+            {(["projects", "files", "transportation", "people"] as Page[]).includes(page) && <ModulePage page={page} health={health} selections={selections} onOpenReference={setSelectedRef} onNavigate={setPage} />}
+            {page === "notifications" && <NotificationsPage health={health} workspace={workspace} />}
+            {page === "goals" && <GoalsExecutionPage onToast={setToast} />}
+            {page === "settings" && <SettingsPage health={health} visualMode={visualMode} onVisualMode={changeVisualMode} onSignOut={() => { clearAccessToken(); setHealth((current) => current ? { ...current, authenticated: true } : current); }} />}
+          </Suspense>
         </div>
         <footer className="nature-footer"><span>RTA BY KARM <i>·</i> {health?.mode === "live" ? "Zoho Books is the source of truth" : "Local practice data · no live books changes"}</span><span><i className="footer-orbit" /> Nature × systems × work</span></footer>
       </main>
@@ -430,7 +435,7 @@ function HomePage({ health, workspace, busy, visualMode, onRefresh, onNavigate, 
     <section className="health-ecosystem" aria-label="Business source status">
       <div className={`health-gauge ${mode === "live" ? "has-live-source" : ""}`}><div><b>{mode === "live" ? "01" : "00"}</b><span>LIVE<br />SOURCES</span></div></div>
       <div className="health-summary"><span className="health-title">Business workspace <b className={`table-status ${mode === "live" ? "cyan" : "amber"}`}>{mode === "live" ? "CONNECTED" : "PRACTICE"}</b></span><p>{mode === "live" ? "Zoho Books is connected as the accounting source. Values below come from records returned by that source." : "This session is using local practice data. No live Books changes are being made."}</p><small>{workspace.invoices.length} invoices <i>·</i> {workspace.contacts.length} contacts <i>·</i> {workspace.audit.length} recent events loaded</small></div>
-      <div className={`ecosystem-map ${busy ? "is-syncing" : ""}`} aria-hidden="true"><SourceTopology3D mode={mode} visualMode={visualMode} /><div className="ecosystem-wire wire-one" /><div className="ecosystem-wire wire-two" /><div className="ecosystem-wire wire-three" /><span className="eco-node eco-center">KARM</span><span className={`eco-node eco-source ${mode === "live" ? "connected" : "practice"}`}>{mode === "live" ? "BOOKS" : "PRACTICE"}</span><span className="eco-node eco-invoices">INV {workspace.invoices.length}</span><span className="eco-node eco-contacts">PEOPLE {workspace.contacts.length}</span></div>
+      <div className={`ecosystem-map ${busy ? "is-syncing" : ""}`} aria-hidden="true"><Suspense fallback={null}><SourceTopology3D mode={mode} visualMode={visualMode} /></Suspense><div className="ecosystem-wire wire-one" /><div className="ecosystem-wire wire-two" /><div className="ecosystem-wire wire-three" /><span className="eco-node eco-center">KARM</span><span className={`eco-node eco-source ${mode === "live" ? "connected" : "practice"}`}>{mode === "live" ? "BOOKS" : "PRACTICE"}</span><span className="eco-node eco-invoices">INV {workspace.invoices.length}</span><span className="eco-node eco-contacts">PEOPLE {workspace.contacts.length}</span></div>
     </section>
     {overdueRecords.length > 0 && <button className="attention-banner" onClick={() => onNavigate("accounting")}><span className="attention-symbol"><Icon name="bell" size={17} /></span><span><b>{overdueRecords.length} overdue invoice {overdueRecords.length === 1 ? "record" : "records"} in the loaded set</b><small>Review the source records in Accounting.</small></span><Icon name="arrow" size={16} /></button>}
     <div className="home-section-heading"><h2>Workspace signals</h2><button className="n-link" onClick={() => onNavigate("business")}>All modules <Icon name="arrow" size={13} /></button></div>
@@ -563,6 +568,28 @@ function AccountingPage({ health, workspace, busy, search, onRefresh, onInvoiceU
   </>;
 }
 
+function RelationshipsPage({ health, workspace, query, onNavigate }: { health: Health | null; workspace: WorkspaceData; query: string; onNavigate: (page: Page) => void }) {
+  const isVendor = (contact: ZohoRecord) => stringField(contact, "contact_type").toLowerCase() === "vendor";
+  const matches = (contact: ZohoRecord) => !query.trim() || JSON.stringify(contact).toLowerCase().includes(query.trim().toLowerCase());
+  const customers = workspace.contacts.filter((contact) => !isVendor(contact));
+  const vendors = workspace.contacts.filter(isVendor);
+  const [kind, setKind] = useState<"customers" | "vendors">("customers");
+  const records = (kind === "vendors" ? vendors : customers).filter(matches);
+  const source = health?.mode === "live" ? "Zoho Books" : "practice workspace";
+  return <>
+    <PageHeading eyebrow="CONNECTED CONTACTS" title="Relationships" description={`Review customer and vendor contacts returned by ${source}. This view does not send messages or change contact records.`} actions={<><span className={`mode-chip ${health?.mode === "live" ? "live" : "practice"}`}><i />{health?.mode === "live" ? "ZOHO BOOKS" : "PRACTICE DATA"}</span><button className="n-button n-button-soft" onClick={() => onNavigate("accounting")}>Open accounting <Icon name="arrow" size={14} /></button></>} />
+    <div className="library-toolbar">
+      <div className="category-filters" role="group" aria-label="Contact type">
+        <button className={`filter-chip ${kind === "customers" ? "selected" : ""}`} aria-pressed={kind === "customers"} onClick={() => setKind("customers")}>Customers · {customers.length}</button>
+        <button className={`filter-chip ${kind === "vendors" ? "selected" : ""}`} aria-pressed={kind === "vendors"} onClick={() => setKind("vendors")}>Vendors · {vendors.length}</button>
+      </div>
+      <span className="library-result">{records.length} {kind} {records.length === 1 ? "record" : "records"}</span>
+    </div>
+    <ContactList title={kind === "vendors" ? "Vendors" : "Customers"} contacts={records} emptyLabel={query.trim() ? "No matching contacts" : `No ${kind} found`} mode={health?.mode ?? "mock"} />
+    <p className="notification-foot">Contact details and outstanding values are shown only when supplied by {source}. Use Accounting for invoices, catalog items, and reports.</p>
+  </>;
+}
+
 function BusinessPage({ health, workspace, onNavigate, onOpenReference }: { health: Health | null; workspace: WorkspaceData; onNavigate: (page: Page) => void; onOpenReference: (reference: NatureReference) => void }) {
   const refs = [references[1], references[72], references[105]];
   return <><PageHeading eyebrow="CONNECTED BUSINESS OPERATIONS" title="Business OS" description="A map of the modules and source records available to this workspace." /><div className="business-overview"><div className="business-source"><span className={`mode-chip ${health?.mode === "live" ? "live" : "practice"}`}><i />{health?.mode === "live" ? "LIVE CONNECTION" : "PRACTICE MODE"}</span><h2>{workspace.invoices.length} invoices. {workspace.contacts.length} contacts.</h2><p>{health?.mode === "live" ? "Loaded from the connected Zoho Books organization." : "Local sample records. They do not update Zoho Books."}</p><button className="n-button n-button-soft" onClick={() => onNavigate("accounting")}>Review accounting records <Icon name="arrow" size={15} /></button></div><div className="business-orbit"><div /><div /><Icon name="network" size={33} /><span>BUSINESS<br />SYSTEM</span></div></div><div className="module-grid">{(["projects", "files", "tasks", "accounting", "transportation", "people", "relationships", "charts"] as Page[]).map((item) => <button key={item} className="module-card" onClick={() => onNavigate(item)}><span className="module-icon"><Icon name={pageIcons[item]} size={18} /></span><span><b>{pageTitles[item]}</b><small>{moduleIntros[item] || "Explore the chart concepts and connected data."}</small></span><Icon name="arrow" size={15} /></button>)}</div><div className="section-head"><div><span className="n-kicker">PATTERNS FOR BUSINESS SYSTEMS</span><h2>Nature-connected thinking</h2></div><button className="n-link" onClick={() => onNavigate("library")}>All references <Icon name="arrow" size={14} /></button></div><div className="business-reference-row">{refs.map((reference) => <button key={reference.id} className="business-reference" onClick={() => onOpenReference(reference)}><NatureMark id={reference.id} category={reference.category} /><span><b>{reference.name}</b><small>{reference.appMeaning}</small></span><Icon name="arrow" size={14} /></button>)}</div></>;
@@ -576,7 +603,7 @@ function ModulePage({ page, health, selections, onOpenReference, onNavigate }: {
   return <>
     <PageHeading eyebrow={`WORKSPACE · ${moduleName.toUpperCase()}`} title={moduleName} description={moduleIntros[page] || "A connected business workspace."} actions={<span className={`mode-chip ${health?.mode === "live" ? "live" : "practice"}`}><i />{health?.mode === "live" ? "LIVE WORKSPACE" : "PRACTICE MODE"}</span>} />
     <div className="module-workspace-layout">
-      <div className="module-intro-panel"><div className="module-intro-symbol"><Icon name={pageIcons[page]} size={27} /></div><div><span className="n-kicker">A WORKSPACE FOR REAL OPERATIONS</span><h2>Bring this system into the living map.</h2><p>Connect an approved source to show real {moduleName.toLowerCase()} data. Until then, this workspace stays clear of invented records or metrics.</p></div></div>
+      <div className="module-intro-panel"><div className="module-intro-symbol"><Icon name={pageIcons[page]} size={27} /></div><div><span className="n-kicker">A WORKSPACE FOR REAL OPERATIONS</span><h2>Bring this system into the living map.</h2><p>Connect an approved source to show real {moduleName.toLowerCase()} data. Until then, this workspace stays clear of invented records or metrics.</p>{page === "files" && <p>KARM currently supports unsent document drafts, not a connected file repository.</p>}{page === "people" && <p>Task owners are not an employee directory; no HR or attendance records are connected.</p>}{page === "transportation" && <p>Internal tasks can track follow-ups, but route, vehicle, and delivery data are not connected.</p>}{page === "projects" && <p>Goals and tasks are available for execution tracking, but project and milestone records are not connected.</p>}<div className="heading-tools">{page === "files" && <button className="n-button n-button-soft" onClick={() => onNavigate("documents")}>Open document drafts <Icon name="arrow" size={14} /></button>}{page === "projects" && <><button className="n-button n-button-soft" onClick={() => onNavigate("goals")}>Open goals <Icon name="arrow" size={14} /></button><button className="n-button n-button-soft" onClick={() => onNavigate("tasks")}>Open tasks <Icon name="arrow" size={14} /></button></>}{(page === "people" || page === "transportation") && <button className="n-button n-button-soft" onClick={() => onNavigate("tasks")}>Open internal tasks <Icon name="arrow" size={14} /></button>}</div></div></div>
       <section className="section-block module-patterns"><div className="section-head"><div><span className="n-kicker">CONNECTED PATTERNS</span><h2>Nature gives the system a shape.</h2><p>Explore related references and save the visual direction that best explains this module.</p></div><button className="n-link" onClick={() => onNavigate("library")}>Explore library <Icon name="arrow" size={14} /></button></div><div className="module-reference-grid">{related.map((reference) => <button key={reference.id} className="module-reference-card" onClick={() => onOpenReference(reference)}><NatureMark id={reference.id} category={reference.category} large /><span>#{String(reference.id).padStart(3, "0")} · {reference.category}</span><b>{reference.name}</b><small>{reference.appMeaning}</small><i>{selections[reference.id] ? "DIRECTION SAVED" : "OPEN FIELD NOTE"} <Icon name="arrow" size={12} /></i></button>)}</div></section>
       {savedRelated.length > 0 && <section className="section-block module-saved-patterns"><span className="n-kicker">YOUR SAVED LENSES</span><div className="saved-lenses">{savedRelated.map((reference) => <button key={reference.id} onClick={() => onOpenReference(reference)}><NatureMark id={reference.id} category={reference.category} /><b>{reference.name}</b><Icon name="arrow" size={13} /></button>)}</div></section>}
       <EmptyConnection label={`${moduleName} data is not connected`} detail={`No ${moduleName.toLowerCase()} records are being shown until an approved data source is available.`} />

@@ -38,6 +38,7 @@ export function loadConfig(env = process.env) {
   if (errors.length) throw new Error('Invalid configuration:\n- ' + errors.join('\n- '));
   return Object.freeze({
     port: num(env.PORT, 8788),
+    ownerId: env.FLUX_OWNER_ID || 'owner',
     dataDir: env.FLUX_DATA_DIR === 'memory' ? null : env.FLUX_DATA_DIR || './data',
     authSecret, approvalSecret, auditKey,
     allowedOrigins: list(env.FLUX_ALLOWED_ORIGINS),

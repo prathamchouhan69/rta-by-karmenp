@@ -438,7 +438,10 @@ export async function startGateway({ env = process.env, logger = console } = {})
 
   const gatewayServer = http.createServer((req, res) => {
     const started = Date.now();
-    const requestId = String(req.headers['x-request-id'] || randomUUID()).slice(0, 100);
+    const suppliedRequestId = req.headers['x-request-id'];
+    const requestId = typeof suppliedRequestId === 'string' && /^[A-Za-z0-9._:-]{1,100}$/.test(suppliedRequestId)
+      ? suppliedRequestId
+      : randomUUID();
     const url = new URL(req.url || '/', 'http://karm.local');
     const ip = clientIp(req);
     res.setHeader('x-request-id', requestId);

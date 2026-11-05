@@ -16,7 +16,7 @@ const SYNTH = { conflicts: ['Growth wants credit, risk wants limits'], tradeoffs
 
 async function boot({ script = {}, write = true, origins = '', browserReader = null, browserDomains = [] } = {}) {
   const z = await startMockZoho(); const llm = await startMockLLM({ models: LISTING, script });
-  const config = loadConfig({ FLUX_DATA_DIR: 'memory', FLUX_AUTH_SECRET: S('a'), FLUX_APPROVAL_SECRET: S('b'), FLUX_AUDIT_KEY: S('c'), FLUX_ALLOWED_ORIGINS: origins, FLUX_BROWSER_ALLOWED_DOMAINS: browserDomains.join(','), ZOHO_ORG_ID: 'ORG1', ZOHO_API_BASE: z.apiBase, ZOHO_ACCOUNTS_BASE: z.accountsBase, ZOHO_READ_CLIENT_ID: 'a', ZOHO_READ_CLIENT_SECRET: 'b', ZOHO_READ_REFRESH_TOKEN: 'c', ...(write ? { ZOHO_WRITE_ENABLED: 'true', ZOHO_WRITE_CLIENT_ID: 'wa', ZOHO_WRITE_CLIENT_SECRET: 'wb', ZOHO_WRITE_REFRESH_TOKEN: 'wc' } : {}), OPENROUTER_API_KEY: 'sk-test', OPENROUTER_BASE_URL: llm.base });
+  const config = loadConfig({ FLUX_DATA_DIR: 'memory', FLUX_OWNER_ID: 'owner1', FLUX_AUTH_SECRET: S('a'), FLUX_APPROVAL_SECRET: S('b'), FLUX_AUDIT_KEY: S('c'), FLUX_ALLOWED_ORIGINS: origins, FLUX_BROWSER_ALLOWED_DOMAINS: browserDomains.join(','), ZOHO_ORG_ID: 'ORG1', ZOHO_API_BASE: z.apiBase, ZOHO_ACCOUNTS_BASE: z.accountsBase, ZOHO_READ_CLIENT_ID: 'a', ZOHO_READ_CLIENT_SECRET: 'b', ZOHO_READ_REFRESH_TOKEN: 'c', ...(write ? { ZOHO_WRITE_ENABLED: 'true', ZOHO_WRITE_CLIENT_ID: 'wa', ZOHO_WRITE_CLIENT_SECRET: 'wb', ZOHO_WRITE_REFRESH_TOKEN: 'wc' } : {}), OPENROUTER_API_KEY: 'sk-test', OPENROUTER_BASE_URL: llm.base });
   const flux = createFlux({ config, sleep: async () => {}, browserReader });
   for (const [id, role] of [['owner1', 'owner'], ['acct1', 'accountant'], ['staff1', 'staff'], ['view1', 'viewer']]) await flux.users.create({ id, role, password: `${id}-long-password` });
   const { routes, authenticate } = buildRoutes(flux);
@@ -41,6 +41,56 @@ test('sign-in: wrong password fails, repeated failures are throttled, tampered o
   assert.equal((await call('GET', '/v1/me', { token: tok.owner })).body.role, 'owner');
   for (let i = 0; i < 5; i++) assert.equal((await call('POST', '/v1/auth/login', { body: { id: 'owner1', password: 'wrong-wrong-wrong' } })).status, 401);
   const r = await call('POST', '/v1/auth/login', { body: { id: 'owner1', password: 'wrong-wrong-wrong' } }); assert.equal(r.status, 429); assert.ok(r.headers.get('retry-after'));
+});
+test('owner manages Flux users, resets passwords, and immediately revokes changed or deactivated sessions', async () => {
+  const { call, tok, flux } = await boot();
+  assert.equal((await call('GET', '/v1/users', { token: tok.acct })).status, 403);
+  const created = await call('POST', '/v1/users', {
+    token: tok.owner,
+    body: { id: 'newstaff', name: 'New Staff', role: 'staff', password: 'staff-account-password-2026' },
+  });
+  assert.equal(created.status, 200);
+  assert.equal(created.body.id, 'newstaff');
+  assert.equal((await call('POST', '/v1/users', {
+    token: tok.owner,
+    body: { id: 'newstaff', role: 'staff', password: 'staff-account-password-2026' },
+  })).status, 409);
+  const listing = await call('GET', '/v1/users', { token: tok.owner });
+  assert.equal(listing.status, 200);
+  assert.ok(listing.body.users.some((u) => u.id === 'newstaff' && u.role === 'staff'));
+  assert.equal(JSON.stringify(listing.body).includes('staff-account-password-2026'), false);
+  const roleChange = await call('POST', '/v1/users/newstaff/role', {
+    token: tok.owner,
+    body: { role: 'viewer' },
+  });
+  assert.equal(roleChange.status, 200);
+  assert.equal(roleChange.body.role, 'viewer');
+
+  const changed = await call('POST', '/v1/users/acct1/password', {
+    token: tok.owner,
+    body: { password: 'account-reset-password-2026' },
+  });
+  assert.equal(changed.status, 200);
+  assert.equal((await call('GET', '/v1/me', { token: tok.acct })).status, 401);
+  const relogin = await call('POST', '/v1/auth/login', {
+    body: { id: 'acct1', password: 'account-reset-password-2026' },
+  });
+  assert.equal(relogin.status, 200);
+
+  const disabled = await call('POST', '/v1/users/acct1/active', {
+    token: tok.owner,
+    body: { active: false },
+  });
+  assert.equal(disabled.status, 200);
+  assert.equal((await call('GET', '/v1/me', { token: relogin.body.token })).status, 401);
+  assert.equal((await call('POST', '/v1/users/owner1/active', { token: tok.owner, body: { active: false } })).status, 422);
+  assert.equal((await call('POST', '/v1/users/owner1/role', { token: tok.owner, body: { role: 'staff' } })).status, 422);
+  await call('POST', '/v1/users', { token: tok.owner, body: { id: 'backupowner', role: 'owner', password: 'backup-owner-password-2026' } });
+  const secondary = await call('POST', '/v1/auth/login', { body: { id: 'backupowner', password: 'backup-owner-password-2026' } });
+  assert.equal(secondary.status, 200);
+  assert.equal((await call('POST', '/v1/users/owner1/active', { token: secondary.body.token, body: { active: false } })).status, 422);
+  assert.equal((await call('POST', '/v1/users/owner1/role', { token: secondary.body.token, body: { role: 'staff' } })).status, 422);
+  assert.equal(JSON.stringify(flux.audit.list({ limit: 100 })).includes('account-reset-password-2026'), false);
 });
 test('roles are enforced by the server: viewer cannot chat, staff cannot read Zoho, accountant cannot approve a Zoho write', async () => {
   const { call, tok } = await boot();

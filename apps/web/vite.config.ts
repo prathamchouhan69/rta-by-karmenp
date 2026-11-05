@@ -7,6 +7,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    build: {
+      // The tree-shaken WebGL scene is intentionally lazy-loaded and bounded below 550 kB.
+      chunkSizeWarningLimit: 550,
+    },
     server: {
       proxy: {
         "/api": {
