@@ -7,6 +7,7 @@ import { istDate } from '../util/time.js';
 import { describeConfig } from '../config.js';
 import { ADVISORS } from '../agents/advisors.js';
 import { estimateCalls } from '../agents/board.js';
+import { buildExtendedRoutes } from './extendedRoutes.js';
 import { HttpError } from './server.js';
 
 const SESSION_SEC = 12 * 3600;
@@ -144,5 +145,6 @@ export function buildRoutes(f) {
     R('POST', '/v1/memory', async ({ user, body }) => memory.add(body.text, user), { permission: 'memory' }),
     R('DELETE', '/v1/memory/:id', async ({ params, user }) => ({ removed: memory.remove(params.id, user) }), { permission: 'memory' }),
   ];
+  routes.push(...buildExtendedRoutes(f));
   return { routes, authenticate };
 }

@@ -1,0 +1,152 @@
+// Practical three-tier problem solving: proper, fast, and legal frugal Jugaad.
+// This is a curated playbook engine, not a licence to cut corners. Every Jugaad
+// answer includes legality, safety and quality guardrails.
+
+const DISCLAIMER = 'Jugaad means a lawful, frugal workaround. Never use it to bypass safety, quality, tax, labour or environmental rules.';
+
+const PLAYBOOKS = {
+  steel_price: {
+    label: 'steel or material price increase',
+    keywords: ['steel', 'tmt', 'cement', 'material price', 'rate increase', 'price rise', 'cost increase'],
+    proper: ['Reconcile the quoted specification, quantity, freight and GST with the supplier.', 'Add a documented price-escalation clause to future quotations and purchase orders.', 'Re-plan purchases against the project schedule and approved BOQ.'],
+    fast: ['Call three approved suppliers today and compare landed cost, not only the basic rate.', 'Buy only the quantity needed for the next 15–30 days.', 'Ask for a written quote with validity, delivery and payment terms.'],
+    jugaad: ['Use serviceable leftover stock from completed sites after checking grade, test certificates and traceability.', 'Optimise cutting and nesting to reduce offcuts; record the revised bar-bending schedule.', 'Ask an existing supplier for a short credit window or a staged delivery instead of a full advance.'],
+    guardrails: ['Do not substitute a lower grade without engineer approval.', 'Do not reuse steel without test certificates and corrosion checks.', 'Do not book input credit without a valid tax invoice and matching GST records.'],
+  },
+  receivables: {
+    label: 'slow collections or cash-flow pressure',
+    keywords: ['receivable', 'overdue', 'collection', 'cash flow', 'cashflow', 'payment delay', 'customer not paying'],
+    proper: ['Age the ledger by customer and invoice; separate disputed from undisputed amounts.', 'Put a written collection escalation matrix in place with owner, accountant and sales responsibilities.', 'Tighten credit limits, advance percentages and payment terms for new work.'],
+    fast: ['Call the top three overdue customers today and agree a dated payment plan.', 'Send a polite statement with invoice numbers, due dates, amounts and bank details.', 'Offer a small early-payment incentive only if the margin and contract allow it.'],
+    jugaad: ['Ask for a post-dated cheque or a partial payment against the oldest invoice.', 'Swap a receivable for a genuine business need (for example, a supplier payment the customer can make directly) only with written consent and correct accounting.', 'Use a short, documented follow-up rhythm: call, WhatsApp, email, visit.'],
+    guardrails: ['Do not threaten, harass or publicly shame a customer.', 'Do not net off unrelated payables without written agreement.', 'Do not delay statutory GST or TDS obligations to cover a cash gap.'],
+  },
+  project_delay: {
+    label: 'project delay or low site productivity',
+    keywords: ['delay', 'late', 'project behind', 'site slow', 'productivity', 'labour shortage'],
+    proper: ['Rebuild the critical-path schedule with actual progress, dependencies and resource loading.', 'Issue a written delay notice and recovery plan with owners and dates.', 'Fix the root cause: material release, drawings, approvals, labour or equipment.'],
+    fast: ['Run a 15-minute daily site stand-up: plan, actual, blocker, owner.', 'Re-sequence non-critical work so labour is not idle.', 'Escalate only the top three blockers to the owner today.'],
+    jugaad: ['Move a small crew to a ready work front instead of waiting for the main front.', 'Use temporary shared equipment or a neighbouring site’s idle machine with a written hire note.', 'Pre-fabricate or pre-assemble off-site where quality and transport allow.'],
+    guardrails: ['Do not skip inspections, curing or safety permits to save a day.', 'Do not put untrained workers on skilled or hazardous tasks.', 'Record every change and extension-of-time claim contemporaneously.'],
+  },
+  procurement: {
+    label: 'procurement or supplier problem',
+    keywords: ['procurement', 'supplier', 'vendor', 'purchase', 'quotation', 'inventory', 'stock'],
+    proper: ['Create an approved-vendor list with rate, quality, capacity and compliance checks.', 'Use a written comparison sheet: specification, landed cost, GST, freight, payment terms and delivery.', 'Set reorder levels and a purchase-approval matrix.'],
+    fast: ['Get three comparable quotes for the immediate requirement.', 'Negotiate freight, unloading and payment terms as part of the landed cost.', 'Place a trial order before committing the full quantity.'],
+    jugaad: ['Combine two small requirements into one order to negotiate a better rate.', 'Ask a trusted peer contractor to share a bulk order if specifications match.', 'Use returnable packaging or supplier-managed stock where genuine.'],
+    guardrails: ['Do not accept a materially cheaper substitute without testing and approval.', 'Avoid verbal orders for material quantities.', 'Keep related-party purchases documented and at arm’s length.'],
+  },
+  sales: {
+    label: 'low sales or lead conversion',
+    keywords: ['sales', 'lead', 'conversion', 'quotation', 'customer acquisition', 'pipeline'],
+    proper: ['Define the ideal customer, the buying trigger and a repeatable sales process.', 'Track lead source, response time, quotation value, follow-ups and win/loss reasons.', 'Build a 90-day sales plan with weekly targets and owner review.'],
+    fast: ['Call every open quotation older than seven days and ask for the next decision.', 'Offer a site visit or a small, clearly scoped proposal instead of a generic brochure.', 'Ask happy customers for one specific referral this week.'],
+    jugaad: ['Create a one-page case study from a recent completed job and send it on WhatsApp.', 'Visit a nearby industrial cluster with a printed one-page capability sheet.', 'Bundle a small maintenance or inspection service with a larger project enquiry.'],
+    guardrails: ['Do not make false claims about certifications, capacity or past projects.', 'Do not spam or buy personal data illegally.', 'Do not promise a price or delivery date before checking capacity.'],
+  },
+  marketing: {
+    label: 'marketing or local visibility',
+    keywords: ['marketing', 'brand', 'visibility', 'advertising', 'social media', 'whatsapp'],
+    proper: ['Choose one audience, one offer and one proof point; measure enquiries, not likes.', 'Keep a content calendar with project photos, site progress, safety and customer outcomes.', 'Build a simple CRM and a response-time standard.'],
+    fast: ['Post three real site photos with a clear scope and location tag this week.', 'Ask two customers for a short testimonial.', 'Put the business name, service and phone number on every vehicle and site board.'],
+    jugaad: ['Use a phone camera, natural light and a simple template instead of paying for a studio.', 'Repurpose one site visit into a LinkedIn post, a WhatsApp broadcast and a short video.', 'Partner with a nearby non-competing supplier for a joint local message.'],
+    guardrails: ['Get customer permission before publishing their name, site or photos.', 'Do not edit project photos to exaggerate scope.', 'Follow platform and advertising rules.'],
+  },
+  operations: {
+    label: 'operations or productivity',
+    keywords: ['operations', 'productivity', 'workflow', 'process', 'waste', 'efficiency'],
+    proper: ['Map the value stream and measure cycle time, rework and waiting.', 'Standardise the highest-variation process first.', 'Assign one owner and one daily review metric.'],
+    fast: ['Photograph the current process and mark the three biggest waits.', 'Remove one approval or one double-entry step this week.', 'Run a five-day trial and measure the change.'],
+    jugaad: ['Use a shared spreadsheet and a phone camera before buying software.', 'Label and stage material at the point of use to reduce searching.', 'Create a simple visual checklist at the workstation.'],
+    guardrails: ['Do not remove a control that protects safety, money or quality.', 'Do not automate a broken process.', 'Keep a rollback plan.'],
+  },
+  construction: {
+    label: 'construction execution problem',
+    keywords: ['construction', 'site', 'peb', 'rcc', 'warehouse', 'factory', 'flooring', 'boundary wall', 'road'],
+    proper: ['Compare the approved drawing, BOQ, specification and actual work front.', 'Issue a written technical query or change order before deviating.', 'Inspect and document each stage with photos and checklists.'],
+    fast: ['Resolve the top interface issue with a joint site walk today.', 'Freeze the next seven-day look-ahead plan with material and labour owners.', 'Test one critical material or method before full deployment.'],
+    jugaad: ['Use a temporary access route or a small mobile plant to open a blocked work front.', 'Repurpose approved formwork or scaffolding from a completed area after inspection.', 'Prefabricate a repeated element at ground level and lift it safely.'],
+    guardrails: ['Never compromise structural safety, fire safety or statutory approvals.', 'Do not use uncertified material or unapproved mixes.', 'Do not let unqualified people operate plant or work at height.'],
+  },
+  energy: {
+    label: 'energy or fuel cost',
+    keywords: ['energy', 'electricity', 'diesel', 'fuel', 'power', 'generator'],
+    proper: ['Meter the main loads and separate production, utilities and losses.', 'Set an energy baseline and review the largest consumers monthly.', 'Evaluate efficiency measures with a payback calculation.'],
+    fast: ['Switch off idle equipment and fix compressed-air or water leaks.', 'Check power factor, tariff slab and maximum-demand charges.', 'Compare diesel consumption per trip or per tonne against a documented baseline.'],
+    jugaad: ['Schedule high-load work in the cheaper tariff window where the process allows.', 'Share a return trip or a delivery with a nearby site to reduce empty running.', 'Use natural light and ventilation where it does not compromise safety.'],
+    guardrails: ['Do not bypass electrical protection or safety interlocks.', 'Do not modify a utility connection without approval.', 'Verify claimed savings against a measured baseline.'],
+  },
+  logistics: {
+    label: 'transport or logistics cost',
+    keywords: ['transport', 'freight', 'logistics', 'truck', 'delivery', 'mileage'],
+    proper: ['Measure cost per tonne-km or per trip, including empty running, detention and loading.', 'Tender regular routes and set a documented freight matrix.', 'Plan loads, routes and return loads together.'],
+    fast: ['Compare three transporters on landed cost and delivery reliability.', 'Reduce detention by pre-loading and pre-clearing documents.', 'Consolidate small consignments into a full load where possible.'],
+    jugaad: ['Match a return load with a trusted nearby business through a written arrangement.', 'Use a village-level or local carrier for the last mile if insurance and safety are adequate.', 'Align delivery windows with the customer’s unloading capacity to avoid waiting charges.'],
+    guardrails: ['Do not overload a vehicle or falsify a permit or e-way bill.', 'Check carrier insurance and driver fitness.', 'Record detention and damage claims contemporaneously.'],
+  },
+  labour: {
+    label: 'labour or team productivity',
+    keywords: ['labour', 'labor', 'worker', 'team', 'attendance', 'skill', 'training'],
+    proper: ['Define the crew mix, output norm and quality standard for each activity.', 'Train supervisors on planning, safety and daily measurement.', 'Pay correctly, on time, and maintain statutory records.'],
+    fast: ['Set a simple daily output target and review it at the same time each day.', 'Pair a new worker with an experienced worker for the first week.', 'Remove one material or tool delay that is stopping the crew.'],
+    jugaad: ['Cross-train one worker to cover a critical absence.', 'Use a mobile toolbox talk at the work front instead of a long classroom session.', 'Create a small visual standard at the workstation.'],
+    guardrails: ['Do not withhold wages, documents or statutory benefits.', 'Do not use child labour or unsafe working conditions.', 'Follow applicable labour, wage, PF, ESI and safety rules.'],
+  },
+  health: {
+    label: 'health and wellness',
+    keywords: ['health', 'sleep', 'weight', 'fitness', 'diet', 'stress', 'hydration', 'medicine', 'bp', 'sugar'],
+    proper: ['Consult a qualified doctor or dietitian for personal medical and nutrition advice.', 'Track the relevant measurements consistently and bring the record to the consultation.', 'Follow prescribed medicine and treatment exactly.'],
+    fast: ['Choose one small habit to improve this week: sleep window, water, a short walk or a home-cooked meal.', 'Remove one barrier: keep water visible, prepare food ahead, or set a reminder.', 'Review progress after seven days without judging a single reading.'],
+    jugaad: ['Use a phone reminder and a visible water bottle at the work desk or site office.', 'Walk during a phone call or use a short post-meal walk.', 'Batch-prepare simple dal, vegetables or snacks for the work week.'],
+    guardrails: ['Do not diagnose or self-prescribe from an app.', 'Do not stop or change prescribed medicine without a doctor.', 'Seek emergency help for chest pain, breathing difficulty, stroke signs, severe bleeding or unconsciousness.'],
+  },
+  documents: {
+    label: 'documents, invoicing or compliance',
+    keywords: ['document', 'invoice', 'gst', 'hsn', 'sac', 'quotation', 'purchase order', 'compliance', 'e-way'],
+    proper: ['Use one controlled template with mandatory fields, version control and an approval step.', 'Verify HSN/SAC and GST treatment against an authoritative source or your CA.', 'Reconcile invoices, e-way bills, delivery proof and bank receipts.'],
+    fast: ['Create a checklist of missing fields before sending any document.', 'Use a single numbering series and a shared folder with read-only access.', 'Ask the customer to confirm the PO, GSTIN and delivery address in writing.'],
+    jugaad: ['Build a reusable spreadsheet or document template for repeated jobs.', 'Use a phone scan and a consistent file-naming rule instead of loose photos.', 'Keep a one-page vendor/customer master with verified GSTIN and contact details.'],
+    guardrails: ['Never create a fake invoice, e-way bill or tax document.', 'Never claim input credit without a valid tax invoice and actual receipt.', 'Verify every HSN/SAC and GST rate; Flux does not guess them.'],
+  },
+  generic: {
+    label: 'general business problem',
+    keywords: [],
+    proper: ['Write the problem as a measurable gap: current state, target state, deadline and owner.', 'List the three root causes and test them with data, not opinion.', 'Choose one action, set a review date, and record the result.'],
+    fast: ['Fix the most urgent safety, cash or customer issue today.', 'Use the smallest reversible action that gives new information.', 'Tell the affected people what changed and when you will review it.'],
+    jugaad: ['Use what is already available: existing stock, skills, contacts, tools or idle capacity.', 'Trade a non-cash resource only with written agreement and correct accounting.', 'Start with a one-day or one-customer pilot before scaling.'],
+    guardrails: ['Do not break the law, safety rules, contracts or confidentiality.', 'Do not misrepresent facts to a customer, lender or authority.', 'Measure the result; stop if the workaround creates a bigger risk.'],
+  },
+};
+
+const ORDER = ['steel_price', 'receivables', 'project_delay', 'procurement', 'sales', 'marketing', 'operations', 'construction', 'energy', 'logistics', 'labour', 'health', 'documents', 'generic'];
+
+export function detectCategory(problem) {
+  const text = String(problem || '').toLowerCase();
+  for (const key of ORDER) {
+    const p = PLAYBOOKS[key];
+    if (p.keywords.some((k) => text.includes(k))) return key;
+  }
+  return 'generic';
+}
+
+export function advise({ problem, category = null, budget = null, timeAvailable = null, constraints = [] } = {}) {
+  const text = String(problem || '').trim();
+  if (!text) throw Object.assign(new Error('Describe the problem in one or two sentences.'), { status: 422, code: 'BAD_PROBLEM' });
+  if (text.length > 4000) throw Object.assign(new Error('Problem must be at most 4000 characters.'), { status: 422, code: 'BAD_PROBLEM' });
+  const key = category && PLAYBOOKS[category] ? category : detectCategory(text);
+  const p = PLAYBOOKS[key];
+  const constraintText = Array.isArray(constraints) ? constraints.map((c) => String(c).slice(0, 160)).filter(Boolean).slice(0, 10) : [];
+  const context = [budget ? `Budget: ${String(budget).slice(0, 80)}` : null, timeAvailable ? `Time: ${String(timeAvailable).slice(0, 80)}` : null, constraintText.length ? `Constraints: ${constraintText.join('; ')}` : null].filter(Boolean);
+  return {
+    ok: true, problem: text, category: key, categoryLabel: p.label, context,
+    proper: { label: 'Proper solution', summary: 'Compliant, scalable and durable.', steps: p.proper },
+    fast: { label: 'Fast practical solution', summary: 'Low-cost action for the next few days.', steps: p.fast },
+    jugaad: { label: 'Legal frugal Jugaad', summary: 'Use existing resources with minimum cash and maximum speed.', steps: p.jugaad },
+    guardrails: p.guardrails,
+    confidence: key === 'generic' ? 'low' : 'medium',
+    source: 'Curated Flux operating playbook. Adapt to the actual contract, drawings, law and site conditions.',
+    limitations: ['This is a structured starting point, not a guarantee of the lowest cost or best outcome.', 'Verify every commercial, tax, safety and legal step with the responsible professional.'],
+    disclaimer: DISCLAIMER,
+  };
+}

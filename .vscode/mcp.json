@@ -1,0 +1,27 @@
+{
+  "servers": {
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "penpot": {
+      "type": "http",
+      "url": "http://127.0.0.1:4401/mcp"
+    },
+    "stitch": {
+      "type": "http",
+      "url": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "${input:stitchApiKey}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "stitchApiKey",
+      "description": "Stitch API key",
+      "password": true
+    }
+  ]
+}

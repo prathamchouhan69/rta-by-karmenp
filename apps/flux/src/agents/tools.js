@@ -3,6 +3,9 @@ import { validateGstin } from '../checks/gstin.js';
 import { fuelTrip } from '../calc/fuel.js';
 import { rankDues } from '../calc/ageing.js';
 import { daysBetween, istDate, parseDate } from '../util/time.js';
+import { searchKnowledge, recommendKnowledge } from '../knowledge/library.js';
+import { liveStatus } from '../live/status.js';
+import { findSchemes } from '../opportunities/schemes.js';
 
 const slimInvoice = (i) => ({ id: i.invoice_id, invoice_number: i.invoice_number, customer_name: i.customer_name, status: i.status, date: i.date, due_date: i.due_date, total: i.total, balance: i.balance });
 const needStr = (v, n) => { if (typeof v !== 'string' || !v.trim()) throw new Error(`${n} is required`); return v.trim(); };
@@ -20,6 +23,26 @@ export function createTools({ reader, hsn, memory, browserReader = null, now = (
     get_invoice: { description: 'One invoice from Zoho Books. args: {id}', permission: 'read:zoho', run: async (a) => slimInvoice(await reader.getInvoice(needStr(a.id, 'id'))) },
     find_customer: { description: 'Find a customer in Zoho Books. args: {name}', permission: 'read:zoho', run: async (a) => ({ customers: (await reader.listContacts({ search: needStr(a.name, 'name') })).slice(0, 5).map((c) => ({ id: c.contact_id, name: c.contact_name, type: c.contact_type, gst_no: c.gst_no || null, outstanding_receivable_amount: c.outstanding_receivable_amount ?? null })) }) },
     read_memory: { description: 'Facts the user asked Flux to remember. args: none', permission: 'memory', run: async () => ({ facts: memory.list().slice(0, 20).map((m) => m.text) }) },
+    search_knowledge: {
+      description: 'Search the curated knowledge library by keyword. Returns principles, frameworks and cited sources, not live data. args: {query, category?, limit?}',
+      permission: 'knowledge:read',
+      run: async (a) => searchKnowledge({ query: String(a.query || '').slice(0, 300), category: a.category ? String(a.category).slice(0, 80) : null, limit: Math.min(Number(a.limit) || 8, 20) }),
+    },
+    recommend_knowledge: {
+      description: 'Recommend curated knowledge for a context such as money, business, construction, startup, health, india, ai, marketing or operations. args: {context, limit?}',
+      permission: 'knowledge:read',
+      run: async (a) => recommendKnowledge({ context: String(a.context || 'business').slice(0, 40), limit: Math.min(Number(a.limit) || 6, 20) }),
+    },
+    find_schemes: {
+      description: 'Search the curated government-scheme directory with official sources. Not a live eligibility check. args: {query, limit?}',
+      permission: 'knowledge:read',
+      run: async (a) => findSchemes({ query: String(a.query || '').slice(0, 300), limit: Math.min(Number(a.limit) || 10, 20) }),
+    },
+    live_data_status: {
+      description: 'Say which live data feeds are configured. Use before answering questions about live economy, currency, tenders, schemes, news, market prices or local intelligence. args: none',
+      permission: 'live:read',
+      run: async () => liveStatus(),
+    },
   };
   if (browserReader) {
     t.read_public_page = {

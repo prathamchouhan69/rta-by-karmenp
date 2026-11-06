@@ -8,7 +8,7 @@
     "tools/*"
   ],
   "scripts": {
-    "dev": "concurrently -n web,gateway,mock -c cyan,magenta,yellow \"npm:dev:web\" \"npm:dev:gateway\" \"npm:dev:mock\"",
+    "dev": "concurrently -n gateway,mock -c magenta,yellow \"npm:dev:gateway\" \"npm:dev:mock\"",
     "dev:web": "npm run dev -w apps/web",
     "dev:proxy": "npm run dev -w apps/proxy",
     "dev:gateway": "npm run dev -w apps/gateway",

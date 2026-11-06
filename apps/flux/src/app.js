@@ -13,6 +13,8 @@ import { ZohoTokens, ZohoError } from './zoho/auth.js';
 import { ZohoReader } from './zoho/client.js';
 import { ZohoWriter } from './zoho/writer.js';
 import { HsnService } from './hsn/hsn.js';
+import { MaterialPriceBook } from './materials/priceBook.js';
+import { HealthStore } from './health/engine.js';
 import { DocumentEngine } from './documents/documents.js';
 import { buildBriefing, BriefingScheduler } from './briefing/briefing.js';
 import { AgentRegistry } from './agents/registry.js';
@@ -43,6 +45,8 @@ export function createFlux({ config, fetchFn = fetch, now = () => new Date(), sl
   const writer = z.writeEnabled ? new ZohoWriter({ apiBase: z.apiBase, orgId: z.orgId, tokens: tok(z.write), fetchFn }) : null;
 
   const hsn = new HsnService({ store, reader, audit, lookup: hsnLookup, now });
+  const materials = new MaterialPriceBook({ store, audit, now });
+  const health = new HealthStore({ store, audit, now });
   const docs = new DocumentEngine({ router, reader, hsn, approvals, writer, store, audit, now });
   const memory = new Memory(store, audit);
   const publicPageReader = browserReader || createAgentBrowserReader({ allowedDomains: config.browserAllowedDomains });
@@ -80,5 +84,5 @@ export function createFlux({ config, fetchFn = fetch, now = () => new Date(), sl
   const startBriefing = () => { if (!config.briefingEnabled || scheduler) return; scheduler = new BriefingScheduler({ run: () => briefing.run('scheduler'), nextAt: (n) => nextRun(n, config.briefingHour), hour: config.briefingHour, now, hasToday: () => !!briefing.today(), onError: (e) => { audit.append({ actor: 'scheduler', action: 'briefing.failed', data: { error: e.message } }); } }); scheduler.start(); };
   const stop = () => scheduler?.stop();
 
-  return { config, store, audit, users, limiter, approvals, registry, usage, router, reader, writer, hsn, docs, memory, tools, agents, orchestrator, board, briefing, startBriefing, stop, now };
+  return { config, store, audit, users, limiter, approvals, registry, usage, router, reader, writer, hsn, materials, health, docs, memory, tools, agents, orchestrator, board, briefing, startBriefing, stop, now };
 }

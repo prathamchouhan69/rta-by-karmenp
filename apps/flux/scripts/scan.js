@@ -21,7 +21,7 @@ rule('Zoho write outside the writer', src.filter((f) => rel(f).startsWith('src/z
 rule('HTTP write verb outside allowed modules', src.filter((f) => !/src\/(zoho\/writer|zoho\/auth|models\/gateway|http\/(server|routes))\.js$/.test(rel(f))), (t) => /method:\s*'(POST|PUT|PATCH|DELETE)'/i.test(t));
 rule('Zoho delete or payment call anywhere', src, (t) => /\/payments|customerpayments|method:\s*'DELETE'/i.test(t) && !/gateway|routes/.test(t));
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-const allowedRuntimeDependencies = { 'agent-browser': '0.41.2' };
+const allowedRuntimeDependencies = { 'agent-browser': '0.41.2', zod: '4.6.7' };
 for (const [name, version] of Object.entries(pkg.dependencies || {})) {
   if (allowedRuntimeDependencies[name] !== version) fails.push(`unapproved runtime dependency: ${name}@${version}`);
 }

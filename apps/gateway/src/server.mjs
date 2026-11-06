@@ -86,7 +86,7 @@ function createIpLimiter({ max, windowMs, enabled }) {
 
 export async function startGateway({ env = process.env, logger = console } = {}) {
   prepareEnvironment(env);
-  if (!env.STATIC_ROOT) env.STATIC_ROOT = 'apps/web/dist';
+  if (!env.STATIC_ROOT) env.STATIC_ROOT = '../web/dist';
   const settings = gatewaySettings(env);
 
   const proxyModule = await import('../../proxy/src/server.mjs');
