@@ -1,6 +1,6 @@
 export type Role = 'owner' | 'accountant' | 'staff' | 'viewer';
 export type Lang = 'en' | 'hi';
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'classic';
 
 export interface SessionUser {
   id: string;

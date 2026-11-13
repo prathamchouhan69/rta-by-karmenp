@@ -27,7 +27,7 @@ export function Providers({ user, initialTheme, initialLang, children }: { user:
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
+    document.documentElement.style.colorScheme = theme === 'dark' ? 'dark' : 'light';
   }, [theme]);
 
   useEffect(() => {

@@ -6,6 +6,10 @@ The production gateway also serves the complete Flux API under `/flux/v1/*` with
 
 The backend runs in `mock` mode by default and binds to loopback. Live mode requires Zoho OAuth credentials and a configured organization ID. Live or non-loopback deployments require owner authentication; remote deployments must use an HTTPS reverse proxy. Live APIs must be tested against the target Zoho organization before production use.
 
+## Flux conversation context
+
+`POST /flux/v1/chat` accepts an optional `history` array for follow-up questions. The Flux UI sends it only when the user enables **Use recent chat for follow-ups**. It accepts up to 8 prior `{ "role": "user" | "assistant", "content": "..." }` messages, each 1–2,000 characters; invalid roles, empty content, oversized messages, or larger histories are rejected with `422 BAD_HISTORY`. Past turns are marked as unverified context, not evidence, and are not persisted by the Flux server. The UI keeps its visible transcript in the browser's session storage; clearing the thread removes that local transcript.
+
 ## Session and health
 
 | Method | Route | Purpose |

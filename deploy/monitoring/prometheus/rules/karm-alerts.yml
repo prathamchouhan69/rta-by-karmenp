@@ -1,0 +1,174 @@
+groups:
+  - name: karm-gateway
+    interval: 30s
+    rules:
+      # Gateway availability
+      - alert: KarmGatewayDown
+        expr: up{job="karm-gateway"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "KARM Gateway is down"
+          description: "Gateway has been down for more than 1 minute"
+
+      - alert: KarmGatewayHighLatency
+        expr: histogram_quantile(0.95, sum(rate(karm_gateway_request_duration_seconds_bucket[5m])) by (le)) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "KARM Gateway high latency"
+          description: "95th percentile latency > 2s for 5 minutes"
+
+      - alert: KarmGatewayHighErrorRate
+        expr: sum(rate(karm_gateway_requests_total{status=~"5.."}[5m])) / sum(rate(karm_gateway_requests_total[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "KARM Gateway high error rate"
+          description: "5xx error rate > 5% for 2 minutes"
+
+      # Proxy health
+      - alert: KarmProxyUnhealthy
+        expr: karm_proxy_health == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "KARM Proxy unhealthy"
+          description: "Proxy health check failing"
+
+      # Flux health
+      - alert: KarmFluxUnhealthy
+        expr: karm_flux_health == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Flux backend unhealthy"
+          description: "Flux health check failing"
+
+      - alert: KarmFluxNoModels
+        expr: karm_flux_models == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No Flux models configured"
+          description: "No model providers available - using deterministic fallback only"
+
+      - alert: KarmFluxAuditLag
+        expr: karm_flux_audit_entries < 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Flux audit log not growing"
+          description: "No audit entries for 10 minutes - possible processing stall"
+
+      # Database
+      - alert: KarmPostgresDown
+        expr: up{job="postgres-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "Database exporter unreachable"
+
+      - alert: KarmPostgresHighConnections
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL high connection usage"
+          description: "Connection usage > 85% of max_connections"
+
+      - alert: KarmPostgresReplicationLag
+        expr: pg_replication_lag_seconds > 60
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL replication lag"
+          description: "Replica lag > 60 seconds"
+
+      # Disk/Memory
+      - alert: KarmDiskSpaceCritical
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space critical"
+          description: "Less than 10% disk space available"
+
+      - alert: KarmMemoryHigh
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.9
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage > 90% for 10 minutes"
+
+      # Backup
+      - alert: KarmBackupFailed
+        expr: increase(karm_backup_failures_total[1h]) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backup failed"
+          description: "At least one backup failed in the last hour"
+
+      - alert: KarmBackupStale
+        expr: time() - karm_backup_last_success_timestamp > 86400
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Backup stale"
+          description: "No successful backup in 24 hours"
+
+      # SSL Certificate
+      - alert: KarmCertExpiringSoon
+        expr: ssl_certificate_expiry_days < 30
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "Certificate expires in less than 30 days"
+
+      - alert: KarmCertExpired
+        expr: ssl_certificate_expiry_days < 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "SSL certificate EXPIRED"
+          description: "Certificate has expired!"
+
+      # Container health
+      - alert: KarmContainerRestartLoop
+        expr: rate(container_restart_count[15m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container restart loop"
+          description: "Container restarting frequently"
+
+      # HTTP probes (Blackbox)
+      - alert: KarmEndpointDown
+        expr: probe_success == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Endpoint down"
+          description: "HTTP probe failing for {{ $labels.instance }}"

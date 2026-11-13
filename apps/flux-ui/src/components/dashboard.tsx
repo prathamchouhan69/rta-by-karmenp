@@ -38,6 +38,14 @@ interface Proposal {
   createdAt: string;
 }
 
+interface Task {
+  id: string;
+  title?: string;
+  status?: string;
+  priority?: string;
+  createdAt?: string;
+}
+
 interface LiveDomain {
   domain: string;
   label: string;
@@ -56,10 +64,10 @@ interface LiveStatus {
 const QUICK_ACTIONS: Array<{ href: string; label: string; note: string; icon: IconName }> = [
   { href: '/chat', label: 'Ask Flux', note: 'Evidence, uncertainty and a next step.', icon: 'chat' },
   { href: '/money', label: 'Money plan', note: 'Budget, goals, EMI and cash flow.', icon: 'money' },
-  { href: '/construction', label: 'Site desk', note: 'Estimates, quantities and prices.', icon: 'construction' },
-  { href: '/health', label: 'Health check', note: 'General guidance, never a diagnosis.', icon: 'health' },
-  { href: '/knowledge', label: 'Knowledge', note: 'Principles with cited sources.', icon: 'knowledge' },
-  { href: '/jugaad', label: 'Jugaad', note: 'Proper, fast and lawful frugal options.', icon: 'jugaad' },
+  { href: '/wealth', label: 'Wealth snapshot', note: 'Scenarios from your own numbers.', icon: 'wealth' },
+  { href: '/startup', label: 'Startup runway', note: 'Runway and unit-economics tools.', icon: 'startup' },
+  { href: '/economy', label: 'Economy brief', note: 'Assess caller-supplied events.', icon: 'economy' },
+  { href: '/radar', label: 'Opportunity radar', note: 'Review sourced opportunities.', icon: 'radar' },
 ];
 
 function statusTone(status: string): 'ok' | 'warn' | 'danger' | undefined {
@@ -103,10 +111,18 @@ export function Dashboard() {
   const [briefingError, setBriefingError] = useState('');
   const [building, setBuilding] = useState(false);
   const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [proposalsState, setProposalsState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [proposalsError, setProposalsError] = useState('');
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasksState, setTasksState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [tasksError, setTasksError] = useState('');
   const [live, setLive] = useState<LiveStatus | null>(null);
+  const [liveState, setLiveState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [liveError, setLiveError] = useState('');
   const [dateLine, setDateLine] = useState('');
 
   const loadBriefing = useCallback(async () => {
+    setBriefingError('');
     setBriefingState('loading');
     try {
       const data = await api<Briefing>('v1/briefing/today');
@@ -138,11 +154,38 @@ export function Dashboard() {
   useEffect(() => {
     if (can(user, 'proposals:read')) {
       api<{ proposals: Proposal[] }>('v1/proposals?status=pending')
-        .then((data) => setProposals(data.proposals.slice(0, 4)))
-        .catch(() => setProposals([]));
+        .then((data) => {
+          setProposals(data.proposals);
+          setProposalsState('ready');
+        })
+        .catch((error) => {
+          setProposalsError(errorMessage(error));
+          setProposalsState('error');
+        });
+      api<{ tasks: Task[] }>('v1/tasks')
+        .then((data) => {
+          setTasks(Array.isArray(data.tasks) ? data.tasks : []);
+          setTasksState('ready');
+        })
+        .catch((error) => {
+          setTasksError(errorMessage(error));
+          setTasksState('error');
+        });
+    } else {
+      setTasksState('ready');
     }
     if (can(user, 'live:read')) {
-      api<LiveStatus>('v1/live/status').then(setLive).catch(() => setLive(null));
+      api<LiveStatus>('v1/live/status')
+        .then((data) => {
+          setLive(data);
+          setLiveState('ready');
+        })
+        .catch((error) => {
+          setLiveError(errorMessage(error));
+          setLiveState('error');
+        });
+    } else {
+      setLiveState('ready');
     }
   }, [user]);
 
@@ -162,6 +205,13 @@ export function Dashboard() {
   }
 
   const canBuild = can(user, 'read:zoho');
+  const taskStatusCounts = tasks.reduce<Record<string, number>>((counts, task) => {
+    const status = task.status?.trim() || 'Unspecified';
+    counts[status] = (counts[status] || 0) + 1;
+    return counts;
+  }, {});
+  const taskStatuses = Object.entries(taskStatusCounts).sort((a, b) => b[1] - a[1]);
+  const openTasks = taskStatusCounts.open || 0;
 
   return (
     <div className="stack-lg">
@@ -241,10 +291,51 @@ export function Dashboard() {
       </Section>
 
       {can(user, 'proposals:read') ? (
+        <Section title="Work in progress">
+          {tasksState === 'loading' ? <LoadingRow label="Loading saved tasks…" /> : null}
+          {tasksState === 'error' ? (
+            <InlineError message={tasksError || 'Saved tasks could not be loaded.'} />
+          ) : null}
+          {tasksState === 'ready' && tasks.length === 0 ? (
+            <EmptyState title="No saved tasks yet">
+              Tasks appear here after an approved task proposal is executed. This view does not include draft proposals.
+            </EmptyState>
+          ) : null}
+          {tasksState === 'ready' && tasks.length > 0 ? (
+            <div className="panel flat task-snapshot">
+              <div className="row-between">
+                <div>
+                  <p className="eyebrow">Saved task records</p>
+                  <h3>{tasks.length} task{tasks.length === 1 ? '' : 's'}</h3>
+                </div>
+                <Badge tone={openTasks ? 'warn' : 'ok'}>{openTasks} open</Badge>
+              </div>
+              <p className="fineprint">Current status distribution from Flux task records · not a time series.</p>
+              <ul className="task-status-chart" aria-label="Task count by current status">
+                {taskStatuses.map(([status, count]) => (
+                  <li key={status}>
+                    <div className="row-between">
+                      <span>{status}</span>
+                      <strong>{count}</strong>
+                    </div>
+                    <span className="task-status-track" aria-hidden="true">
+                      <span style={{ width: `${Math.max(4, (count / tasks.length) * 100)}%` }} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </Section>
+      ) : null}
+
+      {can(user, 'proposals:read') ? (
         <Section title={t('shell.pendingApprovals')} aside={<Link className="button ghost small" href="/approvals">View all</Link>}>
-          {proposals.length ? (
+          {proposalsState === 'loading' ? <LoadingRow label="Loading pending proposals…" /> : null}
+          {proposalsState === 'error' ? <InlineError message={proposalsError || 'Pending proposals could not be loaded.'} /> : null}
+          {proposalsState === 'ready' && proposals.length ? (
             <div className="grid-2">
-              {proposals.map((proposal) => (
+              {proposals.slice(0, 4).map((proposal) => (
                 <article key={proposal.id} className="panel flat">
                   <div className="row-between">
                     <Badge tone="accent">{proposal.gate}</Badge>
@@ -255,11 +346,12 @@ export function Dashboard() {
                 </article>
               ))}
             </div>
-          ) : (
+          ) : null}
+          {proposalsState === 'ready' && proposals.length === 0 ? (
             <EmptyState title="Nothing waiting for approval">
               Flux cannot write anything without a human approval. New proposals will appear here.
             </EmptyState>
-          )}
+          ) : null}
         </Section>
       ) : null}
 
@@ -267,11 +359,19 @@ export function Dashboard() {
         <div className="panel warning">
           <div className="row-between">
             <div>
-              <h3>{live?.liveDataAvailable ? 'A live source is configured' : t('shell.liveOffline')}</h3>
+              <h3>
+                {!can(user, 'live:read') ? 'Live-source status is not available for this role' : null}
+                {can(user, 'live:read') && liveState === 'loading' ? 'Checking live-source status…' : null}
+                {can(user, 'live:read') && liveState === 'error' ? 'Live-source status could not be checked' : null}
+                {can(user, 'live:read') && liveState === 'ready' ? (live?.liveDataAvailable ? 'A live source is configured' : t('shell.liveOffline')) : null}
+              </h3>
               <p className="muted" style={{ fontSize: '0.88rem', marginTop: '0.3rem' }}>{t('dashboard.liveFeedNote')}</p>
             </div>
-            <Badge tone={live?.liveDataAvailable ? 'ok' : 'warn'}>{live?.code || 'LIVE_DATA_NOT_CONFIGURED'}</Badge>
+            <Badge tone={liveState === 'ready' && live?.liveDataAvailable ? 'ok' : 'warn'}>
+              {!can(user, 'live:read') ? 'RESTRICTED' : live?.code || (liveState === 'error' ? 'STATUS_UNAVAILABLE' : liveState === 'loading' ? 'CHECKING' : 'NOT_CHECKED')}
+            </Badge>
           </div>
+          {can(user, 'live:read') && liveState === 'error' ? <p className="fineprint" style={{ marginTop: '0.55rem' }}>{liveError}</p> : null}
           {live ? (
             <div className="chip-row" style={{ marginTop: '0.85rem' }}>
               {live.domains.map((domain) => (

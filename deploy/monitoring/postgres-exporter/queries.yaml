@@ -1,0 +1,131 @@
+# Custom queries for PostgreSQL monitoring
+# https://github.com/prometheus-community/postgres_exporter
+
+pg_database:
+  query: |
+    SELECT
+      d.datname,
+      pg_database_size(d.datname) as size_bytes,
+      (SELECT count(*) FROM pg_stat_activity WHERE datname = d.datname) as active_connections
+    FROM pg_database d
+    WHERE d.datallowconn
+  metrics:
+    - datname:
+        usage: LABEL
+    - size_bytes:
+        usage: GAUGE
+        description: "Database size in bytes"
+    - active_connections:
+        usage: GAUGE
+        description: "Active connections to database"
+
+pg_table_bloat:
+  query: |
+    SELECT
+      schemaname,
+      tablename,
+      pg_total_relation_size(schemaname||'.'||tablename) as total_size,
+      pg_relation_size(schemaname||'.'||tablename) as table_size,
+      pg_total_relation_size(schemaname||'.'||tablename) - pg_relation_size(schemaname||'.'||tablename) as index_size,
+      n_live_tup,
+      n_dead_tup,
+      CASE WHEN n_live_tup > 0 THEN round(n_dead_tup::numeric / n_live_tup * 100, 1) ELSE 0 END as dead_tuple_pct
+    FROM pg_stat_user_tables
+    WHERE n_live_tup > 0
+  metrics:
+    - schemaname:
+        usage: LABEL
+    - tablename:
+        usage: LABEL
+    - total_size:
+        usage: GAUGE
+        description: "Total table size including indexes"
+    - table_size:
+        usage: GAUGE
+        description: "Table size excluding indexes"
+    - index_size:
+        usage: GAUGE
+        description: "Index size"
+    - n_live_tup:
+        usage: GAUGE
+        description: "Live tuples"
+    - n_dead_tup:
+        usage: GAUGE
+        description: "Dead tuples"
+    - dead_tuple_pct:
+        usage: GAUGE
+        description: "Dead tuple percentage"
+
+pg_index_usage:
+  query: |
+    SELECT
+      schemaname,
+      tablename,
+      indexname,
+      idx_scan,
+      idx_tup_read,
+      idx_tup_fetch,
+      pg_relation_size(indexrelid) as index_size
+    FROM pg_stat_user_indexes
+  metrics:
+    - schemaname:
+        usage: LABEL
+    - tablename:
+        usage: LABEL
+    - indexname:
+        usage: LABEL
+    - idx_scan:
+        usage: COUNTER
+        description: "Number of index scans"
+    - idx_tup_read:
+        usage: COUNTER
+        description: "Index tuples read"
+    - idx_tup_fetch:
+        usage: COUNTER
+        description: "Index tuples fetched"
+    - index_size:
+        usage: GAUGE
+        description: "Index size in bytes"
+
+pg_replication:
+  query: |
+    SELECT
+      client_addr,
+      state,
+      sync_state,
+      pg_wal_lsn_diff(sent_lsn, replay_lsn) as lag_bytes,
+      pg_wal_lsn_diff(sent_lsn, write_lsn) as write_lag_bytes,
+      pg_wal_lsn_diff(sent_lsn, flush_lsn) as flush_lag_bytes
+    FROM pg_stat_replication
+  metrics:
+    - client_addr:
+        usage: LABEL
+    - state:
+        usage: LABEL
+    - sync_state:
+        usage: LABEL
+    - lag_bytes:
+        usage: GAUGE
+        description: "Replication lag in bytes"
+    - write_lag_bytes:
+        usage: GAUGE
+        description: "Write lag in bytes"
+    - flush_lag_bytes:
+        usage: GAUGE
+        description: "Flush lag in bytes"
+
+pg_settings:
+  query: |
+    SELECT name, setting, unit, short_desc
+    FROM pg_settings
+    WHERE name IN ('max_connections', 'shared_buffers', 'effective_cache_size', 'work_mem', 'maintenance_work_mem')
+  metrics:
+    - name:
+        usage: LABEL
+    - setting:
+        usage: GAUGE
+        description: "PostgreSQL setting value"
+    - unit:
+        usage: LABEL
+    - short_desc:
+        usage: LABEL

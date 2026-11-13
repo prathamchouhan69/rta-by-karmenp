@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  falco:
+    image: falcosecurity/falco:0.38.0
+    container_name: karm-falco
+    command:
+      - '--pidfile=/tmp/falco.pid'
+      - '--configuration=/etc/falco/falco.yaml'
+      - '--rules-file=/etc/falco/falco_rules.yaml'
+      - '--rules-file=/etc/falco/karm-rules.yaml'
+    volumes:
+      - ./falco/karm-rules.yaml:/etc/falco/karm-rules.yaml:ro
+      - ./falco/falco.yaml:/etc/falco/falco.yaml:ro
+      - /var/run/docker.sock:/host/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+    environment:
+      - FALCO_DRIVER=ebpf
+      - FALCO_EBPF_PROBE=
+      - FALCO_IGNORE_CONTAINER_ENGINE=false
+    privileged: true
+    pid: host
+    network_mode: host
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "falco", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  falcosidekick:
+    image: falcosecurity/falcosidekick:0.4.0
+    container_name: karm-falcosidekick
+    environment:
+      - SLACK_WEBHOOK_URL=${FALCO_SLACK_WEBHOOK:-}
+      - PAGERDUTY_KEY=${FALCO_PAGERDUTY_KEY:-}
+      - WEBHOOK_URL=${FALCO_WEBHOOK_URL:-}
+      - CONFIG_FILE=/etc/falcosidekick/config.yaml
+    volumes:
+      - ./falco/falcosidekick.yaml:/etc/falcosidekick/config.yaml:ro
+    ports:
+      - "127.0.0.1:2802:2802"
+    restart: unless-stopped
+    depends_on:
+      - falco
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M

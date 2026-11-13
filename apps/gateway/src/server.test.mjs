@@ -68,6 +68,7 @@ before(async () => {
     'ZOHO_ORG_ID', 'ZOHO_READ_CLIENT_ID', 'ZOHO_READ_CLIENT_SECRET', 'ZOHO_READ_REFRESH_TOKEN',
     'ZOHO_WRITE_CLIENT_ID', 'ZOHO_WRITE_CLIENT_SECRET', 'ZOHO_WRITE_REFRESH_TOKEN',
     'OPENROUTER_API_KEY', 'OMNIROUTE_API_KEY', 'OMNIROUTE_BASE_URL', 'FLUX_ALLOWED_ORIGINS',
+    'FLUX_UI_URL', 'FLUX_PORT', 'FLUX_BIND_HOST',
   ]) delete process.env[name];
 
   gateway = await startGateway({ env: process.env, logger: { log: () => {}, error: () => {} } });

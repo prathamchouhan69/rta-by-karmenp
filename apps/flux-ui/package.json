@@ -4,9 +4,13 @@
   "private": true,
   "description": "Mobile-first Next.js interface for Flux, the AI operating system inside RTA by KARM.",
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev -H 127.0.0.1 -p ${FLUX_UI_PORT:-3000}",
+    "prebuild": "node scripts/verify-library-inventory.mjs",
     "build": "next build",
-    "start": "next start -p 3000",
+    "start": "next start -p ${FLUX_UI_PORT:-3000}",
+    "test": "npm run test:library-selections && npm run test:receivables-aging",
+    "test:library-selections": "node --experimental-strip-types --test src/lib/library-selections.test.mjs",
+    "test:receivables-aging": "node --experimental-strip-types --test src/lib/receivables-aging.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

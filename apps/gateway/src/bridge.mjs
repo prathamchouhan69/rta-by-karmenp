@@ -60,6 +60,11 @@ export async function ensureFluxOwner(users, { id, name, password = '' }) {
   const existing = users.getRecord(id);
   if (existing) {
     if (!existing.active || existing.role !== 'owner') throw new Error(`Configured Flux owner "${id}" must exist and remain active with the owner role`);
+    // FLUX_OWNER_PASSWORD is the source of truth for the interface login. Keep an
+    // existing owner in sync without rewriting the hash when it already matches.
+    if (password.length >= 12 && !(await users.authenticate(id, password))) {
+      await users.resetPassword(id, password);
+    }
     return users.get(id);
   }
   const secret = password.length >= 12 ? password : randomBytes(24).toString('hex');

@@ -6,7 +6,19 @@
     },
     "penpot": {
       "type": "http",
-      "url": "http://127.0.0.1:4401/mcp"
+      "url": "${env:PENPOT_MCP_URL}"
+    },
+    "brilliant": {
+      "command": "npx",
+      "args": ["-y", "@brilliant-hq/mcp"]
+    },
+    "figwright": {
+      "command": "npx",
+      "args": ["-y", "@figwright/mcp@latest"]
+    },
+    "anima": {
+      "type": "http",
+      "url": "https://api.agentgrid.io/v1/mcp"
     },
     "stitch": {
       "type": "http",

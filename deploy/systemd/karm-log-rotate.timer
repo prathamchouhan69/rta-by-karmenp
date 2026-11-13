@@ -1,0 +1,12 @@
+[Unit]
+Description=KARM OS Log Rotation Timer (daily)
+Requires=karm-log-rotate.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=7200
+AccuracySec=1h
+
+[Install]
+WantedBy=timers.target

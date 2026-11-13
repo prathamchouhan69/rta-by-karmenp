@@ -1,0 +1,126 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      version:
+        description: 'Version tag to deploy (optional, defaults to latest main)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version || 'main' }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Docker image
+        run: |
+          IMAGE_TAG=${{ github.event.inputs.version || github.sha }}
+          docker build -t karm-os:${IMAGE_TAG} .
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+
+      - name: Validate Docker Compose
+        run: docker compose config
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cd /opt/karm-os
+            git fetch origin
+            git checkout ${{ github.event.inputs.version || 'main' }}
+            
+            # Copy environment file
+            cp .env.production.example .env.production
+            
+            # Validate required secrets are set
+            required_vars=(
+              "POSTGRES_PASSWORD"
+              "CADDY_DOMAIN"
+              "SETUP_CODE"
+              "SESSION_SECRET"
+              "FLUX_AUTH_SECRET"
+              "FLUX_APPROVAL_SECRET"
+              "FLUX_AUDIT_KEY"
+              "FLUX_OWNER_PASSWORD"
+            )
+            for var in "${required_vars[@]}"; do
+              if [ -z "${!var}" ]; then
+                echo "ERROR: $var is not set"
+                exit 1
+              fi
+            done
+            
+            # Pull new image
+            docker compose pull
+            
+            # Run database migrations if needed
+            docker compose run --rm app npm run db:migrate || true
+            
+            # Rolling restart
+            docker compose up -d --no-deps app
+            
+            # Wait for health
+            for i in {1..30}; do
+              if curl -sf http://127.0.0.1:8787/readyz >/dev/null; then
+                echo "Deployment successful"
+                exit 0
+              fi
+              sleep 5
+            done
+            echo "Deployment failed - health check timeout"
+            docker compose logs app
+            exit 1
+
+      - name: Run post-deployment smoke test
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          envs: SETUP_CODE,FLUX_OWNER_PASSWORD,METRICS_TOKEN
+          script: |
+            cd /opt/karm-os
+            KARM_BASE_URL=https://${{ secrets.CADDY_DOMAIN }} \
+            SETUP_CODE=${SETUP_CODE} \
+            FLUX_OWNER_PASSWORD=${FLUX_OWNER_PASSWORD} \
+            METRICS_TOKEN=${METRICS_TOKEN} \
+            node scripts/smoke-gateway.mjs
+
+      - name: Notify deployment
+        if: always()
+        run: |
+          STATUS=${{ job.status }}
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d "{\"text\":\"Deployment to ${{ github.event.inputs.environment }} ${STATUS}\"}"

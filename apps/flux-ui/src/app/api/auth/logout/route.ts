@@ -1,14 +1,14 @@
-import { NextResponse } from 'next/server';
-import { SESSION_COOKIE } from '@/server/config';
+import { NextResponse, type NextRequest } from 'next/server';
+import { SESSION_COOKIE, isSecureRequest } from '@/server/config';
 
 export const runtime = 'nodejs';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   const response = NextResponse.json({ ok: true });
   response.cookies.set(SESSION_COOKIE, '', {
     httpOnly: true,
     sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    secure: isSecureRequest(request),
     path: '/',
     maxAge: 0,
   });

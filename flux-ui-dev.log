@@ -1,0 +1,41 @@
+
+> flux-ui@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.4.5 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.31.79:3000
+✓ Ready in 872ms
+✓ Running next.config.ts took 107ms
+
+✓ Generated AGENTS.md for AI agents. Set `agentRules: false` in next.config to disable.
+○ Compiling / ...
+ GET / 307 in 707ms (next.js: 272ms, application-code: 434ms)
+ GET / 307 in 271ms (next.js: 6ms, application-code: 265ms)
+ GET /login 200 in 136ms (next.js: 15ms, application-code: 121ms)
+✓ Compiled in 186ms
+ GET / 307 in 180ms (next.js: 7ms, application-code: 173ms)
+ GET /login 200 in 136ms (next.js: 4ms, application-code: 132ms)
+ GET / 307 in 261ms (next.js: 2ms, application-code: 258ms)
+ GET / 307 in 253ms (next.js: 5ms, application-code: 248ms)
+ GET / 307 in 104ms (next.js: 4ms, application-code: 100ms)
+ GET / 307 in 226ms (next.js: 1.8ms, application-code: 225ms)
+ GET /login 200 in 79ms (next.js: 2ms, application-code: 77ms)
+ GET / 307 in 110ms (next.js: 1.9ms, application-code: 108ms)
+ GET /login 200 in 69ms (next.js: 2ms, application-code: 67ms)
+ GET / 307 in 152ms (next.js: 2ms, application-code: 150ms)
+ GET / 307 in 114ms (next.js: 2.0ms, application-code: 112ms)
+ GET / 307 in 120ms (next.js: 1.6ms, application-code: 118ms)
+ GET / 307 in 86ms (next.js: 1.4ms, application-code: 85ms)
+ GET / 307 in 101ms (next.js: 1.3ms, application-code: 99ms)
+ GET / 307 in 83ms (next.js: 1.9ms, application-code: 81ms)
+ GET /login 200 in 101ms (next.js: 1.4ms, application-code: 100ms)
+ GET /api/system/health 401 in 126ms (next.js: 75ms, application-code: 51ms)
+ GET / 307 in 526ms (next.js: 12ms, application-code: 514ms)
+ GET / 307 in 151ms (next.js: 4ms, application-code: 147ms)
+ GET /login 200 in 105ms (next.js: 1.4ms, application-code: 103ms)
+ GET /manifest.webmanifest 200 in 51ms (next.js: 34ms, application-code: 17ms)
+ GET / 307 in 188ms (next.js: 4ms, application-code: 184ms)
+ GET /login 200 in 115ms (next.js: 1.3ms, application-code: 114ms)
+ GET /manifest.webmanifest 200 in 25ms (next.js: 3ms, application-code: 22ms)
+[?25h

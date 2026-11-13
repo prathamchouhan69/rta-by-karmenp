@@ -16,6 +16,14 @@ function newId(): string {
   return `m_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function recentTurns(messages: ChatMessageData[]): { role: 'user' | 'assistant'; content: string }[] {
+  return messages
+    .filter((message): message is ChatMessageData & { role: 'user' | 'assistant' } =>
+      !message.queued && (message.role === 'user' || message.role === 'assistant'))
+    .slice(-8)
+    .map((message) => ({ role: message.role, content: message.body.slice(0, 2000) }));
+}
+
 function restore(): ChatMessageData[] {
   if (typeof window === 'undefined') return [];
   try {
@@ -25,7 +33,8 @@ function restore(): ChatMessageData[] {
     if (!Array.isArray(parsed)) return [];
     return parsed.filter((row): row is ChatMessageData => {
       const item = row as Partial<ChatMessageData> | null;
-      return !!item && typeof item.id === 'string' && typeof item.body === 'string' && (item.role === 'user' || item.role === 'assistant' || item.role === 'system');
+      return !!item && typeof item.id === 'string' && typeof item.body === 'string' && (item.role === 'user' || item.role === 'assistant' || item.role === 'system')
+        && (item.queueId === undefined || typeof item.queueId === 'string');
     });
   } catch {
     return [];
@@ -41,6 +50,7 @@ export function ChatPanel() {
   const [input, setInput] = useState('');
   const [deep, setDeep] = useState(false);
   const [verify, setVerify] = useState(false);
+  const [useRecentContext, setUseRecentContext] = useState(false);
   const [screen, setScreen] = useState('none');
   const [recordId, setRecordId] = useState('');
   const [busy, setBusy] = useState(false);
@@ -56,18 +66,22 @@ export function ChatPanel() {
     setMessages((current) => [...current, message].slice(-60));
   }, []);
 
-  const ask = useCallback(async (text: string, options: { deep: boolean; verify: boolean }) => {
+  const ask = useCallback(async (
+    text: string,
+    options: { deep: boolean; verify: boolean },
+    history: { role: 'user' | 'assistant'; content: string }[],
+  ) => {
     const payload = {
       message: text,
       deep: options.deep,
       verify: options.verify,
+      history,
       context: canUseContext && screen !== 'none'
         ? { screen, ...(recordId.trim() ? { recordId: recordId.trim() } : {}) }
         : null,
     };
-    const response = await api<ChatResponse>('v1/chat', { method: 'POST', body: payload });
-    append({ id: newId(), role: 'assistant', body: response.answer, response, createdAt: new Date().toISOString() });
-  }, [append, canUseContext, recordId, screen]);
+    return api<ChatResponse>('v1/chat', { method: 'POST', body: payload });
+  }, [canUseContext, recordId, screen]);
 
   const flush = useCallback(async () => {
     if (flushing.current) return;
@@ -78,11 +92,25 @@ export function ChatPanel() {
     }
     flushing.current = true;
     setBusy(true);
+    const previousMessages = messages.filter((message) => !message.queued);
     try {
       for (const item of items) {
-        append({ id: newId(), role: 'user', body: item.message, createdAt: item.createdAt });
         try {
-          await ask(item.message, { deep: item.deep, verify: item.verify });
+          const history = useRecentContext ? recentTurns(previousMessages) : [];
+          const response = await ask(item.message, { deep: item.deep, verify: item.verify }, history);
+          const queuedMessage = messages.find((message) => message.queueId === item.id);
+          if (queuedMessage) {
+            setMessages((current) => current.map((message) => message.queueId === item.id
+              ? { ...message, queued: false, queueId: undefined }
+              : message));
+          } else {
+            append({ id: newId(), role: 'user', body: item.message, createdAt: item.createdAt });
+          }
+          append({ id: newId(), role: 'assistant', body: response.answer, response, createdAt: new Date().toISOString() });
+          previousMessages.push(
+            { id: newId(), role: 'user', body: item.message, createdAt: item.createdAt },
+            { id: newId(), role: 'assistant', body: response.answer, response, createdAt: new Date().toISOString() },
+          );
           removeQueued(item.id);
         } catch (issue) {
           setError(errorMessage(issue));
@@ -94,7 +122,7 @@ export function ChatPanel() {
       setBusy(false);
       flushing.current = false;
     }
-  }, [append, ask]);
+  }, [append, ask, messages, useRecentContext]);
 
   const flushRef = useRef(flush);
   flushRef.current = flush;
@@ -131,13 +159,15 @@ export function ChatPanel() {
     setError('');
     setInput('');
     if (!navigator.onLine) {
-      enqueueMessage(text, deep, verify);
-      append({ id: newId(), role: 'user', body: text, queued: true, createdAt: new Date().toISOString() });
+      const queued = enqueueMessage(text, deep, verify);
+      append({ id: newId(), queueId: queued.id, role: 'user', body: text, queued: true, createdAt: queued.createdAt });
       return;
     }
+    const history = useRecentContext ? recentTurns(messages) : [];
     append({ id: newId(), role: 'user', body: text, createdAt: new Date().toISOString() });
     setBusy(true);
-    ask(text, { deep, verify })
+    ask(text, { deep, verify }, history)
+      .then((response) => append({ id: newId(), role: 'assistant', body: response.answer, response, createdAt: new Date().toISOString() }))
       .catch((issue) => setError(errorMessage(issue)))
       .finally(() => setBusy(false));
   }
@@ -277,8 +307,10 @@ export function ChatPanel() {
           <div className="chat-tools">
             <CheckboxField label={t('chat.deep')} checked={deep} onChange={setDeep} />
             <CheckboxField label={t('chat.verify')} checked={verify} onChange={setVerify} />
+            <CheckboxField label={t('chat.recentContext')} checked={useRecentContext} onChange={setUseRecentContext} />
             <span className="fineprint" style={{ marginLeft: 'auto' }}>{input.length}/4000 · Enter to send</span>
           </div>
+          {useRecentContext ? <p className="fineprint">{t('chat.recentContextPrivacy')}</p> : null}
           {voice.error ? <p className="fineprint" style={{ color: 'var(--danger)' }}>{voice.error}</p> : null}
           {!voice.supported ? <p className="fineprint">Voice input needs a browser with SpeechRecognition. Typing always works.</p> : null}
         </div>

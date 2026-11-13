@@ -1,0 +1,14 @@
+[Unit]
+Description=KARM OS Log Rotation
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/karm-os
+EnvironmentFile=/opt/karm-os/.env.production
+ExecStart=/usr/bin/node /opt/karm-os/scripts/log-rotate.mjs --max-size=100M --max-age=30
+User=node
+Group=node
+
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { FLUX_API_URL, SESSION_COOKIE, SESSION_MAX_AGE } from '@/server/config';
+import { FLUX_API_URL, SESSION_COOKIE, SESSION_MAX_AGE, isSecureRequest } from '@/server/config';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     response.cookies.set(SESSION_COOKIE, data.token, {
       httpOnly: true,
       sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+      secure: isSecureRequest(request),
       path: '/',
       maxAge: data.expiresInSec || SESSION_MAX_AGE,
     });

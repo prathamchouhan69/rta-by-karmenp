@@ -1,0 +1,296 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday 2 AM
+
+env:
+  NODE_VERSION: '22'
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+jobs:
+  lint-and-typecheck:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run typecheck
+        run: npm run typecheck
+
+      - name: Run money scan
+        run: npm run scan:money
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run Trivy Docker image scan
+        uses: aquasecurity/trivy-action@master
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          image-ref: 'karm-os:${{ github.sha }}'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Review dependencies
+        uses: actions/dependency-review-action@v4
+        with:
+          config-file: '.github/dependency-review-config.yml'
+          fail-on-severity: 'high'
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test, security-scan]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all workspaces
+        run: npm run build
+
+      - name: Build Docker image
+        run: docker build -t karm-os:${{ github.sha }} .
+
+      - name: Validate Docker Compose
+        run: docker compose config
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: karm-os:${{ github.sha }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.spdx.json
+          retention-days: 90
+
+  e2e-smoke:
+    name: E2E Smoke Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Docker image
+        run: docker build -t karm-os:e2e .
+
+      - name: Start test containers
+        run: |
+          docker network create karm-test
+          docker run -d --name postgres-test \
+            --network karm-test \
+            -e POSTGRES_DB=karm \
+            -e POSTGRES_USER=karm \
+            -e POSTGRES_PASSWORD=test \
+            postgres:17-alpine
+          sleep 5
+          docker run -d --name app-test \
+            --network karm-test \
+            -e NODE_ENV=production \
+            -e DATABASE_URL=postgresql://karm:test@postgres-test:5432/karm \
+            -e ZOHO_MODE=mock \
+            -e FLUX_AUTH_SECRET=$(openssl rand -hex 32) \
+            -e FLUX_APPROVAL_SECRET=$(openssl rand -hex 32) \
+            -e FLUX_AUDIT_KEY=$(openssl rand -hex 32) \
+            -e FLUX_OWNER_PASSWORD=$(openssl rand -hex 16) \
+            -p 8787:8787 \
+            karm-os:e2e
+
+      - name: Wait for readiness
+        run: |
+          for i in {1..60}; do
+            if curl -sf http://127.0.0.1:8787/readyz >/dev/null; then
+              echo "Ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Timeout waiting for readiness"
+          docker logs app-test
+          exit 1
+
+      - name: Run E2E smoke test
+        run: npm run test:e2e
+
+      - name: Run gateway smoke test
+        run: |
+          SETUP_CODE=$(openssl rand -hex 16) \
+          FLUX_OWNER_PASSWORD=$(docker exec app-test printenv FLUX_OWNER_PASSWORD) \
+          node scripts/smoke-gateway.mjs
+
+      - name: Run load test
+        run: |
+          SETUP_CODE=$(openssl rand -hex 16) \
+          FLUX_OWNER_PASSWORD=$(docker exec app-test printenv FLUX_OWNER_PASSWORD) \
+          node scripts/load-test.mjs --duration=30 --rps=20 --concurrency=10
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f app-test postgres-test
+          docker network rm karm-test
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build, e2e-smoke]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: .
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=tag
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          sbom: true
+          provenance: true
+
+      - name: Sign image with Cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: 'latest'
+
+      - name: Sign the published image
+        run: |
+          cosign sign --yes ghcr.io/${{ github.repository }}@${{ steps.meta.outputs.digest }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: sbom.spdx.json
+          generate_release_notes: true

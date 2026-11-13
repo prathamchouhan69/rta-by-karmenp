@@ -1,0 +1,12 @@
+[Unit]
+Description=KARM OS Backup Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/karm-os
+EnvironmentFile=/opt/karm-os/.env.production
+ExecStart=/usr/bin/docker compose --profile ops run --rm backup
+User=root
+Group=docker

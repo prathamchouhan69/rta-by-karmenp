@@ -1,0 +1,12 @@
+[Unit]
+Description=KARM OS Database Maintenance Timer (weekly)
+Requires=karm-db-maintenance.service
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+RandomizedDelaySec=10800
+AccuracySec=1h
+
+[Install]
+WantedBy=timers.target

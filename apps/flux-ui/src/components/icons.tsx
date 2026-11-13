@@ -4,7 +4,8 @@ export type IconName =
   | 'home' | 'chat' | 'money' | 'wealth' | 'startup' | 'construction' | 'health'
   | 'knowledge' | 'jugaad' | 'approvals' | 'settings' | 'sun' | 'moon' | 'globe'
   | 'menu' | 'close' | 'mic' | 'send' | 'plus' | 'trash' | 'chevron' | 'check'
-  | 'warning' | 'spark' | 'logout' | 'wifi-off' | 'wifi' | 'arrow' | 'search';
+  | 'warning' | 'spark' | 'logout' | 'wifi-off' | 'wifi' | 'arrow' | 'search'
+  | 'economy' | 'radar' | 'local' | 'automations' | 'meeting' | 'documents';
 
 const paths: Record<IconName, string> = {
   home: 'M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',
@@ -36,6 +37,12 @@ const paths: Record<IconName, string> = {
   wifi: 'M2 8a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01',
   arrow: 'M5 12h14M13 6l6 6-6 6',
   search: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3',
+  economy: 'M3 6h18M3 12h12M3 18h9M18 9v12M14 9h4l4 4v6h-8',
+  radar: 'M12 3a9 9 0 0 0-9 9c0 2.6 1.2 4.9 3 6.7l-2.2 2.2 1.4 1.4 2.2-2.2A9 9 0 0 0 21 12 9 9 0 0 0 12 3zm0 3a6 6 0 0 1 6 6 6 6 0 0 1-2.8 4.8L12 12.8V6z',
+  local: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0zM12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
+  automations: 'M5 5h14v4h-4v6h4v4H5V5zm7 7h-2v-2h2v2z',
+  meeting: 'M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm2 6h10M7 10h.01M7 14h10M7 18h6',
+  documents: 'M6 3h8l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm8 0v5h5M8 12h8M8 16h8',
 };
 
 export function Icon({ name, size = 20, ...props }: { name: IconName; size?: number } & SVGProps<SVGSVGElement>) {

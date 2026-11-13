@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily KARM OS Backup Timer
+Requires=karm-backup.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=3600
+AccuracySec=1h
+
+[Install]
+WantedBy=timers.target

@@ -172,6 +172,28 @@ test('jugaad and knowledge APIs are permissioned and labelled', async () => {
   assert.equal(recommend.body.investmentDisclaimer, 'Educational information only, not personalised investment advice.');
 });
 
+test('economy price trend validates caller-supplied rows before calculation', async () => {
+  const { call, tok } = await boot();
+  const valid = await call('POST', '/v1/economy/price-trend', {
+    token: tok.staff,
+    body: { rows: [
+      { material: 'TMT steel', price: 60000, date: '2026-10-01' },
+      { material: 'TMT steel', price: 62000, date: '2026-11-01' },
+    ] },
+  });
+  assert.equal(valid.status, 200);
+  assert.equal(valid.body.summary[0].trend, 'rising');
+  assert.equal(valid.body.summary[0].observations, 2);
+  assert.match(valid.body.investmentDisclaimer, /not personalised investment advice/);
+
+  const invalid = await call('POST', '/v1/economy/price-trend', {
+    token: tok.staff,
+    body: { rows: [{ material: 'TMT steel', price: -1, date: '2026-02-31', source: 'unverified' }] },
+  });
+  assert.equal(invalid.status, 422);
+  assert.equal(invalid.body.error.code, 'VALIDATION_ERROR');
+});
+
 test('Zod rejects unknown fields and invalid values with a structured 422', async () => {
   const { call, tok } = await boot();
   const unknown = await call('POST', '/v1/finance/emi', { token: tok.acct, body: { principal: 100000, months: 12, surprise: true } });

@@ -1,0 +1,39 @@
+# Dependency Review Configuration
+# https://github.com/actions/dependency-review-action
+
+# Fail on these severity levels
+fail-on-severity: high
+
+# Allow these licenses (SPDX identifiers)
+allow-licenses:
+  - MIT
+  - Apache-2.0
+  - BSD-2-Clause
+  - BSD-3-Clause
+  - ISC
+  - CC0-1.0
+  - Unlicense
+  - Python-2.0
+  - Zlib
+
+# Deny these licenses
+deny-licenses:
+  - GPL-2.0
+  - GPL-3.0
+  - AGPL-3.0
+  - LGPL-2.1
+  - LGPL-3.0
+
+# Allow specific packages with non-allowed licenses (with justification)
+allow-packages:
+  # Example: package-name@version: "Justification for exception"
+
+# Deny specific packages regardless of license
+deny-packages:
+  - event-stream@3.3.6  # Known malicious package
+
+# Scope to check (runtime, development, or all)
+scope: all
+
+# Configuration file version
+config-version: 1

@@ -27,8 +27,9 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
 export async function getUiPreferences(): Promise<{ theme: Theme; lang: Lang }> {
   const jar = await cookies();
+  const savedTheme = jar.get(THEME_COOKIE)?.value;
   return {
-    theme: jar.get(THEME_COOKIE)?.value === 'light' ? 'light' : 'dark',
+    theme: savedTheme === 'light' || savedTheme === 'classic' ? savedTheme : 'dark',
     lang: jar.get(LANG_COOKIE)?.value === 'hi' ? 'hi' : 'en',
   };
 }

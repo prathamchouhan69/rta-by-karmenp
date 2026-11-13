@@ -1,0 +1,105 @@
+# Falcosidekick Configuration
+# https://github.com/falcosecurity/falcosidekick
+
+slack:
+  webhookurl: ""
+  channel: ""
+  username: "Falco"
+  icon: ":falco:"
+  minpriority: "WARNING"
+
+pagerduty:
+  key: ""
+  servicekey: ""
+  minpriority: "CRITICAL"
+
+webhook:
+  url: ""
+  minpriority: "WARNING"
+  customheaders:
+    Authorization: "Bearer ${WEBHOOK_TOKEN}"
+
+alertmanager:
+  url: ""
+  minpriority: "WARNING"
+
+mattermost:
+  webhookurl: ""
+  channel: ""
+  username: "Falco"
+  minpriority: "WARNING"
+
+rocketchat:
+  webhookurl: ""
+  channel: ""
+  username: "Falco"
+  minpriority: "WARNING"
+
+teams:
+  webhookurl: ""
+  minpriority: "WARNING"
+
+datadog:
+  apikey: ""
+  appkey: ""
+  minpriority: "WARNING"
+
+discord:
+  webhookurl: ""
+  minpriority: "WARNING"
+
+opsgenie:
+  apikey: ""
+  minpriority: "WARNING"
+
+googlechat:
+  webhookurl: ""
+  minpriority: "WARNING"
+
+telegram:
+  token: ""
+  chatid: ""
+  minpriority: "WARNING"
+
+aws_sns:
+  accesskey: ""
+  secretkey: ""
+  region: ""
+  topicarn: ""
+  minpriority: "WARNING"
+
+aws_lambda:
+  accesskey: ""
+  secretkey: ""
+  region: ""
+  functionname: ""
+  minpriority: "WARNING"
+
+azure_log_analytics:
+  workspaceid: ""
+  sharedkey: ""
+  minpriority: "WARNING"
+
+kafka:
+  brokers: ""
+  topic: ""
+  minpriority: "WARNING"
+
+stan:
+  clusterid: ""
+  clientid: ""
+  subject: ""
+  minpriority: "WARNING"
+
+nats:
+  url: ""
+  subject: ""
+  minpriority: "WARNING"
+
+policy_report:
+  enabled: true
+  minpriority: "WARNING"
+
+customfields:
+  cluster: "karm-os"
+  environment: "production"

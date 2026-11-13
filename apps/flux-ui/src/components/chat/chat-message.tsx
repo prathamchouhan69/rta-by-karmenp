@@ -11,6 +11,7 @@ export interface ChatMessageData {
   body: string;
   response?: ChatResponse;
   queued?: boolean;
+  queueId?: string;
   createdAt: string;
 }
 

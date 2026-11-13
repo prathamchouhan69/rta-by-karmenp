@@ -7,37 +7,52 @@ import { Icon, type IconName } from './icons';
 import { useSession, useUi, can } from './providers';
 import { api } from '@/lib/api';
 import type { TranslationKey } from '@/lib/i18n';
+import type { Theme } from '@/lib/types';
 
 interface NavItem {
   href: string;
   key: TranslationKey;
   icon: IconName;
+  permission?: string;
 }
 
 const PRIMARY: NavItem[] = [
   { href: '/', key: 'nav.home', icon: 'home' },
   { href: '/chat', key: 'nav.chat', icon: 'chat' },
   { href: '/money', key: 'nav.money', icon: 'money' },
+  { href: '/cash-flow', key: 'nav.cashFlow', icon: 'money', permission: 'finance:read' },
   { href: '/wealth', key: 'nav.wealth', icon: 'wealth' },
   { href: '/startup', key: 'nav.startup', icon: 'startup' },
-  { href: '/construction', key: 'nav.construction', icon: 'construction' },
+  { href: '/economy', key: 'nav.economy', icon: 'economy' },
+  { href: '/radar', key: 'nav.radar', icon: 'radar' },
+  { href: '/documents', key: 'nav.documents', icon: 'documents' },
 ];
 
 const SECONDARY: NavItem[] = [
-  { href: '/health', key: 'nav.health', icon: 'health' },
-  { href: '/knowledge', key: 'nav.knowledge', icon: 'knowledge' },
-  { href: '/jugaad', key: 'nav.jugaad', icon: 'jugaad' },
+  { href: '/references', key: 'nav.references', icon: 'knowledge' },
+  { href: '/charts', key: 'nav.charts', icon: 'wealth' },
+  { href: '/selections', key: 'nav.selections', icon: 'approvals' },
+  { href: '/schemes', key: 'nav.schemes', icon: 'knowledge', permission: 'knowledge:read' },
+  { href: '/local', key: 'nav.local', icon: 'local' },
+  { href: '/automations', key: 'nav.automations', icon: 'automations' },
+  { href: '/meeting', key: 'nav.meeting', icon: 'meeting' },
+  { href: '/tasks', key: 'nav.tasks', icon: 'approvals', permission: 'proposals:read' },
   { href: '/approvals', key: 'nav.approvals', icon: 'approvals' },
   { href: '/settings', key: 'nav.settings', icon: 'settings' },
 ];
 
 const TITLES: Array<[string, TranslationKey]> = [
   ['/chat', 'nav.chat'], ['/money', 'nav.money'], ['/wealth', 'nav.wealth'],
-  ['/startup', 'nav.startup'], ['/construction', 'nav.construction'],
-  ['/health', 'nav.health'], ['/knowledge', 'nav.knowledge'],
-  ['/jugaad', 'nav.jugaad'], ['/approvals', 'nav.approvals'], ['/settings', 'nav.settings'],
+  ['/cash-flow', 'nav.cashFlow'], ['/startup', 'nav.startup'], ['/economy', 'nav.economy'], ['/radar', 'nav.radar'],
+  ['/local', 'nav.local'], ['/automations', 'nav.automations'], ['/meeting', 'nav.meeting'],
+  ['/tasks', 'nav.tasks'], ['/approvals', 'nav.approvals'], ['/settings', 'nav.settings'],
+  ['/schemes', 'nav.schemes'],
+  ['/documents', 'nav.documents'],
+  ['/references', 'nav.references'], ['/charts', 'nav.charts'], ['/selections', 'nav.selections'],
   ['/', 'nav.home'],
 ];
+
+const NEXT_THEME: Record<Theme, Theme> = { dark: 'light', light: 'classic', classic: 'dark' };
 
 function isActive(pathname: string, href: string): boolean {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
@@ -165,9 +180,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <nav aria-label="Main navigation" className="stack">
         <p className="nav-group-label">Operate</p>
-        <div className="side-nav">{PRIMARY.map((item) => navLink(item))}</div>
+        <div className="side-nav">{PRIMARY.filter((item) => !item.permission || can(user, item.permission)).map((item) => navLink(item))}</div>
         <p className="nav-group-label" style={{ marginTop: '0.55rem' }}>Personal &amp; knowledge</p>
-        <div className="side-nav">{SECONDARY.map((item) => navLink(item))}</div>
+        <div className="side-nav">{SECONDARY.filter((item) => !item.permission || can(user, item.permission)).map((item) => navLink(item))}</div>
       </nav>
 
       <div className="sidebar-foot">
@@ -217,8 +232,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span>{pending != null && pending > 0 ? `${pending} ${t('shell.pendingApprovals').toLowerCase()}` : liveOff ? t('shell.liveOffline') : t('shell.liveActivity')}</span>
               </Link>
             ) : null}
-            <button className="icon-button" type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>
-              <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
+            <button className="icon-button" type="button" onClick={() => setTheme(NEXT_THEME[theme])} aria-label={`Change visual mood. Current mood: ${theme}`} title={`Visual mood: ${theme}`}>
+              <Icon name={theme === 'light' ? 'sun' : 'moon'} size={18} />
             </button>
             <button className="icon-button" type="button" onClick={() => setLang(lang === 'en' ? 'hi' : 'en')} aria-label={lang === 'en' ? 'Switch to Hindi' : 'Switch to English'} title={lang === 'en' ? 'हिन्दी' : 'English'}>
               <Icon name="globe" size={18} />

@@ -30,6 +30,25 @@
           "whoami": "Who Am I"
         }
       }
+    },
+    "figwright": {
+      "command": "npx",
+      "args": ["-y", "@figwright/mcp@latest"]
+    },
+    "brilliant": {
+      "command": "npx",
+      "args": ["-y", "@brilliant-hq/mcp"]
+    },
+    "anima": {
+      "type": "http",
+      "url": "https://api.agentgrid.io/v1/mcp"
+    },
+    "stitch": {
+      "type": "http",
+      "url": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "AQ.Ab8RN6JrZ3y-UfKypJo9lmVUMMb1nU7KGkQAcp-cjE9Bi261eA"
+      }
     }
   }
 }

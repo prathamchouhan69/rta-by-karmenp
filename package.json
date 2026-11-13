@@ -8,18 +8,43 @@
     "tools/*"
   ],
   "scripts": {
-    "dev": "concurrently -n gateway,mock -c magenta,yellow \"npm:dev:gateway\" \"npm:dev:mock\"",
+    "dev": "concurrently -n gateway,ui,mock -c magenta,cyan,yellow \"npm:dev:gateway\" \"npm:dev:flux-ui\" \"npm:dev:mock\"",
+    "dev:flux-ui": "FLUX_API_URL=http://127.0.0.1:8788 FLUX_UI_PORT=${FLUX_UI_PORT:-3000} npm run dev -w apps/flux-ui",
     "dev:web": "npm run dev -w apps/web",
     "dev:proxy": "npm run dev -w apps/proxy",
-    "dev:gateway": "npm run dev -w apps/gateway",
+    "dev:gateway": "GATEWAY_HOST=127.0.0.1 FLUX_PORT=8788 FLUX_UI_URL=http://127.0.0.1:${FLUX_UI_PORT:-3000} FLUX_OWNER_PASSWORD=${FLUX_OWNER_PASSWORD:-karm-local-dev-owner} npm run dev -w apps/gateway",
     "dev:mock": "npm run dev -w tools/mock-zoho",
-    "build": "npm run build -w apps/web && npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho && npm run build -w packages/shared",
-    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w apps/web && npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway",
-    "lint": "npm run lint -w apps/web && npm run lint -w apps/proxy && npm run typecheck -w apps/gateway",
-    "test": "npm run test -w packages/shared && npm run test -w apps/web && npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && node --test scripts/*.test.mjs",
+    "start": "node scripts/start-production.mjs",
+    "build": "npm run build -w packages/shared && npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho && npm run build -w apps/flux-ui",
+    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway && npm run typecheck -w apps/flux-ui",
+    "lint": "npm run lint -w apps/proxy && npm run typecheck -w apps/gateway && npm run typecheck -w apps/flux-ui",
+    "test": "npm run test -w packages/shared && npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && npm run test -w apps/flux-ui && node --test scripts/*.test.mjs",
     "scan:money": "node scripts/zero-math-scan.mjs",
     "test:e2e": "node scripts/e2e-smoke.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run scan:money && npm test && npm run build && npm run test:e2e"
+    "verify": "npm run typecheck && npm run lint && npm run scan:money && npm test && npm run build && npm run test:e2e",
+    "validate:env": "node scripts/validate-env.mjs --env-file=.env.production",
+    "validate:env:fix": "node scripts/validate-env.mjs --fix --env-file=.env.production",
+    "db:maintain": "node scripts/db-maintenance.mjs --all",
+    "db:analyze": "node scripts/db-maintenance.mjs --analyze",
+    "db:vacuum": "node scripts/db-maintenance.mjs --vacuum",
+    "db:stats": "node scripts/db-maintenance.mjs --stats",
+    "backup:verify": "node scripts/verify-backups.mjs",
+    "backup:verify:latest": "node scripts/verify-backups.mjs --latest-only",
+    "health:check": "node scripts/health-monitor.mjs",
+    "logs:rotate": "node scripts/log-rotate.mjs",
+    "logs:rotate:dry": "node scripts/log-rotate.mjs --dry-run",
+    "deploy:prepare": "npm run validate:env && npm run build && docker compose config",
+    "secrets:get": "node scripts/secrets.mjs get",
+    "secrets:set": "node scripts/secrets.mjs set",
+    "secrets:list": "node scripts/secrets.mjs list",
+    "secrets:rotate": "node scripts/secrets.mjs rotate",
+    "secrets:generate": "node scripts/secrets.mjs generate",
+    "load-test": "node scripts/load-test.mjs",
+    "load-test:ci": "node scripts/load-test.mjs --duration=60 --rps=20 --concurrency=10",
+    "migrate:up": "npm run migrate:up -w apps/proxy",
+    "migrate:down": "npm run migrate:down -w apps/proxy",
+    "migrate:status": "npm run migrate:status -w apps/proxy",
+    "migrate:create": "npm run migrate:create -w apps/proxy"
   },
   "devDependencies": {
     "@types/node": "22.13.4",
@@ -39,5 +64,8 @@
     "@typescript-eslint/typescript-estree": {
       "minimatch": "11.0.1"
     }
+  },
+  "dependencies": {
+    "recharts": "^3.10.1"
   }
 }

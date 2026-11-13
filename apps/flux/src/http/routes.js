@@ -91,7 +91,7 @@ export function buildRoutes(f) {
       return { id: updated.id, reset: true };
     }, { permission: 'users:admin' }),
 
-    R('POST', '/v1/chat', async ({ user, body }) => { need(body, 'message'); return orchestrator.answer({ actor: user, message: body.message, context: body.context || null, deep: !!body.deep, verify: !!body.verify }); }, { permission: 'chat', limit: AI }),
+    R('POST', '/v1/chat', async ({ user, body }) => { need(body, 'message'); return orchestrator.answer({ actor: user, message: body.message, context: body.context || null, history: body.history, deep: !!body.deep, verify: !!body.verify }); }, { permission: 'chat', limit: AI }),
 
     R('GET', '/v1/board/advisors', async () => ({ advisors: ADVISORS.map(({ id, title, scope }) => ({ id, title, scope })) }), { permission: 'board' }),
     R('POST', '/v1/board/estimate', async ({ body }) => { const ids = board.resolveIds(body.advisors || 'all'); return { advisors: ids, estimatedCalls: estimateCalls(ids), policy: config.costPolicy }; }, { permission: 'board' }),

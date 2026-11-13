@@ -1,0 +1,81 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":enableVulnerabilityAlerts",
+    ":automergePatch",
+    ":automergeMinor",
+    ":schedule(weekly)"
+  ],
+  "timezone": "UTC",
+  "schedule": ["after 2am on monday"],
+  "timezone": "UTC",
+  "prHourlyLimit": 3,
+  "prConcurrentLimit": 5,
+  "branchPrefix": "renovate/",
+  "commitMessagePrefix": "deps:",
+  "labels": ["dependencies", "renovate"],
+  "reviewers": ["@maintainers"],
+  "assignees": ["@maintainers"],
+  "automerge": true,
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dependency Dashboard",
+  "dependencyDashboardHeader": "This dashboard tracks all dependency updates. PRs are auto-merged for patch/minor updates that pass CI.",
+  "dependencyDashboardFooter": "Managed by Renovate Bot",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "schedule": ["after 2am on monday"]
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "schedule": ["after 2am on monday"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major-update", "needs-review"]
+    },
+    {
+      "matchPackagePatterns": ["^@types/"],
+      "groupName": "types",
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["^eslint", "^@typescript-eslint"],
+      "groupName": "eslint",
+      "automerge": false,
+      "labels": ["linting", "needs-review"]
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "automerge": false,
+      "labels": ["typescript", "needs-review"]
+    },
+    {
+      "matchPackageNames": ["node"],
+      "enabled": false
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["node", "postgres", "caddy", "pgbouncer"],
+      "automerge": false,
+      "labels": ["docker", "infrastructure"]
+    }
+  ],
+  "ignorePaths": [
+    "**/apps/web/**",
+    "**/reference-video-guides/**"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "vulnerability"],
+    "automerge": true
+  }
+}

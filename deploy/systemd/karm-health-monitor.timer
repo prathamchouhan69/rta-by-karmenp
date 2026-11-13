@@ -1,0 +1,12 @@
+[Unit]
+Description=KARM OS Health Monitor Timer (every 5 minutes)
+Requires=karm-health-monitor.service
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

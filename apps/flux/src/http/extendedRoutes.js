@@ -10,6 +10,11 @@ import {
 } from '../construction/cost.js';
 import { bmi, bmr, tdee, waterTarget, macros, vitalsCheck, emergencyCheck, lifestylePlan, workforceHeatGuidance, HEALTH_DISCLAIMER } from '../health/engine.js';
 import { advise } from '../jugaad/advisor.js';
+import { economyBrief, priceTrendSummary } from '../economy/mode.js';
+import { opportunityAlerts, trendRadar } from '../opportunities/radar.js';
+import { localInsights } from '../intelligence/local.js';
+import { evaluateBusinessRules, evaluateHealthRules } from '../automations/engine.js';
+import { structureMeeting } from '../meeting/assistant.js';
 import { budgetPlan, savingsGoalPlan, expenseReview } from '../money/mode.js';
 import { netWorthSnapshot, compoundScenario, retirementGap } from '../wealth/mode.js';
 import { runway, burnMultiple, dilution, startupSnapshot } from '../startup/mode.js';
@@ -31,6 +36,8 @@ import {
   budgetPlanSchema, savingsGoalSchema, expenseReviewSchema, netWorthSchema, compoundSchema,
   retirementGapSchema, runwaySchema, burnMultipleSchema, dilutionSchema, startupSnapshotSchema,
   ocrExtractSchema, schemeSearchSchema,
+  economyBriefSchema, trendRadarSchema, opportunityAlertsSchema, localInsightsSchema,
+  businessRulesSchema, healthRulesSchema, meetingSchema, priceTrendRowsSchema,
 } from './modeSchemas.js';
 import { HttpError } from './server.js';
 
@@ -38,7 +45,7 @@ const finance = (result) => (result && result.ok === false ? result : { ...resul
 const health = (result) => (result && result.ok === false ? result : { ...result, disclaimer: HEALTH_DISCLAIMER });
 
 export function buildExtendedRoutes(f) {
-  const { materials, health: healthStore } = f;
+  const { materials, health: healthStore, economy, radar, local, automations } = f;
   const R = (method, path, handler, opts) => [method, path, handler, opts];
   const id = (user) => user.id;
 
@@ -135,5 +142,26 @@ export function buildExtendedRoutes(f) {
     R('POST', '/v1/knowledge/search', async ({ body }) => searchKnowledge(parseInput(knowledgeSearchSchema, body)), { permission: 'knowledge:read' }),
     R('POST', '/v1/knowledge/recommend', async ({ body }) => recommendKnowledge(parseInput(knowledgeRecommendSchema, body)), { permission: 'knowledge:read' }),
     R('GET', '/v1/knowledge/:id', async ({ params }) => getKnowledge(params.id) || (() => { throw new HttpError(404, 'NOT_FOUND', 'Knowledge entry not found'); })(), { permission: 'knowledge:read' }),
+
+    // World Economy Mode — every entry is caller-supplied or explicitly uncertain.
+    R('POST', '/v1/economy/brief', async ({ body }) => economyBrief(parseInput(economyBriefSchema, body)), { permission: 'economy:read' }),
+    R('POST', '/v1/economy/price-trend', async ({ body }) => {
+      const { rows } = parseInput(priceTrendRowsSchema, body);
+      return { ...priceTrendSummary(rows), investmentDisclaimer: FINANCE_DISCLAIMER };
+    }, { permission: 'materials:read' }),
+
+    // Opportunity and Trend Radars.
+    R('POST', '/v1/radar/opportunities', async ({ body }) => opportunityAlerts(parseInput(opportunityAlertsSchema, body)), { permission: 'opportunities:read' }),
+    R('POST', '/v1/radar/trends', async ({ body }) => trendRadar(parseInput(trendRadarSchema, body)), { permission: 'opportunities:read' }),
+
+    // Local Aunty Mode.
+    R('POST', '/v1/local/insights', async ({ body }) => localInsights(parseInput(localInsightsSchema, body)), { permission: 'local:read' }),
+
+    // Automations — prepare drafts and reminders only.
+    R('POST', '/v1/automations/business', async ({ body, user }) => automations.business(parseInput(businessRulesSchema, body)), { permission: 'automations:read' }),
+    R('POST', '/v1/automations/health', async ({ body, user }) => ({ ...automations.health(parseInput(healthRulesSchema, body)), userId: user.id }), { permission: 'health:read' }),
+
+    // Meeting Assistant.
+    R('POST', '/v1/meeting/structure', async ({ body }) => structureMeeting(parseInput(meetingSchema, body)), { permission: 'documents:draft' }),
   ];
 }

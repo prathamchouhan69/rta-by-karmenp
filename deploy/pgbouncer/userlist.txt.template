@@ -1,0 +1,1 @@
+"karm" "md5$(echo -n "karm${POSTGRES_PASSWORD}" | md5sum | cut -d' ' -f1)"

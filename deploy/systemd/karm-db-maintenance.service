@@ -1,0 +1,15 @@
+[Unit]
+Description=KARM OS Database Maintenance
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/karm-os
+EnvironmentFile=/opt/karm-os/.env.production
+ExecStart=/usr/bin/node /opt/karm-os/scripts/db-maintenance.mjs --all
+User=node
+Group=node
+
+[Install]
+WantedBy=multi-user.target

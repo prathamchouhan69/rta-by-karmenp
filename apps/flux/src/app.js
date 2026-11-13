@@ -19,6 +19,11 @@ import { DocumentEngine } from './documents/documents.js';
 import { buildBriefing, BriefingScheduler } from './briefing/briefing.js';
 import { AgentRegistry } from './agents/registry.js';
 import { ADVISORS } from './agents/advisors.js';
+import { economyBrief, priceTrendSummary } from './economy/mode.js';
+import { opportunityAlerts, trendRadar } from './opportunities/radar.js';
+import { localInsights } from './intelligence/local.js';
+import { evaluateBusinessRules, evaluateHealthRules } from './automations/engine.js';
+import { structureMeeting, toTaskProposals as meetingTasks } from './meeting/assistant.js';
 import { createTools } from './agents/tools.js';
 import { createAgentBrowserReader } from './agents/browserReader.js';
 import { CORE_TOOLS, Orchestrator } from './agents/orchestrator.js';
@@ -84,5 +89,11 @@ export function createFlux({ config, fetchFn = fetch, now = () => new Date(), sl
   const startBriefing = () => { if (!config.briefingEnabled || scheduler) return; scheduler = new BriefingScheduler({ run: () => briefing.run('scheduler'), nextAt: (n) => nextRun(n, config.briefingHour), hour: config.briefingHour, now, hasToday: () => !!briefing.today(), onError: (e) => { audit.append({ actor: 'scheduler', action: 'briefing.failed', data: { error: e.message } }); } }); scheduler.start(); };
   const stop = () => scheduler?.stop();
 
-  return { config, store, audit, users, limiter, approvals, registry, usage, router, reader, writer, hsn, materials, health, docs, memory, tools, agents, orchestrator, board, briefing, startBriefing, stop, now };
+  const economy = { brief: (i) => economyBrief(i), trend: (rows) => priceTrendSummary(rows) };
+  const radar = { alerts: (i) => opportunityAlerts(i), trends: (i) => trendRadar(i) };
+  const local = { insights: (i) => localInsights(i) };
+  const automations = { business: (i) => evaluateBusinessRules(i), health: (i) => evaluateHealthRules(i) };
+  const meeting = { structure: (i) => structureMeeting(i), tasks: (m, actor) => meetingTasks(m, actor) };
+
+  return { config, store, audit, users, limiter, approvals, registry, usage, router, reader, writer, hsn, materials, health, docs, memory, tools, agents, orchestrator, board, briefing, economy, radar, local, automations, meeting, startBriefing, stop, now };
 }

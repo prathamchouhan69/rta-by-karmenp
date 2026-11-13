@@ -57,16 +57,19 @@ Set `OPENROUTER_API_KEY` (and/or `OMNIROUTE_BASE_URL`). Then, as owner: `POST /v
 | Briefing | `GET /v1/briefing/today`, `POST /v1/briefing/run`, `POST /v1/briefing/:date/status` `{action: save, snooze, dismiss, open}` |
 | Models | `GET /v1/models`, `POST /v1/models/sync`, `.../pin`, `.../trust`, `.../classify`, `GET /v1/models/usage` |
 | Audit | `GET /v1/audit`, `GET /v1/audit/verify` |
+| Knowledge | `GET /v1/knowledge/stats`, `/categories`, `/search`, `/:id`; `POST /v1/knowledge/search`, `/recommend` |
+| Economy and intelligence | `POST /v1/economy/brief`, `/price-trend`, `/radar/opportunities`, `/radar/trends`, `/local/insights`, `/meeting/structure` |
+| Automations | `POST /v1/automations/business`, `/health`; these return proposed reminders or alerts only |
 | Tools | `POST /v1/tools/fuel`, `/gstin`, `/dues`; public page reading is available to Flux chat only when `FLUX_BROWSER_ALLOWED_DOMAINS` is configured; `GET/POST/DELETE /v1/memory` |
 
 ## Checks
 
-`npm test` runs 85 automated tests against a pretend Zoho Books and a pretend model gateway, including real HTTP and a real server process. `npm run scan` fails on unapproved runtime dependencies, hard-coded models, key-like strings, forbidden names, placeholder code, over-long files or Zoho writes outside the writer.
+`npm test` runs the Flux backend tests against a pretend Zoho Books and a pretend model gateway, including real HTTP and a real server process. `npm run scan` fails on unapproved runtime dependencies, hard-coded models, key-like strings, forbidden names, placeholder code, over-long files or Zoho writes outside the writer.
 
 ## Honest limits
 
 - **Not yet tested against live services.** Zoho Books and the model gateways are simulated in the tests. Before real use, run against a Zoho test organisation and check: the draft POST accepts a JSON body, `accept=pdf` returns a PDF, and the list filters behave as expected.
 - **Plug-in points, not shipped:** the research source for market news, schemes, tenders and prices (so those briefing sections say "Could not verify"), and an official HSN/SAC lookup (so codes stay "Needs verification" until you confirm one).
-- **Not built:** finalising (G3) and sending (G4) executors, the exact-decimal totals preview (Option B), voice, OCR, a database server (data is JSON files under `FLUX_DATA_DIR`; one server process only), push delivery to the iPhone, and the app screens that call this API.
+- **Not built:** finalising (G3) and sending (G4) executors, a production OCR provider, voice, a database server (data is JSON files under `FLUX_DATA_DIR`; one server process only), and push delivery to the iPhone. The broad Flux product roadmap is not fully implemented; available screens and integrations remain a subset of the requested scope.
 - Free models have small daily limits and unreviewed terms; that is why customer data is blocked until you vet a provider.
 - Public web reading uses the agent-browser CLI's text reader and does not launch a persistent browser. It accepts only HTTPS URLs on the exact configured host allowlist, rejects query strings and fragments, sends no Flux cookies or credentials, limits output and reads to two pages per answer, and returns bounded page text as untrusted data. No click, form, download, login, or write commands are exposed.

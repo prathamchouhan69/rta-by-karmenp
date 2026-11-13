@@ -3,6 +3,10 @@ import { z } from 'zod';
 const finite = z.number().finite();
 const nonNegative = finite.nonnegative();
 const positive = finite.positive();
+const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
+  const date = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}, 'Use a real calendar date');
 const percent = finite.min(0).max(100);
 const currency = z.string().regex(/^[A-Za-z]{3}$/).transform((value) => value.toUpperCase()).default('INR');
 const shortText = (max = 120) => z.string().trim().min(1).max(max);
@@ -126,6 +130,129 @@ export const ocrExtractSchema = z.object({
 export const schemeSearchSchema = z.object({
   query: z.string().trim().max(300).default(''),
   limit: z.coerce.number().int().min(1).max(100).default(20),
+}).strict();
+
+const economyEvent = z.object({
+  event: z.string().trim().max(200),
+  date: z.string().trim().max(40).optional(),
+  source: z.string().trim().max(160),
+  sourceUrl: z.string().url().max(500).optional(),
+  whatHappened: z.string().trim().max(600),
+  whyItMatters: z.string().trim().max(600),
+  impactOnRTA: z.string().trim().max(400),
+  impactOnMyMoney: z.string().trim().max(400),
+  opportunity: z.string().trim().max(400),
+  risk: z.string().trim().max(400),
+  recommendedAction: z.string().trim().max(400),
+  jugaadAction: z.string().trim().max(400),
+  confidence: z.enum(['high', 'medium', 'low', 'uncertain']).default('uncertain'),
+}).strict();
+
+export const economyBriefSchema = z.object({ events: z.array(economyEvent).max(200).default([]) }).strict();
+
+export const priceTrendRowsSchema = z.object({
+  rows: z.array(z.object({
+    material: z.string().trim().min(1).max(120),
+    price: positive,
+    date: dateOnly,
+  }).strict()).max(500).default([]),
+}).strict();
+
+export const trendRadarSchema = z.object({
+  trends: z.array(z.object({
+    id: z.string().trim().max(80).optional(),
+    trend: z.string().trim().max(200),
+    category: z.string().trim().max(40).default('general'),
+    whatChanged: z.string().trim().max(400),
+    whyItMatters: z.string().trim().max(400),
+    impactOnRTA: z.string().trim().max(400),
+    opportunity: z.string().trim().max(400),
+    risk: z.string().trim().max(400),
+    timeHorizon: z.string().trim().max(40).default('unknown'),
+    recommendedAction: z.string().trim().max(400),
+    confidence: z.enum(['high', 'medium', 'low', 'uncertain']).default('uncertain'),
+  }).strict()).max(200).default([]),
+}).strict();
+
+export const opportunityAlertsSchema = z.object({
+  alerts: z.array(z.object({
+    id: z.string().trim().max(80).optional(),
+    type: z.string().trim().max(40).default('opportunity'),
+    whatHappened: z.string().trim().max(400),
+    whyItMatters: z.string().trim().max(400),
+    moneyOpportunity: z.string().trim().max(400),
+    deadline: z.string().trim().max(40).optional(),
+    firstAction: z.string().trim().max(400),
+    jugaadAction: z.string().trim().max(400),
+    risk: z.string().trim().max(400),
+    source: z.string().trim().max(160),
+    sourceUrl: z.string().url().max(500).optional(),
+    confidence: z.enum(['high', 'medium', 'low', 'uncertain']).default('uncertain'),
+    approvalRequired: z.boolean().default(true),
+  }).strict()).max(200).default([]),
+}).strict();
+
+const localInsight = z.object({
+  area: z.string().trim().max(40).default('uncertain'),
+  whatHappened: z.string().trim().max(400),
+  whyItMatters: z.string().trim().max(400),
+  opportunity: z.string().trim().max(400),
+  whoToContact: z.string().trim().max(300),
+  howToEarn: z.string().trim().max(400),
+  jugaadApproach: z.string().trim().max(400),
+  risk: z.string().trim().max(400),
+  source: z.string().trim().max(160),
+  sourceUrl: z.string().url().max(500).optional(),
+  verifiedAt: z.string().trim().max(40).optional(),
+  confidence: z.enum(['high', 'medium', 'low', 'uncertain']).default('uncertain'),
+}).strict();
+
+export const localInsightsSchema = z.object({ insights: z.array(localInsight).max(200).default([]) }).strict();
+
+export const businessRulesSchema = z.object({
+  invoices: z.array(z.object({
+    id: z.string().trim().max(80),
+    number: z.string().trim().max(80).optional(),
+    customerName: z.string().trim().max(160).optional(),
+    dueDate: z.string().trim().max(40),
+    balance: z.string().trim().max(40).optional(),
+  }).strict()).max(500).default([]),
+  projects: z.array(z.object({
+    id: z.string().trim().max(80),
+    name: z.string().trim().max(160).optional(),
+    marginPercent: finite,
+  }).strict()).max(200).default([]),
+  materialPrices: z.array(z.object({
+    material: z.string().trim().max(120),
+    location: z.string().trim().max(120),
+    unit: z.string().trim().max(40),
+    currentPrice: finite,
+    priceChangePercent: finite,
+    confidence: z.string().trim().max(20).optional(),
+  }).strict()).max(200).default([]),
+  marginThreshold: percent.default(10),
+  priceRiseThreshold: percent.default(5),
+}).strict();
+
+export const healthRulesSchema = z.object({
+  profile: z.object({
+    weightKg: finite.min(20).max(500).optional(),
+    medicines: z.array(z.string().trim().max(160)).max(50).default([]),
+  }).optional(),
+  vitals: z.array(z.object({
+    type: z.string().trim().max(40),
+    value: z.union([finite, z.object({ systolic: finite, diastolic: finite }).strict()]),
+  }).strict()).max(200).default([]),
+}).strict();
+
+export const meetingSchema = z.object({
+  text: z.string().trim().min(1).max(20000),
+  title: z.string().trim().max(120).optional(),
+  date: z.string().trim().max(40).optional(),
+  owner: z.string().trim().max(80).optional(),
+  due: z.string().trim().max(40).optional(),
+  attendees: z.array(z.string().trim().max(80)).max(50).default([]),
+  summary: z.string().trim().max(600).optional(),
 }).strict();
 
 export { z };

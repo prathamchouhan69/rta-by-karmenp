@@ -1,0 +1,14 @@
+[Unit]
+Description=KARM OS Health Monitor
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/karm-os
+EnvironmentFile=/opt/karm-os/.env.production
+ExecStart=/usr/bin/node /opt/karm-os/scripts/health-monitor.mjs --url=https://%H --metrics-token=${METRICS_TOKEN} --alert-webhook=${ALERT_WEBHOOK}
+User=node
+Group=node
+
+[Install]
+WantedBy=multi-user.target

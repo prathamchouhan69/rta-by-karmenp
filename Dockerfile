@@ -4,6 +4,7 @@ WORKDIR /app
 COPY . .
 RUN npm ci
 RUN npm run build
+RUN rm -rf apps/flux-ui/.next/cache
 RUN npm prune --omit=dev
 
 FROM node:22-bookworm-slim AS runtime
@@ -11,10 +12,14 @@ FROM node:22-bookworm-slim AS runtime
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
     PORT=8787 \
-    STATIC_ROOT=apps/web/dist \
+    FLUX_BIND_HOST=127.0.0.1 \
+    FLUX_PORT=8788 \
+    FLUX_UI_URL=http://127.0.0.1:3000 \
+    FLUX_UI_PORT=3000 \
     DATA_DIR=/data/proxy \
     FLUX_DATA_DIR=/data/flux \
-    FLUX_TRUST_PROXY=true
+    FLUX_TRUST_PROXY=true \
+    NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 
 COPY --from=build --chown=node:node /app/package.json ./package.json
@@ -26,14 +31,20 @@ COPY --from=build --chown=node:node /app/apps/flux/src ./apps/flux/src
 COPY --from=build --chown=node:node /app/apps/flux/scripts ./apps/flux/scripts
 COPY --from=build --chown=node:node /app/apps/gateway/package.json ./apps/gateway/package.json
 COPY --from=build --chown=node:node /app/apps/gateway/src ./apps/gateway/src
-COPY --from=build --chown=node:node /app/apps/web/dist ./apps/web/dist
+COPY --from=build --chown=node:node /app/apps/flux-ui/package.json ./apps/flux-ui/package.json
+COPY --from=build --chown=node:node /app/apps/flux-ui/next.config.mjs ./apps/flux-ui/next.config.mjs
+COPY --from=build --chown=node:node /app/apps/flux-ui/tsconfig.json ./apps/flux-ui/tsconfig.json
+COPY --from=build --chown=node:node /app/apps/flux-ui/.next ./apps/flux-ui/.next
+COPY --from=build --chown=node:node /app/apps/flux-ui/public ./apps/flux-ui/public
+COPY --from=build --chown=node:node /app/apps/flux-ui/src ./apps/flux-ui/src
+COPY --from=build --chown=node:node /app/scripts/start-production.mjs ./scripts/start-production.mjs
 
-RUN mkdir -p /data/proxy /data/flux && chown -R node:node /data
+RUN mkdir -p /data/proxy /data/flux /app/apps/flux-ui/.next/cache && chown -R node:node /data /app/apps/flux-ui/.next
 USER node
 VOLUME ["/data"]
 EXPOSE 8787
 
-HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=5 \
+HEALTHCHECK --interval=15s --timeout=5s --start-period=45s --retries=5 \
   CMD node -e "fetch('http://127.0.0.1:8787/readyz').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
 
-CMD ["node", "apps/gateway/src/server.mjs"]
+CMD ["node", "scripts/start-production.mjs"]

@@ -1,0 +1,12 @@
+[Unit]
+Description=KARM OS Backup Verification Timer (weekly)
+Requires=karm-verify-backups.service
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+RandomizedDelaySec=14400
+AccuracySec=1h
+
+[Install]
+WantedBy=timers.target

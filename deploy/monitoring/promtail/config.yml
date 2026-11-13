@@ -1,0 +1,55 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: karm-gateway
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: karm-gateway
+          service: gateway
+          __path__: /opt/karm-os/logs/gateway*.log
+
+  - job_name: karm-docker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: karm-docker
+          service: docker
+          __path__: /var/lib/docker/containers/*/*-json.log
+
+  - job_name: karm-system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: karm-system
+          service: system
+          __path__: /var/log/syslog
+
+  - job_name: karm-nginx
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: karm-nginx
+          service: nginx
+          __path__: /var/log/nginx/*.log
+
+  - job_name: karm-caddy
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: karm-caddy
+          service: caddy
+          __path__: /var/log/caddy/*.log

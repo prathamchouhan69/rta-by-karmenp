@@ -216,10 +216,10 @@ npm run uxpin:summary   # Show component summary
 
 ### Web App
 ```bash
-npm run dev             # Start dev server (port 5173)
-npm run build           # Build for production
-npm run typecheck       # TypeScript check
-npm run lint            # ESLint check
+npm run dev             # Gateway :8787, flux-ui :3000, mock Zoho :4010
+npm run build           # Build flux-ui and the backend packages
+npm run typecheck       # TypeScript checks
+npm run lint            # Backend lint and frontend type checks
 ```
 
 ### GitKraken
