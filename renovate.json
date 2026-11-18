@@ -69,10 +69,7 @@
       "labels": ["docker", "infrastructure"]
     }
   ],
-  "ignorePaths": [
-    "**/apps/web/**",
-    "**/reference-video-guides/**"
-  ],
+  "ignorePaths": [],
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security", "vulnerability"],

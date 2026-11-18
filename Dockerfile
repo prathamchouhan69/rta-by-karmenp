@@ -4,7 +4,6 @@ WORKDIR /app
 COPY . .
 RUN npm ci
 RUN npm run build
-RUN rm -rf apps/flux-ui/.next/cache
 RUN npm prune --omit=dev
 
 FROM node:22-bookworm-slim AS runtime
@@ -14,12 +13,9 @@ ENV NODE_ENV=production \
     PORT=8787 \
     FLUX_BIND_HOST=127.0.0.1 \
     FLUX_PORT=8788 \
-    FLUX_UI_URL=http://127.0.0.1:3000 \
-    FLUX_UI_PORT=3000 \
     DATA_DIR=/data/proxy \
     FLUX_DATA_DIR=/data/flux \
-    FLUX_TRUST_PROXY=true \
-    NEXT_TELEMETRY_DISABLED=1
+    FLUX_TRUST_PROXY=true
 WORKDIR /app
 
 COPY --from=build --chown=node:node /app/package.json ./package.json
@@ -31,15 +27,9 @@ COPY --from=build --chown=node:node /app/apps/flux/src ./apps/flux/src
 COPY --from=build --chown=node:node /app/apps/flux/scripts ./apps/flux/scripts
 COPY --from=build --chown=node:node /app/apps/gateway/package.json ./apps/gateway/package.json
 COPY --from=build --chown=node:node /app/apps/gateway/src ./apps/gateway/src
-COPY --from=build --chown=node:node /app/apps/flux-ui/package.json ./apps/flux-ui/package.json
-COPY --from=build --chown=node:node /app/apps/flux-ui/next.config.mjs ./apps/flux-ui/next.config.mjs
-COPY --from=build --chown=node:node /app/apps/flux-ui/tsconfig.json ./apps/flux-ui/tsconfig.json
-COPY --from=build --chown=node:node /app/apps/flux-ui/.next ./apps/flux-ui/.next
-COPY --from=build --chown=node:node /app/apps/flux-ui/public ./apps/flux-ui/public
-COPY --from=build --chown=node:node /app/apps/flux-ui/src ./apps/flux-ui/src
 COPY --from=build --chown=node:node /app/scripts/start-production.mjs ./scripts/start-production.mjs
 
-RUN mkdir -p /data/proxy /data/flux /app/apps/flux-ui/.next/cache && chown -R node:node /data /app/apps/flux-ui/.next
+RUN mkdir -p /data/proxy /data/flux && chown -R node:node /data
 USER node
 VOLUME ["/data"]
 EXPOSE 8787

@@ -86,7 +86,6 @@ function createIpLimiter({ max, windowMs, enabled }) {
 
 export async function startGateway({ env = process.env, logger = console } = {}) {
   prepareEnvironment(env);
-  if (!env.STATIC_ROOT && !env.FLUX_UI_URL) env.STATIC_ROOT = '../web/dist';
   const settings = gatewaySettings(env);
 
   const proxyModule = await import('../../proxy/src/server.mjs');
@@ -214,15 +213,9 @@ export async function startGateway({ env = process.env, logger = console } = {})
   };
 
   const readiness = async () => {
-    const uiCheck = settings.uiUrl
-      ? fetch(`${settings.uiUrl}/login`, { signal: AbortSignal.timeout(5_000) })
-        .then((response) => ({ ok: response.status < 500, status: response.status }))
-        .catch((error) => ({ ok: false, error: error.message }))
-      : null;
-    const [proxyResult, fluxResult, uiResult] = await Promise.allSettled([
+    const [proxyResult, fluxResult] = await Promise.allSettled([
       proxyFetch('/api/v1/health', { ip: '127.0.0.1' }).then(async (response) => ({ status: response.status, body: await safeJson(response) })),
       fluxJson('/health'),
-      uiCheck,
     ]);
     const proxy = proxyResult.status === 'fulfilled'
       ? { ok: proxyResult.value.body?.ok === true, status: proxyResult.value.status, mode: proxyResult.value.body?.data?.mode || null }
@@ -230,12 +223,7 @@ export async function startGateway({ env = process.env, logger = console } = {})
     const flux = fluxResult.status === 'fulfilled'
       ? { ok: fluxResult.value.status === 200 && fluxResult.value.data?.ok === true, status: fluxResult.value.status }
       : { ok: false, error: fluxResult.reason?.message || 'flux unavailable' };
-    const ui = settings.uiUrl
-      ? (uiResult.status === 'fulfilled'
-        ? uiResult.value
-        : { ok: false, error: uiResult.reason?.message || 'interface unavailable' })
-      : null;
-    return { ok: proxy.ok && flux.ok && (!ui || ui.ok), proxy, flux, ...(ui ? { ui } : {}) };
+    return { ok: proxy.ok && flux.ok, proxy, flux };
   };
 
   const handleMetrics = (req, res, ip) => {
@@ -451,36 +439,6 @@ export async function startGateway({ env = process.env, logger = console } = {})
     });
   };
 
-  const handleUi = (req, res, url, ip, requestId) => {
-    const headers = cleanHeaders(req.headers);
-    const forwardedProto = settings.trustProxy ? req.headers['x-forwarded-proto'] : '';
-    const forwardedHost = settings.trustProxy ? req.headers['x-forwarded-host'] : '';
-    headers['x-forwarded-for'] = ip;
-    headers['x-forwarded-proto'] = String(forwardedProto || (req.socket.encrypted ? 'https' : 'http'));
-    headers['x-forwarded-host'] = String(forwardedHost || req.headers.host || '');
-    headers['x-request-id'] = requestId;
-
-    const init = {
-      method: req.method,
-      headers,
-      redirect: 'manual',
-      signal: AbortSignal.timeout(settings.timeoutMs),
-    };
-    const hasBody = !['GET', 'HEAD'].includes(req.method)
-      && (Number(req.headers['content-length'] || 0) > 0 || Boolean(req.headers['transfer-encoding']));
-    if (hasBody) {
-      init.body = Readable.toWeb(req);
-      init.duplex = 'half';
-    }
-    return (async () => {
-      const response = await fetch(`${settings.uiUrl}${url.pathname}${url.search}`, init);
-      return forwardResponse(res, response, req);
-    })().catch((error) => {
-      if (res.headersSent) return res.destroy();
-      return sendError(res, 502, 'UI_UNAVAILABLE', `The interface is unavailable: ${error.message}`);
-    });
-  };
-
   const gatewayServer = http.createServer((req, res) => {
     const started = Date.now();
     const suppliedRequestId = req.headers['x-request-id'];
@@ -527,8 +485,6 @@ export async function startGateway({ env = process.env, logger = console } = {})
       if (url.pathname === '/api/v1/flux/briefing') return handleBriefing(req, res, ip);
       if (url.pathname === '/api/v1/flux/ask') return handleAsk(req, res, ip);
       if (url.pathname === '/flux' || url.pathname.startsWith('/flux/')) return handleFlux(req, res, url, ip, requestId);
-      const proxyApi = url.pathname === '/api/v1' || url.pathname.startsWith('/api/v1/');
-      if (settings.uiUrl && !proxyApi) return handleUi(req, res, url, ip, requestId);
       return handleProxy(req, res, url, ip);
     };
 
@@ -554,7 +510,7 @@ export async function startGateway({ env = process.env, logger = console } = {})
   });
 
   flux.startBriefing();
-  logger.log?.(`KARM gateway listening on http://${settings.host}:${settings.port} (proxy + Flux on ${settings.fluxHost}:${fluxPort}${settings.uiUrl ? `, interface proxied from ${settings.uiUrl}` : ''})`);
+  logger.log?.(`KARM gateway listening on http://${settings.host}:${settings.port} (proxy + Flux on ${settings.fluxHost}:${fluxPort})`);
 
   const closeServer = (server) => new Promise((resolveClose) => {
     if (!server.listening) return resolveClose();

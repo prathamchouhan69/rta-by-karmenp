@@ -36,9 +36,6 @@ try {
   check('gateway liveness', healthz.status === 200 && healthz.data?.ok === true, `HTTP ${healthz.status}`);
   const readyz = await call('/readyz');
   check('gateway readiness', readyz.status === 200 && readyz.data?.ok === true, JSON.stringify(readyz.data?.proxy || {}));
-  check('flux-ui readiness', readyz.data?.ui?.ok !== false, JSON.stringify(readyz.data?.ui || {}));
-  const uiLogin = await call('/login');
-  check('flux-ui login page', uiLogin.status === 200 && /Flux/i.test(uiLogin.text), `HTTP ${uiLogin.status}`);
   const proxyHealth = await call('/api/v1/health');
   check('proxy health', proxyHealth.status === 200 && proxyHealth.data?.ok === true, `HTTP ${proxyHealth.status}`);
   const fluxHealth = await call('/flux/health');

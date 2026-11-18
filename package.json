@@ -4,24 +4,20 @@
   "type": "module",
   "workspaces": [
     "apps/*",
-    "packages/*",
     "tools/*"
   ],
   "scripts": {
-    "dev": "concurrently -n gateway,ui,mock -c magenta,cyan,yellow \"npm:dev:gateway\" \"npm:dev:flux-ui\" \"npm:dev:mock\"",
-    "dev:flux-ui": "FLUX_API_URL=http://127.0.0.1:8788 FLUX_UI_PORT=${FLUX_UI_PORT:-3000} npm run dev -w apps/flux-ui",
-    "dev:web": "npm run dev -w apps/web",
+    "dev": "concurrently -n gateway,mock -c magenta,yellow \"npm:dev:gateway\" \"npm:dev:mock\"",
     "dev:proxy": "npm run dev -w apps/proxy",
-    "dev:gateway": "GATEWAY_HOST=127.0.0.1 FLUX_PORT=8788 FLUX_UI_URL=http://127.0.0.1:${FLUX_UI_PORT:-3000} FLUX_OWNER_PASSWORD=${FLUX_OWNER_PASSWORD:-karm-local-dev-owner} npm run dev -w apps/gateway",
+    "dev:gateway": "GATEWAY_HOST=127.0.0.1 FLUX_PORT=8788 FLUX_OWNER_PASSWORD=${FLUX_OWNER_PASSWORD:-karm-local-dev-owner} npm run dev -w apps/gateway",
     "dev:mock": "npm run dev -w tools/mock-zoho",
     "start": "node scripts/start-production.mjs",
-    "build": "npm run build -w packages/shared && npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho && npm run build -w apps/flux-ui",
-    "typecheck": "npm run typecheck -w packages/shared && npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway && npm run typecheck -w apps/flux-ui",
-    "lint": "npm run lint -w apps/proxy && npm run typecheck -w apps/gateway && npm run typecheck -w apps/flux-ui",
-    "test": "npm run test -w packages/shared && npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && npm run test -w apps/flux-ui && node --test scripts/*.test.mjs",
-    "scan:money": "node scripts/zero-math-scan.mjs",
+    "build": "npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho",
+    "typecheck": "npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway",
+    "lint": "npm run lint -w apps/proxy && npm run typecheck -w apps/gateway",
+    "test": "npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && node --test scripts/*.test.mjs",
     "test:e2e": "node scripts/e2e-smoke.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run scan:money && npm test && npm run build && npm run test:e2e",
+    "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run test:e2e",
     "validate:env": "node scripts/validate-env.mjs --env-file=.env.production",
     "validate:env:fix": "node scripts/validate-env.mjs --fix --env-file=.env.production",
     "db:maintain": "node scripts/db-maintenance.mjs --all",
@@ -48,24 +44,7 @@
   },
   "devDependencies": {
     "@types/node": "22.13.4",
-    "@typescript-eslint/eslint-plugin": "^8.72.1",
-    "@typescript-eslint/parser": "^8.72.1",
-    "@vitejs/plugin-react": "4.3.4",
     "concurrently": "9.1.2",
-    "eslint": "^9.39.5",
-    "eslint-plugin-jsx-a11y": "6.10.2",
-    "eslint-plugin-react-hooks": "5.1.0",
-    "prettier": "3.5.1",
-    "typescript": "5.7.3",
-    "vite": "^6.4.5",
-    "vitest": "^5.1.0"
-  },
-  "overrides": {
-    "@typescript-eslint/typescript-estree": {
-      "minimatch": "11.0.1"
-    }
-  },
-  "dependencies": {
-    "recharts": "^3.10.1"
+    "prettier": "3.5.1"
   }
 }

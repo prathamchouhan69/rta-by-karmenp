@@ -2,7 +2,7 @@
   "name": "@karm/gateway",
   "private": true,
   "type": "module",
-  "description": "Single production edge for KARM OS: web + proxy API + full Flux API",
+  "description": "Single production edge for KARM OS: proxy API + full Flux API",
   "engines": {
     "node": ">=20.6"
   },

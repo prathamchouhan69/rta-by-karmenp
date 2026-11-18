@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { serveStatic } from '@hono/node-server/serve-static';
 import { createHmac } from 'node:crypto';
 import { isIP } from 'node:net';
 import { createAuth, createLoginLimiter } from './auth.mjs';
@@ -9,8 +8,7 @@ import { convertMeasurementText } from './measurements.mjs';
 import { createStore } from './store.mjs';
 import { createWriteApprovalToken, isValidWriteApproval } from './write-approval.mjs';
 import { ZohoApiError, ZohoBooksClient, selectZohoOrganization, validateZohoConfig } from './zoho-client.mjs';
-import { extname, dirname, join, resolve } from 'node:path';
-import { readFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const entities = {
@@ -85,13 +83,7 @@ app.use('*', async (c, next) => {
   c.header('X-Content-Type-Options', 'nosniff');
   c.header('Referrer-Policy', 'no-referrer');
   c.header('Cache-Control', 'no-store');
-  const isFrontendRequest = Boolean(config.env.STATIC_ROOT) && !c.req.path.startsWith('/api/');
-  c.header(
-    'Content-Security-Policy',
-    isFrontendRequest
-      ? "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
-      : "default-src 'none'; frame-ancestors 'none'",
-  );
+  c.header('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'");
   c.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   c.header('X-Frame-Options', 'DENY');
 
@@ -603,23 +595,6 @@ app.post('/api/v1/invoices/:id/status/:status', async (c) => {
     return { status: 200, body: { ok: true, data: payload.invoice ?? payload.data ?? payload } };
   });
 });
-
-if (config.env.STATIC_ROOT) {
-  const staticHandler = serveStatic({
-    root: config.env.STATIC_ROOT,
-    onFound: (path, c) => {
-      c.header('Cache-Control', path.includes('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache');
-    },
-  });
-  app.get('*', async (c, next) => {
-    if (c.req.path.startsWith('/api/')) return next();
-    return staticHandler(c, async () => {
-      if (extname(c.req.path)) return next();
-      c.header('Cache-Control', 'no-cache');
-      return c.html(await readFile(join(config.env.STATIC_ROOT, 'index.html'), 'utf8'));
-    });
-  });
-}
 
 async function readBody(c, optional = false) {
   const contentType = c.req.header('Content-Type') ?? '';

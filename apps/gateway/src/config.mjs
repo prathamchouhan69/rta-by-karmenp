@@ -97,7 +97,6 @@ export function gatewaySettings(env = process.env) {
     port: integer(env.PORT, 8787),
     fluxHost: env.FLUX_BIND_HOST || '127.0.0.1',
     fluxPort: integer(env.FLUX_PORT, 0),
-    uiUrl: String(env.FLUX_UI_URL || '').replace(/\/+$/, ''),
     appOrigin: env.APP_ORIGIN || '',
     trustProxy: env.TRUST_PROXY === 'true',
     metricsToken: env.METRICS_TOKEN || '',
@@ -115,15 +114,6 @@ export function gatewaySettings(env = process.env) {
   if (settings.production) validateProductionOrigin(settings.appOrigin);
   if (settings.port < 1 || settings.port > 65_535) throw new Error('PORT must be an integer from 1 to 65535');
   if (settings.fluxPort < 0 || settings.fluxPort > 65_535) throw new Error('FLUX_PORT must be an integer from 0 to 65535');
-  if (settings.uiUrl) {
-    let ui;
-    try { ui = new URL(settings.uiUrl); } catch {
-      throw new Error('FLUX_UI_URL must be an absolute http(s) URL');
-    }
-    if (!['http:', 'https:'].includes(ui.protocol) || ui.pathname !== '/' || ui.search || ui.hash) {
-      throw new Error('FLUX_UI_URL must be an absolute http(s) origin without a path, query or fragment');
-    }
-  }
   if (settings.rateLimitMax < 0) throw new Error('GATEWAY_RATE_LIMIT_MAX must be zero or greater');
   if (settings.rateLimitWindowMs < 1_000) throw new Error('GATEWAY_RATE_LIMIT_WINDOW_MS must be at least 1000');
   if (settings.bodyLimit < 1_024) throw new Error('GATEWAY_BODY_LIMIT_BYTES must be at least 1024');

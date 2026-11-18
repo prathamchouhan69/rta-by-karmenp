@@ -1,10 +1,8 @@
 # Product
 
-<!-- impeccable:product-schema 1 -->
-
 ## Platform
 
-web
+Backend API and gateway service.
 
 ## Users
 
@@ -20,12 +18,12 @@ The product connects operational work to the organization's Zoho Books records r
 
 ## Operating Context
 
-Staff use the web app to review and work with customer/vendor records, invoices and other supported accounting documents, payments, expenses, and reports. The backend currently has local practice mode and a configured Zoho Books integration.
+Staff use API clients and integrations to review and work with customer/vendor records, invoices and other supported accounting documents, payments, expenses, and reports. The backend currently has local practice mode and a configured Zoho Books integration.
 
 ## Capabilities and Constraints
 
 - The backend API is versioned at `/api/v1`; see `docs/BACKEND-API.md`.
-- Zoho Books owns calculated totals, tax, balance, and other accounting results; the frontend must display received values and must not calculate money.
+- Zoho Books owns calculated totals, tax, balance, and other accounting results; clients must display received values and must not calculate money.
 - Live Zoho reads have been verified for the configured organization, items, and taxes. Live write workflows have not been accepted against the owner's organization.
 - The current API authentication is a single owner setup code exchanged for a short-lived bearer token; do not expose credentials in client bundles or logs.
 - Production storage, multi-user roles, and deployment are not yet established.
@@ -34,30 +32,23 @@ Staff use the web app to review and work with customer/vendor records, invoices 
 - KARM tasks are owner-assigned internal records. They do not execute external actions or write to Zoho Books.
 - Document preparation currently saves only unsent KARM drafts (meeting notes, follow-up drafts, and operations checklists); it does not send or post them.
 - Daily automations are bounded to creating internal task records at an India-time schedule. They are idempotent per scheduled occurrence and do not call external systems.
-- Live Zoho write APIs require a short-lived approval token bound to the exact request and idempotency key, issued by the non-mutating write-preview route. The UI presents a human confirmation before submitting a write.
+- Live Zoho write APIs require a short-lived approval token bound to the exact request and idempotency key, issued by the non-mutating write-preview route. Clients must present a human confirmation before submitting a write.
 
 ## Brand Commitments
 
-The product name is KARM OS / RTA by KARM. The supplied KARM mark is the existing brand asset; preserve its transparency and render it in a light color on dark surfaces. The user-selected Figma Home Command Center (desktop and iPhone artboards) is the visual reference for the workspace shell and dashboard composition.
+The product name is KARM OS / RTA by KARM.
 
 ## Evidence on Hand
 
-- `docs/KARM_3D_Logo_High_Resolution.pdf` — supplied KARM logo.
-- `docs/FRONTEND-REDESIGN.md` — approved product content and operating constraints.
 - `docs/BACKEND-API.md` — current backend contract.
-- `reference-video-guides/` — approved UI and motion directions.
-- Figma file `YhhdOL9hTCGNsgmeFB92vp`, nodes `6:23984` and `6:24609` — inspected desktop and iPhone Home Command Center artboards.
-- `apps/web/src/references.ts` — the nature, physics, math, and Tesla reference catalog shown by the frontend.
-- `apps/web/src/charts.ts` — the chart-reference catalog; chart previews are concepts, not business data.
+- `apps/gateway/` — production gateway and auth bridge.
+- `apps/proxy/` — Zoho execution plane.
+- `apps/flux/` — Flux identity, briefing, and assistant API.
 - Available practice records and verified Zoho read routes are listed in the backend code and tests.
 
 ## Product Principles
 
 1. Keep Zoho Books as the accounting source of truth.
-2. Show financial values as supplied; never recreate accounting arithmetic in the UI.
+2. Show financial values as supplied; never recreate accounting arithmetic in clients.
 3. Distinguish live data, practice data, offline state, and unavailable capabilities.
 4. Protect organization credentials and gate consequential writes.
-
-## Accessibility & Inclusion
-
-The web interface should work with keyboard, touch, screen readers, responsive layouts, and reduced-motion preferences. These requirements are inferred from the repository's existing reference implementation guidance.

@@ -36,9 +36,6 @@ jobs:
       - name: Run typecheck
         run: npm run typecheck
 
-      - name: Run money scan
-        run: npm run scan:money
-
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest

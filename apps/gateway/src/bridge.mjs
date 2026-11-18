@@ -8,7 +8,7 @@ const bearer = (value) => {
 };
 
 /**
- * The web app signs in once (owner setup code -> proxy JWT). The gateway verifies that
+ * API clients sign in once (owner setup code -> proxy JWT). The gateway verifies that
  * JWT and mints a short-lived Flux session for the mapped Flux user, so Flux RBAC,
  * audit attribution and per-user rate limits stay real instead of being bypassed.
  */

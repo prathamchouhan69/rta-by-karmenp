@@ -1,6 +1,6 @@
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createServer } from 'node:net';
@@ -41,10 +41,6 @@ const auth = () => ({ authorization: `Bearer ${token}` });
 
 before(async () => {
   directory = await mkdtemp(join(tmpdir(), 'karm-gateway-test-'));
-  const web = join(directory, 'web');
-  await writeFile(join(directory, 'placeholder'), 'x');
-  await import('node:fs/promises').then(({ mkdir }) => mkdir(web, { recursive: true }));
-  await writeFile(join(web, 'index.html'), '<!doctype html><title>KARM test</title>');
 
   process.env.NODE_ENV = 'test';
   process.env.HOST = '127.0.0.1';
@@ -52,7 +48,6 @@ before(async () => {
   process.env.ZOHO_MODE = 'mock';
   process.env.DATA_DIR = join(directory, 'proxy-data');
   process.env.FLUX_DATA_DIR = join(directory, 'flux-data');
-  process.env.STATIC_ROOT = web;
   process.env.SETUP_CODE = 'test-owner-code-12345';
   process.env.SESSION_SECRET = 's'.repeat(48);
   process.env.FLUX_AUTH_SECRET = 'a'.repeat(48);
@@ -68,7 +63,7 @@ before(async () => {
     'ZOHO_ORG_ID', 'ZOHO_READ_CLIENT_ID', 'ZOHO_READ_CLIENT_SECRET', 'ZOHO_READ_REFRESH_TOKEN',
     'ZOHO_WRITE_CLIENT_ID', 'ZOHO_WRITE_CLIENT_SECRET', 'ZOHO_WRITE_REFRESH_TOKEN',
     'OPENROUTER_API_KEY', 'OMNIROUTE_API_KEY', 'OMNIROUTE_BASE_URL', 'FLUX_ALLOWED_ORIGINS',
-    'FLUX_UI_URL', 'FLUX_PORT', 'FLUX_BIND_HOST',
+    'FLUX_PORT', 'FLUX_BIND_HOST',
   ]) delete process.env[name];
 
   gateway = await startGateway({ env: process.env, logger: { log: () => {}, error: () => {} } });
@@ -85,7 +80,7 @@ after(async () => {
 });
 
 describe('KARM production gateway', () => {
-  it('serves liveness, readiness, the web app and the proxy API', async () => {
+  it('serves liveness, readiness and the proxy API', async () => {
     const health = await call('/healthz');
     assert.equal(health.status, 200);
     assert.equal(health.body.service, 'karm-gateway');
@@ -97,10 +92,6 @@ describe('KARM production gateway', () => {
     const proxyHealth = await call('/api/v1/health');
     assert.equal(proxyHealth.status, 200);
     assert.equal(proxyHealth.body.data.service, 'karm-proxy');
-
-    const page = await call('/');
-    assert.equal(page.status, 200);
-    assert.match(page.text, /KARM test/);
   });
 
   it('preserves safe request IDs and replaces malformed caller values', async () => {

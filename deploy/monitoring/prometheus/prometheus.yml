@@ -57,7 +57,7 @@ scrape_configs:
       - targets:
           - https://${CADDY_DOMAIN}/healthz
           - https://${CADDY_DOMAIN}/readyz
-          - https://${CADDY_DOMAIN}/login
+          - https://${CADDY_DOMAIN}/api/v1/health
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target

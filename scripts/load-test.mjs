@@ -56,7 +56,6 @@ async function main() {
     { path: '/api/v1/invoices', method: 'GET', auth: true },
     { path: '/api/v1/tasks', method: 'GET', auth: true },
     { path: '/api/v1/goals', method: 'GET', auth: true },
-    { path: '/login', method: 'GET', auth: false },
   ];
 
   const results = {

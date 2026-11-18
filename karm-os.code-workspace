@@ -16,25 +16,9 @@
   },
   "extensions": {
     "recommendations": [
-      "figma.figma-vscode-extension",
       "saoudrizwan.claude-dev",
       "rooveterinaryinc.roo-cline",
       "eamodio.gitlens"
     ]
-  },
-  "mcp": {
-    "servers": {
-      "figma": {
-        "type": "http",
-        "url": "https://mcp.figma.com/mcp",
-        "headers": {
-          "X-Figma-Plugin-Bundle": "figma_prod@2_2_163"
-        }
-      },
-      "penpot": {
-        "type": "http",
-        "url": "http://localhost:9091/mcp"
-      }
-    }
   }
 }

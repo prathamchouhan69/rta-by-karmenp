@@ -1,32 +1,24 @@
 # KARM production gateway
 
-`apps/gateway` is the single production entry point. It serves the `flux-ui` Next.js
-interface, the hardened `/api/v1` proxy API, and the complete Flux API without
-collapsing either backend's security model.
+`apps/gateway` is the single production entry point. It serves the hardened `/api/v1`
+proxy API and the complete Flux API without collapsing either backend's security model.
 
 ```
-Browser
+API clients
   │  one origin, one Flux session
   ▼
 KARM gateway :8787
   ├─ /api/v1/*            → proxy (Hono, in-process)      Zoho execution plane
   ├─ /api/v1/flux/*       → compatibility BFF            unifies Flux + proxy
   ├─ /flux/*              → Flux HTTP API :8788          AI + identity plane
-  ├─ /api/auth/*          → flux-ui Next.js :3000        login/logout/session
-  ├─ /api/flux/*          → flux-ui Next.js :3000        authenticated UI proxy
-  ├─ / and /_next/*       → flux-ui Next.js :3000        Next.js interface
   ├─ /healthz /readyz     → liveness / dependency health
   └─ /metrics             → Prometheus (token or loopback)
 ```
 
-When `FLUX_UI_URL` is unset, the gateway keeps the legacy static `STATIC_ROOT` fallback.
-Production sets `FLUX_UI_URL=http://127.0.0.1:3000` and runs the built Next.js server
-next to the gateway.
-
 Flux keeps its own RBAC, approval gates, model router, cost guard, audit chain,
 briefings, documents, advisory board, and user store. The gateway does not replace
 those controls. It translates the proxy owner session into a Flux session for API
-clients and the legacy static app; `flux-ui` uses its own Flux password login.
+clients.
 
 ## Routes
 
@@ -40,17 +32,12 @@ clients and the legacy static app; `flux-ui` uses its own Flux password login.
 | `/flux/v1/auth/login` | Flux | Public |
 | `/flux/v1/*` | Flux | Flux bearer token, or a proxy token bridged by the gateway |
 | `/flux/v1/me` | Flux | Same bridge; returns the mapped Flux role and permissions |
-| `/` and `/_next/*` | flux-ui Next.js | Flux session cookie; pages redirect to `/login` |
-| `/api/auth/*` | flux-ui Next.js | Public login/logout; session cookie |
-| `/api/flux/*` | flux-ui Next.js → Flux | Flux session cookie |
-| `/api/system/*` | flux-ui Next.js | Flux session cookie |
 | `/healthz` | Gateway | Public |
 | `/readyz` | Gateway | Public; checks proxy storage/Zoho config and Flux |
 | `/metrics` | Gateway | `METRICS_TOKEN`, or loopback only when unset |
 
 The BFF is deliberately narrow. All advanced Flux endpoints remain available under
-`/flux/v1/*` with the original Flux contract, so future UI work and external clients
-can use the full API.
+`/flux/v1/*` with the original Flux contract, so external clients can use the full API.
 
 ## Auth bridge
 
@@ -62,12 +49,10 @@ can use the full API.
    and applies Flux RBAC and per-user rate limits.
 5. Audit rows are attributed to the real Flux user.
 
-`flux-ui` uses direct Flux password login: its `/api/auth/login` route calls Flux
-`/v1/auth/login` and stores the Flux token in an httpOnly cookie. Production therefore
-requires `FLUX_OWNER_PASSWORD` (at least 12 characters) for the owner account. When
-that variable is set, the gateway keeps the existing owner password in sync with it
-without rewriting the hash when it already matches. The proxy setup-code bridge
-remains available for API clients and the legacy static app.
+Direct Flux password login remains available at `POST /flux/v1/auth/login` for API
+clients. Production requires `FLUX_OWNER_PASSWORD` (at least 12 characters) for the
+owner account. When that variable is set, the gateway keeps the existing owner password
+in sync with it without rewriting the hash when it already matches.
 
 Additional Flux users can be created with:
 
@@ -125,16 +110,15 @@ npm run build
 ZOHO_MODE=mock FLUX_OWNER_PASSWORD=karm-local-dev-owner npm start
 ```
 
-`npm start` runs the built `flux-ui` server on `127.0.0.1:3000`, the gateway on
-`127.0.0.1:8787`, and Flux on `127.0.0.1:8788`. Open `http://127.0.0.1:8787` and sign
-in as `owner` with the password above. Flux secrets are derived from the proxy session
-secret in development only. Production requires all three secrets.
+`npm start` runs the gateway on `127.0.0.1:8787` and Flux on `127.0.0.1:8788`.
+Flux secrets are derived from the proxy session secret in development only.
+Production requires all three secrets.
 
 Hot-reload development runs the same topology with source watchers:
 
 ```bash
 ZOHO_MODE=mock npm run dev
-# gateway :8787, flux-ui :3000, Flux :8788, mock Zoho :4010
+# gateway :8787, Flux :8788, mock Zoho :4010
 ```
 
 The default local owner password is `karm-local-dev-owner`. The gateway keeps the
@@ -145,7 +129,7 @@ when `apps/gateway/.data/flux/users.json` already exists.
 
 1. `cp .env.production.example .env.production` and replace every placeholder.
 2. Generate three different Flux secrets of at least 32 characters.
-3. Set `FLUX_OWNER_PASSWORD` to at least 12 characters; the interface signs in with it.
+3. Set `FLUX_OWNER_PASSWORD` to at least 12 characters for the Flux owner account.
 4. Generate a separate `BACKUP_ENCRYPTION_KEY` of at least 32 characters.
 5. Keep `ZOHO_MODE=mock` for the first smoke test.
 6. Point `CADDY_DOMAIN` at this host in DNS and allow inbound TCP ports 80/443
@@ -156,7 +140,6 @@ when `apps/gateway/.data/flux/users.json` already exists.
    - `https://$CADDY_DOMAIN/readyz`
    - `https://$CADDY_DOMAIN/api/v1/health`
    - `https://$CADDY_DOMAIN/flux/health`
-   - owner sign-in in `flux-ui`, then Briefing & advisor board.
 9. Scrape `/metrics` with `Authorization: Bearer $METRICS_TOKEN`.
 10. Start scheduled encrypted database and app-file backups with
    `docker compose --profile ops up -d backup`. Backups are stored under `backups/`,
@@ -183,9 +166,8 @@ npm run verify
 ```
 
 `npm test -w apps/gateway` covers the auth bridge, Flux RBAC, unified status, briefing
-fallback, measurement routing, chat fallback, static fallback, interface proxying,
-readiness, and metrics. The proxy, Flux, `flux-ui`, shared, and money-scan suites run
-from the root `npm test` command.
+fallback, measurement routing, chat fallback, readiness, and metrics. The proxy, Flux,
+gateway, and script suites run from the root `npm test` command.
 
 ## Operational limits
 

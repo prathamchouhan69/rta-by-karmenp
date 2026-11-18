@@ -126,7 +126,6 @@ async function main() {
   checks.push(await checkEndpoint('gateway readiness', `${baseUrl}/readyz`, 200, d => d?.ok === true));
   checks.push(await checkEndpoint('proxy health', `${baseUrl}/api/v1/health`, 200, d => d?.ok === true && d?.data?.mode === 'mock'));
   checks.push(await checkEndpoint('flux health', `${baseUrl}/flux/health`, 200, d => d?.ok === true));
-  checks.push(await checkEndpoint('flux-ui login', `${baseUrl}/login`, 200, d => d?.includes('Flux')));
 
   // Metrics endpoint (if token provided)
   if (metricsToken) {

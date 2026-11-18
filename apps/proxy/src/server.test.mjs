@@ -2,18 +2,13 @@ import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join, relative, resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { createStore } from './store.mjs';
 
 const dataDirectory = await mkdtemp(join(tmpdir(), 'karm-proxy-test-'));
 process.env.ZOHO_MODE = 'mock';
 process.env.HOST = '127.0.0.1';
 process.env.DATA_DIR = dataDirectory;
-process.env.STATIC_ROOT = relative(
-  process.cwd(),
-  resolve(dirname(fileURLToPath(import.meta.url)), '../../../apps/web'),
-);
 delete process.env.SETUP_CODE;
 delete process.env.SESSION_SECRET;
 delete process.env.APP_ORIGIN;
@@ -77,12 +72,7 @@ describe('practice API', () => {
     });
   });
 
-  it('serves frontend routes from the SPA entry point and preserves API 404s', async () => {
-    const page = await app.request('/invoices');
-    assert.equal(page.status, 200);
-    assert.match(await page.text(), /<div id="root"><\/div>/);
-    assert.match(page.headers.get('Content-Security-Policy'), /script-src 'self'/);
-
+  it('preserves API 404s', async () => {
     const missingApiRoute = await app.request('/api/v1/not-a-route');
     assert.equal(missingApiRoute.status, 404);
     assert.equal((await missingApiRoute.json()).error.code, 'RESOURCE_NOT_SUPPORTED');
