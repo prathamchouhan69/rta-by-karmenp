@@ -15,6 +15,3 @@ reports/raw/*.har
 
 # Personal documents
 Pratham Chouhan student verification documents.pdf
-
-# Local design tooling clone (not part of this repository)
-/mcp-server-guide/
