@@ -1,0 +1,11 @@
+=== Check .env files ===
+-rw-rw-r-- 1 rtabykarm rtabykarm 1209 Nov 19 19:33 .env
+-rw-rw-r-- 1 rtabykarm rtabykarm  312 Nov  6 00:14 .env.example
+-rw-rw-r-- 1 rtabykarm rtabykarm 2545 Nov 10 23:15 .env.production
+-rw-rw-r-- 1 rtabykarm rtabykarm 2372 Nov 10 12:06 .env.production.example
+=== Check packages/ ===
+ls: cannot access 'packages': No such file or directory
+=== Check tests/ ===
+ls: cannot access 'tests': No such file or directory
+=== Check prompts/ ===
+ls: cannot access 'prompts': No such file or directory

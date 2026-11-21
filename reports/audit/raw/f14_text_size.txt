@@ -1,0 +1,6 @@
+=== F14: Text Size 200% ===
+
+Cannot test without browser automation (zoom to 200%).
+App uses responsive design with Tailwind CSS.
+
+UNVERIFIED - Cannot test without browser

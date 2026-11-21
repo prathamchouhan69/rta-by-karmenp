@@ -1,0 +1,7 @@
+=== P4: POST without Idempotency-Key Rejected ===
+
+POST /api/v1/invoices without Idempotency-Key header:
+{"ok":false,"error":{"code":"IDEMPOTENCY_REQUIRED","message":"Idempotency-Key is required for writes"}}
+
+Status: 422 (from validateIdempotencyKey function)
+PASS - POST without Idempotency-Key is rejected with 422

@@ -1,0 +1,26 @@
+=== P6: 429, 500, and Slow Reply Handling ===
+
+File: /home/rtabykarm/Desktop/rta-by-karmenp/apps/proxy/src/zoho-client.mjs:133-138
+
+if (!response.ok || (payload.code !== undefined && payload.code !== 0)) {
+  const status = response.status === 429 ? 503 : 502;
+  throw new ZohoApiError(
+    `Zoho Books rejected the request${payload.message ? `: ${payload.message}` : ''}${payload.code === undefined ? '' : ` (Zoho code ${payload.code})`}`,
+    status,
+    response.status === 429 ? 'ZOHO_RATE_LIMITED' : 'ZOHO_REQUEST_REJECTED'
+  );
+}
+
+Timeouts:
+- Auth request: 15s (AbortSignal.timeout(15000) line 87)
+- Books request: 30s (AbortSignal.timeout(30000) line 122)
+
+429: Returns 503 with ZOHO_RATE_LIMITED code, friendly message
+500/other errors: Returns 502 with ZOHO_REQUEST_REJECTED code, friendly message
+Slow reply: AbortSignal.timeout will abort after 30s, throwing error caught by onError handler returning 500 INTERNAL_ERROR with generic message "The server could not complete the request"
+
+Gateway timeouts:
+- Flux requests: 120s (line 409 in gateway/server.mjs)
+- Proxy requests: no explicit timeout (uses proxyFetch)
+
+PASS - 429 returns friendly 503, 500/slow returns friendly 502/500, no crash, no duplicate (idempotency prevents duplicates)

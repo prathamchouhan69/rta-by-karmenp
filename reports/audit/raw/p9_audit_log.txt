@@ -1,0 +1,22 @@
+=== P9: Audit Log Records Every Write ===
+
+Store recordAudit (store.mjs:113-117):
+async recordAudit(entry) {
+  state.audit.unshift({ ...entry, audit_id: randomUUID(), time: new Date().toISOString() });
+  state.audit.length = Math.min(state.audit.length, 10000);
+  await persist();
+}
+
+Audit entries from server.mjs include:
+- action (e.g., 'create', 'update', 'goal_created', 'task_created', 'document_draft_created', 'automation_created', 'write_previewed', 'read_report', 'email', 'status:void')
+- resource (e.g., 'invoices', 'goals', 'tasks', 'documents', 'automations')
+- resource_id (document ID)
+- idempotency_key (for writes)
+- result ('success', 'preview')
+- audit_id (UUID)
+- time (ISO string in UTC)
+
+Rulebook says: "time Asia/Kolkata, device id, route, key, document id"
+Actual: time is UTC (ISO string), no device id, no route (action serves as route), has key (idempotency_key), has document id (resource_id)
+
+PARTLY TRUE - Audit log records writes but time is UTC not Asia/Kolkata, missing device_id and explicit route

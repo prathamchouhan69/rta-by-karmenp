@@ -1,0 +1,10 @@
+=== P16: Required Docs Exist and Not Empty ===
+
+SETUP_ME.md: 5180 bytes - EXISTS ✓
+LIVE_CHECKLIST.md: 1221 bytes - EXISTS ✓
+ENDPOINT_MAP.md: 1911 bytes - EXISTS ✓
+AGGREGATES_AVAILABLE.md: 356 bytes - EXISTS ✓
+DOCUMENT_MATRIX.md: 2885 bytes - EXISTS ✓
+CYCLE_LEDGER.md: 747 bytes - EXISTS ✓
+
+PASS - All required docs exist and are not empty

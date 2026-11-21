@@ -1,0 +1,20 @@
+=== P5: 401 from Zoho - Refresh Once and Retry Once ===
+
+File: /home/rtabykarm/Desktop/rta-by-karmenp/apps/proxy/src/zoho-client.mjs:110-141
+
+async request(method, resource, { query = {}, body, includeOrganization = true } = {}) {
+  // ... setup ...
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const token = await this.getAccessToken(attempt === 1);  // force refresh on attempt 1
+    // ... make request ...
+    const payload = await this.readJson(response);
+    if (response.status === 401 && attempt === 0) {
+      this.accessToken = null;
+      continue;  // retry once
+    }
+    // ... handle other errors ...
+  }
+  throw new ZohoApiError('Zoho authorization expired; retry the request', 502, 'ZOHO_AUTH_FAILED');
+}
+
+PASS - On 401, accessToken is cleared and request is retried exactly once (attempt 0 -> attempt 1). No loop.

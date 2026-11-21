@@ -1,0 +1,2 @@
+apps/web/src/components/common/LivesInZohoBooksTile.tsx:30:          Lives in Zoho Books
+apps/web/src/components/screens/AccountingScreen.tsx:332:        {/* Statutory Reports: Lives in Zoho Books Tile (KARM Law M10) */}

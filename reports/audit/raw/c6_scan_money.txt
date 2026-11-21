@@ -1,0 +1,2 @@
+npm run scan:money (apps/flux/scripts/scan.js)
+Scan passed: 75 source files, 93 files checked, 0 problems.

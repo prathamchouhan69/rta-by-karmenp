@@ -4,15 +4,19 @@
   "type": "module",
   "workspaces": [
     "apps/*",
+    "packages/*",
     "tools/*"
   ],
   "scripts": {
+    "scan:money": "npm run scan -w apps/flux",
+    "scan": "npm run scan -w apps/flux",
     "dev": "concurrently -n gateway,mock -c magenta,yellow \"npm:dev:gateway\" \"npm:dev:mock\"",
     "dev:proxy": "npm run dev -w apps/proxy",
+    "dev:web": "npm run dev -w apps/web",
     "dev:gateway": "GATEWAY_HOST=127.0.0.1 FLUX_PORT=8788 FLUX_OWNER_PASSWORD=${FLUX_OWNER_PASSWORD:-karm-local-dev-owner} npm run dev -w apps/gateway",
     "dev:mock": "npm run dev -w tools/mock-zoho",
     "start": "node scripts/start-production.mjs",
-    "build": "npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho",
+    "build": "npm run build -w apps/web && npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho",
     "typecheck": "npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway",
     "lint": "npm run lint -w apps/proxy && npm run typecheck -w apps/gateway",
     "test": "npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && node --test scripts/*.test.mjs",

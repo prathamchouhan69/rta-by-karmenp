@@ -1,0 +1,9 @@
+=== F2: Top Row Layout and Tap Targets ===
+
+AppHeader.tsx and DynamicIsland.tsx provide top row:
+- DynamicIsland at top center (search left, sync label middle, agent right)
+- AppHeader below with navigation
+
+Tap targets: Need browser testing to verify 44x44 CSS px minimum.
+
+PARTLY TRUE - Structure exists but cannot verify tap targets without browser

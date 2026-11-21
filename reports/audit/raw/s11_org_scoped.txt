@@ -1,0 +1,8 @@
+=== S11: Document IDs Reach Only Owner's Organisation ===
+
+Proxy is single-owner (setup code auth).
+All requests use the same ZOHO_ORG_ID from config.
+No multi-tenancy - single organisation.
+Document IDs are scoped to the single practice store.
+
+PASS - Single owner, single organisation, no cross-org access

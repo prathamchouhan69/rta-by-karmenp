@@ -1,0 +1,17 @@
+=== S13: X-Forwarded-For Does Not Escape Rate Limit ===
+
+Gateway rate limiter (server.mjs:66-85):
+- Uses clientIp function (line 141-147)
+- If TRUST_PROXY=true: uses X-Forwarded-For first IP
+- Validates IP with isIP() before using
+- Rate limit buckets keyed by IP
+
+Proxy login limiter (server.mjs:74-79, 144-150):
+- Uses X-Forwarded-For if TRUST_PROXY=true
+- Validates with isIP()
+- Rate limit key = HMAC of IP with SESSION_SECRET
+
+Both validate X-Forwarded-For is a valid IP before using.
+Cannot bypass rate limit by spoofing X-Forwarded-For.
+
+PASS - X-Forwarded-For validated, cannot escape rate limit

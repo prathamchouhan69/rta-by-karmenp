@@ -1,0 +1,35 @@
+=== M4: Money math grep in web/shared ===
+
+apps/web/src/utils/formatters.ts (DISPLAY FORMATTING ONLY - takes number input, formats for display):
+- Line 16: (abs / 10000000).toFixed(2) - compact Cr display
+- Line 19: (abs / 100000).toFixed(2) - compact L display
+- Line 22: (abs / 1000).toFixed(1) - compact k display
+- Line 24: abs.toLocaleString('en-IN') - standard display
+- Line 40, 47, 53: similar for formatLakhsCrores
+- Line 94: value.toFixed(decimals) - percentage formatting
+
+apps/web/src/components/operations/FuelTripMarginCalculator.tsx (OPERATIONAL CALCULATIONS - not money):
+- Line 53, 67, 82, 95, 107: Number(e.target.value) for input parsing (distance, mileage, diesel price, freight tariff, liters)
+- Line 120, 128, 159: toFixed(1) for fuel calculations (litres, percentages)
+
+apps/web/src/components/operations/OverdueRecoveryRanker.tsx:
+- Line 15: Math.round(daysOverdue * 1.5) - risk score calculation (days, not money)
+
+apps/web/src/components/screens/RelationshipsScreen.tsx:
+- Line 11: reduce on deal_value (pipeline value, not invoice money)
+- Line 12: Math.round on health_score average
+
+apps/web/src/components/screens/ChartDetail.tsx:9, ReferenceDetail.tsx:9 - parseInt for chart/ref IDs
+apps/web/src/components/screens/ProjectDetail.tsx:12-13 - toFixed(2) for CPI/SPI ratios (project management, not money)
+
+packages/shared/src/groupDigits.ts:
+- Line 1-33: String slicing ONLY for Indian digit grouping (zero float, zero Number(), zero Intl.) - ALLOWED
+
+ASSESSMENT:
+- formatters.ts: Display formatting only, but takes NUMBER input - potential violation if input comes from Zoho string converted to number
+- FuelTripMarginCalculator: Operational calculations (fuel, distance) not money
+- OverdueRecoveryRanker: Risk scoring (days) not money
+- groupDigits.ts: COMPLIANT - string slicing only
+- ChartDetail, ReferenceDetail, ProjectDetail: Non-money calculations
+
+NEEDS INVESTIGATION: Where do the numbers passed to formatters.ts come from? If they come from ZohoMoney strings converted to number, that's a violation.

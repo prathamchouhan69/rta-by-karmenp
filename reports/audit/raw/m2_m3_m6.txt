@@ -1,0 +1,25 @@
+=== M2: Money fields as exact text via curl ===
+GET /api/v1/invoices (with auth):
+{"ok":true,"data":[{"customer_id":"c1","line_items":[{"item_id":"i1","quantity":"1","rate":"100.00"}],"invoice_id":"4649ae99-33ec-437c-aaa8-9ed6cd08b31b","status":"draft"},{"customer_id":"cust-1","invoice_id":"aa1d10da-b02a-4173-b42b-1e0b75f6d185","status":"draft"},{"customer_id":"cust-1","line_items":[],"invoice_id":"601bcff1-5002-40c9-b925-3d5158f064d7","status":"draft"},{"invoice_id":"inv-golden","invoice_number":"INV-KE-270031","customer_name":"Dilip Buildcon Ltd","total":"64944.84","total_formatted":"₹64,944.84","balance":"64944.84","balance_formatted":"₹64,944.84","status":"overdue"}]}
+
+GET /api/v1/invoices/inv-golden:
+{"ok":true,"data":{"invoice_id":"inv-golden","invoice_number":"INV-KE-270031","customer_name":"Dilip Buildcon Ltd","total":"64944.84","total_formatted":"₹64,944.84","balance":"64944.84","balance_formatted":"₹64,944.84","status":"overdue"}}
+
+PASS - Money fields arrive as exact TEXT with trailing zeros intact ("64944.84", "100.00")
+
+=== M3: Golden invoice INV-KE-270031 ===
+Raw total: "64944.84" ✓
+Formatted: "₹64,944.84" ✓
+Balance: "64944.84" ✓
+Balance formatted: "₹64,944.84" ✓
+Status: "overdue" ✓
+PASS - Golden invoice arrives unchanged through proxy
+
+=== M6: POST with money fields rejected 422 ===
+POST /api/v1/invoices with "total":"100.00":
+{"ok":false,"error":{"code":"COMPUTED_FIELD","message":"Computed field \"total\" must be supplied by Zoho Books, not the client"}}
+
+POST /api/v1/invoices with "sub_total":"100.00":
+{"ok":false,"error":{"code":"COMPUTED_FIELD","message":"Computed field \"sub_total\" must be supplied by Zoho Books, not the client"}}
+
+PASS - Computed fields (total, sub_total, tax_total, balance, round_off, tax_amount) rejected with 422

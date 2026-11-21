@@ -1,0 +1,49 @@
+=== P2: Contract Test - All Routes Against Mock ===
+
+Core routes (all return 200 OK):
+- GET /api/v1/health: {"ok":true,"data":{"mode":"mock","service":"karm-proxy","authenticated":true,"zohoConfigured":false}}
+- GET /api/v1/organization: {"ok":true,"data":{"name":"Karm Enterprises","mode":"practice"}}
+- GET /api/v1/news: {"ok":true,"data":[{"title":"Practice mode is active","url":"/settings","source":"KARM OS"}]}
+- GET /api/v1/audit: Returns audit log entries
+- GET /api/v1/search?q=Dilip: Returns contacts, items, invoices matching query
+- GET /api/v1/goals: []
+- GET /api/v1/flux/briefing: Returns Flux briefing with counts, attention, health
+- GET /api/v1/tasks: []
+- GET /api/v1/documents: []
+- GET /api/v1/automations: []
+
+Entity routes (all return 200 OK with data or empty arrays):
+- GET /api/v1/contacts: 3 contacts including Dilip Buildcon Ltd
+- GET /api/v1/items: 2 items (Stone dust, River sand)
+- GET /api/v1/taxes: 2 taxes (GST 18%, GST 5%)
+- GET /api/v1/invoices: 4 invoices including golden INV-KE-270031
+- GET /api/v1/estimates: []
+- GET /api/v1/salesorders: []
+- GET /api/v1/deliverychallans: []
+- GET /api/v1/creditnotes: []
+- GET /api/v1/customerpayments: []
+- GET /api/v1/purchaseorders: []
+- GET /api/v1/bills: []
+- GET /api/v1/vendorcredits: []
+- GET /api/v1/vendorpayments: []
+- GET /api/v1/expenses: []
+- GET /api/v1/journals: []
+- GET /api/v1/bankaccounts: []
+- GET /api/v1/banktransactions: []
+
+Report routes (all return 200 OK with available:false in mock mode):
+- GET /api/v1/reports/profitandloss: {"ok":true,"data":{"report":"profitandloss","mode":"practice","available":false,"message":"Reports require a connected Zoho Books organization"}}
+- GET /api/v1/reports/balancesheet: {"ok":true,"data":{"report":"balancesheet","mode":"practice","available":false,"message":"Reports require a connected Zoho Books organization"}}
+- GET /api/v1/reports/cashflow: {"ok":true,"data":{"report":"cashflow","mode":"practice","available":false,"message":"Reports require a connected Zoho Books organization"}}
+- GET /api/v1/reports/agedreceivables: {"ok":true,"data":{"report":"agedreceivables","mode":"practice","available":false,"message":"Reports require a connected Zoho Books organization"}}
+- GET /api/v1/reports/agedpayables: {"ok":true,"data":{"report":"agedpayables","mode":"practice","available":false,"message":"Reports require a connected Zoho Books organization"}}
+- GET /api/v1/reports/taxsummary: {"ok":true,"data":{"report":"taxsummary","mode":"practice","available":false,"message":"Reports require a connected Zoho Books organization"}}
+
+Write routes tested:
+- POST /api/v1/write-previews: Returns approval token structure
+- POST /api/v1/invoices/:id/email: Returns "Invoice email queued in practice mode"
+- POST /api/v1/invoices/:id/status/void: Returns voided invoice (requires X-Confirm-Action)
+
+POST /api/v1/auth/session (login): Returns JWT token
+
+PASS - All routes exist and return expected responses in mock mode

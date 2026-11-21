@@ -1,0 +1,6 @@
+=== S15: App Cannot Be Put in Iframe ===
+
+Proxy CSP: "default-src 'none'; frame-ancestors 'none'" ✓
+Gateway: X-Frame-Options: DENY ✓
+
+PASS - Both proxy and gateway prevent framing

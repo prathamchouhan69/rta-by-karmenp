@@ -52,6 +52,8 @@ export function prepareEnvironment(env = process.env) {
   const production = env.NODE_ENV === 'production';
 
   if (!production) {
+    if (!env.SETUP_CODE) env.SETUP_CODE = 'karm-local-dev-owner-setup-code-12345';
+    if (!env.SESSION_SECRET) env.SESSION_SECRET = 'karm-local-dev-session-secret-32-bytes-long!!';
     const base = env.SESSION_SECRET || env.SETUP_CODE || 'karm-local-development-only';
     const keys = [
       ['FLUX_AUTH_SECRET', 'auth'],

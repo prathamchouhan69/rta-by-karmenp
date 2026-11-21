@@ -1,0 +1,6 @@
+=== S16: Lock Screen Bypass ===
+
+No lock screen implemented (F3 FAIL).
+Therefore bypass not applicable.
+
+FAIL - No lock screen to bypass

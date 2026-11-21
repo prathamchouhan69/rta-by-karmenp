@@ -1,0 +1,20 @@
+cat .gitignore
+node_modules
+dist
+.env
+.env.*
+!.env.example
+!.env.production.example
+coverage
+.tools
+.source
+.data
+/backups/
+reports/raw/*.har
+*.pem
+*.key
+
+# Personal documents
+Pratham Chouhan student verification documents.pdf
+
+PASS - contains all required: node_modules, dist, .env, .env.*, !.env.example, *.pem, *.key

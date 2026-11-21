@@ -1,0 +1,11 @@
+=== M8: App never chooses document numbers ===
+
+Invoice numbers in mock data (apps/web/src/data/mockData.ts): INV-2026-0891, INV-2026-0892, etc.
+Invoice number in golden invoice: INV-KE-270031 (from Zoho)
+Invoice number in ZohoRawInvoicingModal: 
+  - Line 76: invoice_number: preview.invoice_number || 'INV-KE-270032' (fallback for preview only)
+  - Line 89: invoice_number: 'INV-KE-270032' (preview fallback)
+  - Line 111: invoice_number: zohoDraftStringResponse.invoice_number (from Zoho response)
+
+Web app only displays invoice_number from Zoho/mock data, never generates it.
+PASS - App never chooses document numbers; they come from Zoho Books

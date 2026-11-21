@@ -1,0 +1,8 @@
+=== F8: Search Sheet ===
+
+SearchScreen.tsx exists and is accessible via Cmd+K spotlight (App.tsx:188, AppContext:106-108).
+AppContext has isSpotlightOpen and setIsSpotlightOpen.
+
+Proxy has /api/v1/search endpoint tested working (returns contacts, items, invoices).
+
+UNVERIFIED - Search UI exists but not tested for finding customer and invoice number

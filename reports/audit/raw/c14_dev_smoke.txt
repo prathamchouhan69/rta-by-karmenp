@@ -1,0 +1,7 @@
+Servers already running:
+- Gateway on http://127.0.0.1:8787: /healthz returns {"ok":true,"service":"karm-gateway","time":"..."}
+- Gateway /readyz returns proxy+flux health
+- Proxy via gateway /api/v1/health returns {"ok":true,"data":{"mode":"mock","service":"karm-proxy","authenticated":true,"zohoConfigured":false}}
+- Web on http://127.0.0.1:3000: serves React app (Vite dev server)
+
+PASS - all servers start and respond without crashing

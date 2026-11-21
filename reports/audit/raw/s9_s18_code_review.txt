@@ -1,0 +1,53 @@
+=== S9: XSS - code review ===
+=== S10: SSRF ===
+=== S11: Cross-org document access ===
+162:app.get('/api/v1/organization', async (c) => {
+164:  const payload = await config.zoho.request('GET', 'organizations', { includeOrganization: false });
+165:  const organization = selectZohoOrganization(payload.organizations, config.env.ZOHO_ORG_ID);
+166:  if (!organization) return failure(c, 502, 'ZOHO_ORGANIZATION_NOT_FOUND', 'The configured Zoho organization was not returned by the authenticated account');
+167:  return c.json({ ok: true, data: organization });
+468:  if (!config.zoho) return c.json({ ok: true, data: { report, mode: 'practice', available: false, message: 'Reports require a connected Zoho Books organization' } });
+=== S13: X-Forwarded-For ===
+142:    if (settings.trustProxy) {
+143:      const forwarded = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+144:      if (isIP(forwarded)) return forwarded;
+405:      headers['x-forwarded-for'] = ip;
+406:      headers['x-forwarded-proto'] = String(req.headers['x-forwarded-proto'] || (req.socket.encrypted ? 'https' : 'http'));
+=== S16: Lock-screen bypass - frontend check ===
+apps/web/src/data/references.ts:440:    "nature": "Salamander fully regenerating amputated limbs, tail, heart, spinal cord, and parts of its brain.",
+apps/web/src/data/references.ts:448:    "visual": "Soft glowing pink and cyan wireframe highlighting missing fields and growing regenerated data blocks",
+apps/web/src/data/references.ts:923:    "name": "Spiny Mouse Regeneration",
+apps/web/src/data/references.ts:925:    "scientific": "Scientific principle of spiny mouse regeneration exhibiting adaptive biological or physical thermodynamic equilibrium.",
+apps/web/src/data/references.ts:926:    "nature": "Natural phenomenon observed in spiny mouse regeneration adapting to environmental stimuli.",
+apps/web/src/data/references.ts:927:    "business": "Enterprise workflow mechanism for spiny mouse regeneration ensuring business operational continuity.",
+apps/web/src/data/references.ts:937:    "why_unique": "Unique business operating system translation of Spiny Mouse Regeneration specialized for System & Automations with Overtime Chart."
+apps/web/src/data/references.ts:1988:    "nature": "Tens of thousands of starlings forming fluid, shape-shifting aerial flocks without collisions.",
+apps/web/src/data/references.ts:1996:    "visual": "Deep indigo background with hundreds of synchronized silver-feather particles sweeping across telemetry",
+apps/web/src/data/references.ts:2015:    "interaction": "Tap dance rosette to lock camera onto top priority task item in board",
+=== S17: Sign-out-everywhere (session version) ===
+apps/flux/src/http/routes.js:25:    if ((t.ver || 0) !== (u.sessionVersion || 0)) return null;
+apps/flux/src/http/routes.js:37:      return { token: signToken({ typ: 'session', sub: u.id, role: u.role, ver: u.sessionVersion || 0 }, config.authSecret, SESSION_SEC, f.now().getTime()), expiresInSec: SESSION_SEC, user: { id: u.id, name: u.name, role: u.role }, permissions: permissionsFor(u.role) };
+apps/flux/src/security/users.js:17:    this.col.put(id, { id, name: name || id, role, salt, hash, active: true, sessionVersion: 0 });
+apps/flux/src/security/users.js:27:      ? { id: u.id, name: u.name, role: u.role, sessionVersion: u.sessionVersion || 0 }
+apps/flux/src/security/users.js:32:    return u && u.active ? { id: u.id, name: u.name, role: u.role, sessionVersion: u.sessionVersion || 0 } : null;
+apps/flux/src/security/users.js:44:    const updated = { ...user, active, sessionVersion: (user.sessionVersion || 0) + 1 };
+apps/flux/src/security/users.js:51:    const updated = { ...user, role, sessionVersion: (user.sessionVersion || 0) + 1 };
+apps/flux/src/security/users.js:61:    this.col.put(id, { ...user, salt, hash, sessionVersion: (user.sessionVersion || 0) + 1 });
+apps/flux/src/zoho/client.js:14:      if (res.status === 401 && attempt === 0) { this.tokens.invalidate(); continue; }
+apps/flux/src/zoho/auth.js:7:  invalidate() { this.cached = null; }
+=== S18: Brute-force lockout ===
+apps/flux/src/http/routes.js:33:      const l = limiter.hit(k, 5, 15 * 60000); if (!l.ok) throw new HttpError(429, 'RATE_LIMIT', 'Too many sign-in attempts. Wait and try again.', { retryAfterSec: l.retryAfterSec });
+apps/proxy/src/auth.mjs:50:  const attempts = new Map();
+apps/proxy/src/auth.mjs:53:    const previous = attempts.get(key);
+apps/proxy/src/auth.mjs:57:    if (attempts.size > 2000) {
+apps/proxy/src/auth.mjs:59:      for (const [candidate, item] of attempts) if (item.resetAt <= now) attempts.delete(candidate);
+apps/proxy/src/auth.mjs:67:      attempts.set(key, current);
+apps/proxy/src/auth.mjs:72:      attempts.delete(key);
+apps/proxy/src/postgres-store.test.mjs:31:      const attempts = this.loginLimits.get(values[0]) ?? 0;
+apps/proxy/src/postgres-store.test.mjs:32:      if (attempts >= values[2]) return { rows: [], rowCount: 0 };
+apps/proxy/src/postgres-store.test.mjs:33:      this.loginLimits.set(values[0], attempts + 1);
+apps/proxy/src/postgres-store.test.mjs:34:      return { rows: [{ attempt_count: attempts + 1 }], rowCount: 1 };
+apps/proxy/src/server.mjs:149:  if (!await loginLimiter.beginAttempt(rateLimitKey)) return failure(c, 429, 'LOGIN_RATE_LIMITED', 'Too many sign-in attempts; try again shortly');
+apps/proxy/src/server.mjs:756:  const score = Math.min(100, Math.max(0, Math.round(100 - overdue * 12 - goalRiskCount * 14 - Math.max(0, openTasks - 2) * 6 + Math.min(15, sourceCoverage / 10))));
+apps/proxy/src/migrations/20240101000000_initial_schema.up.sql:183:    target_band_max NUMERIC(15,4),
+apps/proxy/src/migrations/20240101000000_initial_schema.up.sql:270:-- Login attempts

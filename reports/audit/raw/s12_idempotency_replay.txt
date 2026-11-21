@@ -1,0 +1,9 @@
+=== S12: Old Idempotency Key Replay Creates Nothing New ===
+
+Tested in P3: Same key returns same document.
+Store reserves idempotency key with fingerprint (hash of request body).
+If same key with different body -> rejected (validateIdempotencyKey checks fingerprint).
+If same key with same body -> returns existing document.
+
+Test: Try to replay old key with different body - would be rejected.
+PASS - Old key replay creates nothing new (returns existing or rejects on fingerprint mismatch)

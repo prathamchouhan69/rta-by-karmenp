@@ -1,0 +1,8 @@
+=== S18: Brute Force Login Lockout After 5 Tries ===
+
+Flux users.js: createLoginLimiter with maxAttempts=5, windowMs=60000
+Proxy auth.mjs: createLoginLimiter with maxAttempts=5 (OWNER_LOGIN_MAX_ATTEMPTS)
+Gateway: inherits from Flux/proxy
+
+Test: 5 failed logins -> 429 LOGIN_RATE_LIMITED
+PASS - Lockout after 5 tries

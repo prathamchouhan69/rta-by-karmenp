@@ -1,0 +1,19 @@
+=== P7: Timeout 15s; Retries Only for GET and Keyed POST ===
+
+Proxy timeouts:
+- Auth: 15s (zoho-client.mjs:87)
+- Books requests: 30s (zoho-client.mjs:122)
+
+Gateway timeouts:
+- Flux: 120s (gateway/server.mjs:409)
+- Proxy: no explicit timeout in proxyFetch
+
+Retry logic (zoho-client.mjs:110-141):
+- Retries ONCE only on 401 (attempt 0 -> attempt 1)
+- Does NOT retry on 429, 500, 502, 503, timeout, or other errors
+- Retries for ALL methods (GET, POST, PUT, DELETE) on 401
+
+Rulebook says: "Timeout is 15s; retries only for GET and keyed POST"
+Actual: Timeout is 15s/30s; retries for ALL methods on 401 only
+
+PARTLY TRUE - Timeout exists but is 30s for Books requests (not 15s). Retries only on 401 (not just GET/keyed POST, but all methods).

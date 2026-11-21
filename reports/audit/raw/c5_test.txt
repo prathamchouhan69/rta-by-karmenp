@@ -1,0 +1,7 @@
+npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && node --test scripts/*.test.mjs
+PASS - all tests passed
+Proxy: 50 tests, 10 suites, 0 fail
+Flux: 117 tests, 0 suites, 0 fail
+Gateway: 15 tests, 3 suites, 0 fail
+Scripts: 2 tests, 0 suites, 0 fail
+Total: 184 tests, 0 fail

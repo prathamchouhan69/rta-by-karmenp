@@ -1,0 +1,12 @@
+=== M10: "Lives in Zoho Books" tiles for reports without Zoho endpoints ===
+
+File: /home/rtabykarm/Desktop/rta-by-karmenp/apps/web/src/components/common/LivesInZohoBooksTile.tsx
+- Line 30: "Lives in Zoho Books" badge
+- Line 46: "Open in Zoho Books →" link
+- Line 14: Default reportName = 'Statutory Financial Statement'
+- Line 15: Description states "KARM OS never invents statutory accounting sums. Balance sheet, profit & loss, trial balance and audit trails are exclusively governed and maintained inside Zoho Books."
+
+Used in: /home/rtabykarm/Desktop/rta-by-karmenp/apps/web/src/components/screens/AccountingScreen.tsx:332
+Comment: {/* Statutory Reports: Lives in Zoho Books Tile (KARM Law M10) */}
+
+PASS - For statutory reports (balance sheet, P&L, trial balance, audit trail), the app shows a "Lives in Zoho Books" tile with "Open in Zoho Books" link, not its own sums.

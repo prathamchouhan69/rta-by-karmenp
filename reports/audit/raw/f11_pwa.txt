@@ -1,0 +1,21 @@
+=== F11: PWA Manifest, Icons, iOS Meta, Offline Shell, No API Caching ===
+
+Manifest.json:
+- name, short_name, description ✓
+- start_url: "/" ✓
+- display: "standalone" ✓
+- background_color, theme_color ✓
+- icons: 192x192 (maskable), 512x512 (maskable) ✓
+- MISSING: 180x180 apple-touch-icon (has 192 only)
+
+index.html:
+- viewport-fit=cover ✓
+- MISSING: apple-mobile-web-app-capable
+- MISSING: apple-mobile-web-app-status-bar-style black-translucent
+
+Service worker (sw.js):
+- Caches API/Flux responses (lines 36-48) - VIOLATES rulebook "service worker does NOT cache API responses"
+- Caches static assets ✓
+- Offline shell: caches /, /index.html, /manifest.json, /icon.svg ✓
+
+FAIL - Service worker caches API responses, missing 180 icon and iOS meta tags

@@ -1,0 +1,9 @@
+=== F9: Agent Commands Without AI ===
+
+Flux has deterministic measurement engine (convertMeasurementText in proxy/measurements.mjs).
+Flux tests show: "measurement engine: exact conversions, compound units, pressure, energy and honest gaps"
+Agent commands: "show unpaid invoices", "what is overdue" - Flux briefing returns overdue invoices verbatim from Zoho.
+
+StarfishRadialFan.tsx provides Flux button in UI.
+
+PASS - Deterministic agent commands work without AI (measurement engine, briefing shows Zoho's list)

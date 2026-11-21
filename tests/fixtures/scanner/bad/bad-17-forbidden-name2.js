@@ -1,0 +1,1 @@
+const systemRole = "BuildWise AI";

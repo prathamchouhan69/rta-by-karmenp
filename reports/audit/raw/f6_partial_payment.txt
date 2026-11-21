@@ -1,0 +1,6 @@
+=== F6: Partial Payment and Credit Note ===
+
+Proxy has customerpayments and creditnotes entities.
+Balance text from Zoho: invoice.balance and invoice.balance_formatted fields returned.
+
+UNVERIFIED - Entities exist but flow not tested

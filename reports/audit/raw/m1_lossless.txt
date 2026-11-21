@@ -1,0 +1,11 @@
+File: /home/rtabykarm/Desktop/rta-by-karmenp/apps/proxy/src/zoho-client.mjs:13-17
+
+export function parseLosslessZohoJson(text) {
+  if (typeof text !== 'string' || !text.trim()) return {};
+  const preserved = text.replace(MONEY_RE, '"$1":"$2"');
+  return JSON.parse(preserved);
+}
+
+MONEY_KEYS (lines 3-10) defines the money field names to preserve as strings.
+MONEY_RE (line 11) regex matches these keys and their numeric values.
+PASS - Lossless JSON parser exists at zoho-client.mjs:13-17

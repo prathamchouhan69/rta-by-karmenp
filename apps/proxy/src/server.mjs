@@ -70,12 +70,13 @@ const store = await createStore(
   { seedPracticeData: config.mode === 'mock' },
 );
 const app = new Hono();
+const maxLoginAttempts = Number(config.env.OWNER_LOGIN_MAX_ATTEMPTS || 5);
 const loginLimiter = config.env.DATABASE_URL
   ? {
-      beginAttempt: (key) => store.beginLoginAttempt(key, { maxAttempts: 8, windowMs: 60_000 }),
+      beginAttempt: (key) => store.beginLoginAttempt(key, { maxAttempts: maxLoginAttempts, windowMs: 60_000 }),
       clear: (key) => store.clearLoginAttempts(key),
     }
-  : createLoginLimiter();
+  : createLoginLimiter({ maxAttempts: maxLoginAttempts });
 const inFlightWrites = new Map();
 let loginLimitCleanupCounter = 0;
 

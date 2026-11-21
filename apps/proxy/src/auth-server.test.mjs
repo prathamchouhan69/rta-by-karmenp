@@ -10,6 +10,7 @@ process.env.HOST = '0.0.0.0';
 process.env.DATA_DIR = dataDirectory;
 process.env.SETUP_CODE = 'a-long-practice-owner-code';
 process.env.SESSION_SECRET = 'test-session-secret-with-more-than-thirty-two-bytes';
+process.env.OWNER_LOGIN_MAX_ATTEMPTS = '8';
 delete process.env.APP_ORIGIN;
 const { app } = await import(`./server.mjs?auth-test=${Date.now()}`);
 

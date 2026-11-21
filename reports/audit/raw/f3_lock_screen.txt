@@ -1,0 +1,10 @@
+=== F3: Lock Screen ===
+
+Search for lock mechanism:
+- No LockScreen component
+- No 'lock' ScreenType in AppContext (lines 12-48)
+- No isLocked state in AppContext
+- LoginScreen exists but no auto-lock on idle/background
+- No cache clearing on lock/sign-out
+
+FAIL - Lock screen NOT implemented

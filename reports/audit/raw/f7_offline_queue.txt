@@ -1,0 +1,12 @@
+=== F7: Offline Queue ===
+
+AppContext has:
+- isOnline state (navigator.onLine)
+- offlineQueueCount state
+- online/offline event listeners (lines 258-278)
+- Debounced note/selections save with offline status
+- On online: setTimeout(() => setOfflineQueueCount(0), 1200) - replays mutations
+
+Service worker (sw.js) caches API responses (violates rulebook F11: "service worker does NOT cache API responses")
+
+PARTLY TRUE - Offline detection exists, but service worker caches API responses (violation), queue replay not fully implemented

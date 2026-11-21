@@ -1,0 +1,6 @@
+=== M9: Mock not imported by web or proxy ===
+
+grep -r "mock-zoho\|mockZoho" apps/web/src/ apps/proxy/src/ --include="*.ts" --include="*.tsx" --include="*.mjs"
+NO HITS
+
+PASS - Mock folder is NOT imported by apps/web or apps/proxy

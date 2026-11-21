@@ -1,0 +1,7 @@
+=== F13: /selftest 11 Rows, Copy and Share ===
+
+No SelfTest screen or component found.
+grep -r "selftest\|SelfTest" apps/web/src/ --include="*.tsx"
+NO HITS
+
+FAIL - /selftest not implemented

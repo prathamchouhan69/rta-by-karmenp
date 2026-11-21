@@ -1,0 +1,1 @@
+eval("const dangerous = true;");

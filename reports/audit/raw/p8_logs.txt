@@ -1,0 +1,19 @@
+=== P8: Logs Contain No Request/Response Bodies and No Tokens ===
+
+Proxy logs (server.mjs):
+- Line 118: console.error('API request failed') - no body, no token
+- Line 128: console.error('Persistent storage health check failed')
+- Line 1113: console.error(`Graceful shutdown failed: ${error.message}`)
+- Line 1118: console.log(`KARM API listening on http://${config.host}:${port} (${config.mode} mode)`)
+
+Gateway logs (server.mjs:461-465):
+- JSON format: { time, id, method, path, status, ms, ip }
+- Text format: `[${requestId}] ${req.method} ${url.pathname} ${res.statusCode} ${ms}ms`
+- No request body, no response body, no tokens
+
+Flux audit log (users.js) uses scrypt for passwords, tokens are JWT
+
+Sample audit log entry from /api/v1/audit:
+{"action":"create","resource":"invoices","resource_id":"c1","idempotency_key":"...","result":"success","audit_id":"...","time":"2026-11-21T13:21:36.321Z"}
+
+PASS - Logs contain no request/response bodies and no tokens

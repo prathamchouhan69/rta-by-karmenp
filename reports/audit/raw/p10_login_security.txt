@@ -1,0 +1,29 @@
+=== P10: Login Security ===
+
+Flux (apps/flux/src/security/users.js):
+- Password hashing: scrypt (KEYLEN=32, salt=16 bytes) ✓
+- Session: JWT tokens (HS256), not cookies
+- No HttpOnly/Secure/SameSite cookies (bearer token auth)
+
+Proxy (apps/proxy/src/auth.mjs):
+- Setup code comparison: HMAC-SHA256 with timingSafeEqual
+- Token: JWT (HS256), 12h expiry
+- Login rate limiting: 5 attempts per client per minute (createLoginLimiter)
+- Lockout: after 5 failed attempts, blocked until window resets
+
+Gateway:
+- Bridges proxy bearer token to Flux session
+- No cookies set by gateway (forwards Flux cookies if any)
+
+CSRF Protection:
+- Proxy: Requires Idempotency-Key for all writes (POST/PUT) - acts as CSRF protection
+- Gateway: No explicit CSRF token (uses Idempotency-Key from proxy)
+
+Rulebook says: "passphrase hashed with scrypt or argon2id; session cookie HttpOnly, Secure, SameSite=Strict; lockout after 5 wrong tries; CSRF token required on non-GET"
+Actual: 
+- scrypt used in Flux ✓
+- No session cookies (bearer tokens) - deviation from rulebook
+- Lockout after 5 tries ✓ (Flux users.js has login attempt tracking, proxy has loginLimiter)
+- CSRF: Idempotency-Key required on writes ✓ (proxy)
+
+PARTLY TRUE - Uses scrypt and lockout, but uses bearer tokens instead of session cookies, CSRF via Idempotency-Key

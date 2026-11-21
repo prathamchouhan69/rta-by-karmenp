@@ -1,0 +1,16 @@
+=== S8: Oversize Body, Wrong Content-Type, Deeply Nested JSON Rejected Safely ===
+
+Oversize body (>1MB):
+- Proxy: returns 413 BODY_TOO_LARGE ✓
+- Gateway: returns 413 (2MB limit) ✓
+
+Wrong Content-Type:
+- Proxy: returns 415 UNSUPPORTED_MEDIA_TYPE ✓
+- Gateway: returns 415 ✓
+
+Deeply nested JSON:
+- Proxy: JSON.parse handles it, but 1MB limit prevents abuse
+- No explicit depth limit, but stack-based validation in validateWriteBody could stack overflow on extreme nesting
+- Error responses: no stack traces ✓
+
+PARTLY TRUE - Oversize and wrong content-type rejected, deep JSON not explicitly limited

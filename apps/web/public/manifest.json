@@ -1,0 +1,24 @@
+{
+  "name": "RTA by KARM — Business OS",
+  "short_name": "RTA KARM",
+  "description": "Living Organic-Tech Business Operating System Command Center for Indian Industrial and Construction Enterprises",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06080d",
+  "theme_color": "#06080d",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/karm-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/karm-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

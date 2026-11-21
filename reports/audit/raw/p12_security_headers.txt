@@ -1,0 +1,24 @@
+=== P12: Security Headers ===
+
+Proxy (server.mjs:83-90) - ALL RESPONSES:
+- X-Content-Type-Options: nosniff ✓
+- Referrer-Policy: no-referrer ✓
+- Cache-Control: no-store ✓
+- Content-Security-Policy: "default-src 'none'; frame-ancestors 'none'" ✓
+- Permissions-Policy: camera=(), microphone=(), geolocation=() ✓
+- X-Frame-Options: DENY ✓
+
+Gateway (server.mjs:450-457) - ALL RESPONSES:
+- x-request-id: UUID ✓
+- x-content-type-options: nosniff ✓
+- referrer-policy: no-referrer ✓
+- x-frame-options: DENY ✓
+- permissions-policy: camera=(), microphone=(), geolocation=() ✓
+- strict-transport-security: max-age=31536000; includeSubDomains (only if HTTPS origin) ✓
+- Cache-Control: no-store (on /metrics) ✓
+- CORS: allows only app origin, no wildcard with credentials ✓
+
+MISSING on Gateway: Content-Security-Policy header
+Proxy has CSP, Gateway does not.
+
+PARTLY TRUE - Proxy has all headers, Gateway missing CSP

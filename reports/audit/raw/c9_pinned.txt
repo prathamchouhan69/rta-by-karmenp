@@ -1,0 +1,11 @@
+Project package.json files (not node_modules):
+- apps/flux/package.json: agent-browser@0.41.2, zod@4.6.7 (exact)
+- apps/proxy/package.json: @hono/node-server@2.1.6, hono@4.13.16, pg@8.23.1 (exact)
+- apps/gateway/package.json: no dependencies
+- apps/web/package.json: date-fns@4.4.0, framer-motion@14.14.0, lucide-react@1.77.0, react@18.3.1, react-dom@18.3.1, recharts@3.11.0 (exact)
+  devDependencies: @types/react@18.3.12, @types/react-dom@18.3.1, @vitejs/plugin-react@4.3.3, autoprefixer@10.7.0, postcss@8.5.33, tailwindcss@3.4.19, typescript@5.6.3, vite@5.4.10 (exact)
+- tools/mock-zoho/package.json: no dependencies
+- Root package.json: @types/node@22.13.4, concurrently@9.1.2, prettier@3.5.1 (exact)
+
+PASS - all project package.json files have pinned exact versions (no ^ or ~)
+package-lock.json is committed

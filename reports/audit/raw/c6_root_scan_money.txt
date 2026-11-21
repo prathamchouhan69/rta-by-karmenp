@@ -1,0 +1,9 @@
+
+> scan:money
+> npm run scan -w apps/flux
+
+
+> flux-backend@0.1.0 scan
+> node scripts/scan.js
+
+Scan passed: 75 source files, 93 files checked, 0 problems.

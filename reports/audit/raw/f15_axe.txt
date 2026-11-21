@@ -1,0 +1,6 @@
+=== F15: axe Accessibility ===
+
+Cannot test without browser automation (axe-core).
+No accessibility testing configured in test suite.
+
+UNVERIFIED - Cannot test without browser

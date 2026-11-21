@@ -1,0 +1,14 @@
+{
+  "cache-control": "no-store",
+  "connection": "keep-alive",
+  "content-security-policy": "default-src 'none'; frame-ancestors 'none'",
+  "content-type": "application/json",
+  "date": "Sat, 21 Nov 2026 13:19:35 GMT",
+  "keep-alive": "timeout=65",
+  "permissions-policy": "camera=(), microphone=(), geolocation=()",
+  "referrer-policy": "no-referrer",
+  "transfer-encoding": "chunked",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "DENY",
+  "x-request-id": "5465a3c7-2166-433e-a6c7-da04930abb2d"
+}

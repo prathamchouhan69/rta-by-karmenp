@@ -1,0 +1,32 @@
+Starting npm run dev...
+20 seconds elapsed. Checking status of gateway & mock...
+Gateway status on :8787: HTTP 200
+Mock status on :4010: HTTP 200
+
+=== Process Output Sample ===
+ 
+> dev
+> concurrently -n gateway,mock -c magenta,yellow "npm:dev:gateway" "npm:dev:mock"
+
+[mock] 
+[mock] > dev:mock
+[mock] > npm run dev -w tools/mock-zoho
+[mock] 
+[gateway] 
+[gateway] > dev:gateway
+[gateway] > GATEWAY_HOST=127.0.0.1 FLUX_PORT=8788 FLUX_OWNER_PASSWORD=${FLUX_OWNER_PASSWORD:-karm-local-dev-owner} npm run dev -w apps/gateway
+[gateway] 
+[gateway] 
+[gateway] > dev
+[gateway] > node --env-file-if-exists=../proxy/.env --watch src/server.mjs
+[gateway] 
+[mock] 
+[mock] > dev
+[mock] > node src/server.mjs
+[mock] 
+[gateway] ../proxy/.env not found. Continuing without it.
+[gateway] ../proxy/.env not found. Continuing without it.
+[mock] Practice Zoho listening on http://localhost:4010
+[gateway] KARM gateway listening on http://127.0.0.1:8787 (proxy + Flux on 127.0.0.1:8788)
+[gateway] [82b31c4e-39a7-4c08-9160-12ad574be79b] GET /readyz 200 112ms
+

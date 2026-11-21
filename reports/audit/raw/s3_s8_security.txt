@@ -1,0 +1,5 @@
+=== S3: No session cookie ===
+=== S4: Forged POST (CSRF) ===
+=== S5: CORS from evil.com ===
+=== S6: Injection ===
+=== S8: Oversize body ===

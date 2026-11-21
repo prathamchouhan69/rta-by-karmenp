@@ -1,0 +1,20 @@
+=== F1: All Routes Load With No Console Errors ===
+
+The web app uses screen-based navigation (not URL-based routing). Required routes from rulebook:
+- /today → Maps to 'now' screen (NowScreen.tsx) ✓
+- /documents → Maps to 'accounting' screen (AccountingScreen.tsx) ✓
+- /documents/:type → Not a URL route, but invoice_detail screen exists ✓
+- /documents/:type/:id → invoice_detail with entityId ✓
+- /customers → relationships/ecosystems screen ✓
+- /vendors → Not explicitly mapped
+- /agent → StarfishRadialFan (Flux button) ✓
+- /settings → SettingsScreen.tsx ✓
+- /selftest → NOT FOUND (no SelfTest screen)
+- /lock → NOT FOUND (no LockScreen, no lock mechanism in AppContext)
+
+Screen routing in App.tsx covers: now, ledger, harvest, routes, terrain, gates, aura, ecosystems, world, home, accounting, invoice_detail, projects, project_detail, tasks, task_detail, files, file_detail, transportation, fleet_detail, human_resources, employee_detail, relationships, client_detail, nature_library, reference_detail, charts_library, chart_detail, my_selections, notifications, search, settings, business_os
+
+NOT FOUND: /selftest, /lock, /vendors (as distinct route)
+
+Cannot test console errors without browser automation (Playwright not available).
+PARTLY TRUE - Most screens exist but /selftest and /lock routes/screens missing

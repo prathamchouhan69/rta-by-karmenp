@@ -1,0 +1,18 @@
+=== S6: Injection Strings Rejected 422 ===
+
+Proxy validates:
+- Content-Type must be application/json (415)
+- Body must be valid JSON (400)
+- Body must be JSON object (422)
+- Computed fields rejected (422 COMPUTED_FIELD)
+- No SQL/NoSQL injection possible (no direct DB queries, uses parameterized store)
+- Path traversal: entity names validated against known entities object (404 if unknown)
+
+Test: curl with SQL injection in search:
+curl -H "Authorization: Bearer $TOKEN" "http://127.0.0.1:8787/api/v1/search?q='; DROP TABLE users;--"
+Returns 200 with empty results (search text treated as literal string)
+
+Test: curl with command injection in body:
+Not applicable - JSON body parsed, not executed
+
+PARTLY TRUE - Input validation prevents injection, but no explicit 422 for injection strings (treated as literal)

@@ -1,0 +1,10 @@
+=== S14: Zoho Tokens Nowhere in Responses, Logs, IndexedDB, localStorage, SW Cache ===
+
+Responses: Proxy returns only Zoho data (money as strings), never tokens.
+Logs: No tokens in logs (checked P8).
+localStorage: AppContext saves theme, selections, notes - no tokens.
+IndexedDB: Not used.
+Service Worker: Caches API responses (violation) but API responses don't contain tokens.
+Flux: Uses scrypt for passwords, JWT for sessions, audit log redacted.
+
+PASS - Zoho tokens not exposed anywhere

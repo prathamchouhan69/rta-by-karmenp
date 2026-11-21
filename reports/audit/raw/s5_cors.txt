@@ -1,0 +1,20 @@
+=== S5: CORS Refuses Another Origin; No Wildcard with Credentials ===
+
+Proxy (server.mjs:91-100):
+- Checks Origin header against config.env.APP_ORIGIN
+- If origin !== APP_ORIGIN: returns 403 ORIGIN_NOT_ALLOWED
+- If origin matches: sets Access-Control-Allow-Origin to that origin (not wildcard)
+- Sets Vary: Origin
+
+Gateway (server.mjs:469-479):
+- Checks Origin against settings.appOrigin
+- If origin !== allowedOrigin: returns 403 ORIGIN_NOT_ALLOWED
+- If origin matches: sets Access-Control-Allow-Origin to that origin
+- Sets Vary: Origin
+- Sets Access-Control-Allow-Headers, Access-Control-Allow-Methods
+
+Test: curl with different Origin:
+curl -H "Origin: http://evil.com" http://127.0.0.1:8787/api/v1/health
+{"ok":false,"error":{"code":"ORIGIN_NOT_ALLOWED","message":"This origin is not allowed"}}
+
+PASS - CORS allows only configured origin, no wildcard with credentials

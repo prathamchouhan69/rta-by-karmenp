@@ -1,0 +1,64 @@
+==> STATUS.md <==
+# KARM OS status
+
+## Backend
+
+The current checkout is configured for practice mode: the root `.env` has `ZOHO_MODE=mock`, Zoho credentials are empty, and `apps/proxy/.env` is not present. A live Zoho connection was verified earlier in a different local configuration, but it is not reproducible from this working copy until the OAuth values are supplied again. No accounting records were created, updated, emailed, or voided during that verification.
+
+The API also has a practice-mode data store, resource routes for the documented accounting entities, basic search/report routes, single-owner bearer authentication for live/non-local use, durable idempotency reservations, audit metadata, and safeguards for calculated totals and invoice voiding.
+Owner login throttling allows eight consecutive attempts per client address per minute and resets on successful authentication.
+
+The Goals & Execution page supports locally stored business goals, deterministic feasibility previews, dated progress updates, daily action prompts, and weekly/monthly/quarterly checkpoints. The engine requires explicit baseline/current values, dates, an owner, target bands, and metric units; missing history or weekly capacity is shown as uncertain rather than guessed. Goal data stays in KARM storage and does not create Zoho records.
+
+Flux includes a rule-based source-grounded briefing/advisor board and owner-assigned KARM tasks with idempotent creation and status updates. Goal actions can be explicitly added to that queue. KARM also stores unsent meeting, follow-up, and operations-checklist drafts, and supports India-time daily automations bounded to creating internal tasks. Q&A operates only on returned invoice, goal, and task records; no model provider or paid inference is configured. Live accounting writes require a ten-minute approval token bound to the exact request and idempotency key. The advisor board recommends human review and never executes actions.
+
+## Unified gateway and Flux integration
+
+`apps/gateway` is the single production entry point on port 8787. It routes `/api/v1/*` to the hardened proxy in-process and routes `/flux/*` to the complete Flux HTTP API on loopback. Flux keeps its own RBAC, users, models, advisory board, approval gates, cost guard, and HMAC-chained audit log; the gateway does not collapse or bypass those controls.
+
+The gateway bridges the owner's proxy bearer token into a minted Flux session for `FLUX_OWNER_ID` (default `owner`) for API clients. Direct Flux password login remains available at `POST /flux/v1/auth/login`. Every Flux request still runs through Flux RBAC and per-user rate limits. Proxy/Zoho execution remains single-owner until the proxy has a real multi-user identity model.
+
+Gateway routes:
+
+- `GET /api/v1/flux/status` — gateway, proxy, Flux, audit-chain, model, and access status.
+- `GET /api/v1/flux/briefing` — merges Flux's Zoho-backed verified/partial/unverified briefing with the proxy's KARM goals/tasks, without double-counting overdue invoices, and recomputes one health profile.
+- `POST /api/v1/flux/ask` — routes deterministic measurements to the formula engine, otherwise to Flux `/v1/chat`, normalizes evidence/verification/audit metadata, and labels the deterministic proxy assistant as a fallback when no model gateway is configured.
+
+`/healthz`, `/readyz`, `/metrics` (token-protected), request IDs, rate limiting, security headers, timeouts, and graceful shutdown are in place. See `docs/GATEWAY.md` for the full contract.
+
+An earlier single-port smoke test passed against the running gateway with a real Zoho organization in `live` mode. That configuration is not present in this checkout; the current runtime was re-verified in practice mode through the gateway:
+
+- `/readyz`, proxy health, and Flux health — OK.
+- Owner login and Flux RBAC bridge — owner session resolved with `*` permissions.
+- Flux audit chain — verified, 1 entry at test time.
+- Unified briefing — engine `flux`, `zohoReadable: true`, `degraded: false`, counts `{ invoices: 20, overdueInvoices: 1, goals: 0, openTasks: 0 }`, 1 attention signal.
+- Measurement conversion and assistant fallback — both labelled correctly.
+- `/metrics` — Prometheus output present.
+
+Verification:
+
+- `npm test -w apps/proxy` — proxy, auth, Zoho-client, persistence, approval-token, Flux, task, and goal tests.
+- `npm test -w apps/flux` — Flux RBAC, approval, audit, router, briefing, board, and tool tests.
+- `npm test -w apps/gateway` — gateway integration, auth bridge, merge, readiness, and metrics tests.
+- `npm test` — proxy, Flux, gateway, and script suites.
+- `npm run test:e2e` — local HTTP practice journey.
+- `npm run verify` — type checks, lint, unit tests, production builds, and E2E smoke.
+- Live Zoho OAuth and authenticated read-only organization, item, and tax requests — successful in the earlier local configuration; live credentials are not present in this checkout.
+- No live Zoho writes, outbound email, scheduled jobs, or model-provider calls were performed.
+
+## Repository state
+
+The frontend applications and design assets have been removed from this repository. The backend gateway, proxy, Flux, mock Zoho service, deployment configuration, and operational scripts remain.
+
+==> BUGS.md <==
+# Known issues
+
+No verified defects have been recorded yet. This file is updated when a validation step
+finds a problem that cannot be fixed in the same pass.
+
+==> DECISIONS.md <==
+# Decisions
+
+- Practice mode is the default until the owner supplies real Zoho credentials.
+- Money is represented as opaque text in the API. The mock is the only component allowed
+  to calculate practice totals.

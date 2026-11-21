@@ -1,0 +1,8 @@
+grep -r "TODO\|FIXME\|lorem" --include="*.ts" --include="*.js" --include="*.mjs" --include="*.tsx" --exclude-dir=node_modules --exclude-dir=.git
+Source files (apps/): NO HITS
+Test fixtures (tests/fixtures/scanner/bad/): 5 hits (expected - these are test fixtures for the scanner)
+- bad-11-todo.js: // TODO: finish this implementation later
+- bad-12-fixme.js: /* FIXME: potential race condition */
+- bad-13-xxx.js: /* XXX */
+- bad-14-lorem.js: const description = "lorem ipsum dolor sit amet";
+- bad-15-not-implemented.js: // not implemented

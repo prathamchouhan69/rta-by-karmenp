@@ -1,0 +1,6 @@
+npm run build -w apps/web && npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho
+PASS - all builds succeeded
+Web build: 503 modules transformed, built in 18.99s
+Proxy: typecheck only
+Gateway: node --check only
+Mock-zoho: node --check only

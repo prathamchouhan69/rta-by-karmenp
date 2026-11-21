@@ -1,0 +1,14 @@
+=== M5: ZohoMoney type creation location ===
+
+File: /home/rtabykarm/Desktop/rta-by-karmenp/packages/shared/src/types.ts:9-10
+export function createZohoMoney(raw: string): ZohoMoney {
+  return raw as ZohoMoney;
+}
+
+Comment (line 3): "Never constructed directly; only created by the proxy response mapper."
+
+ACTUAL USAGE: grep -r "createZohoMoney" shows NO USAGE in proxy or web code.
+The proxy returns money as plain strings from parseLosslessZohoJson.
+The web app receives strings and may convert to number for formatters.ts.
+
+PARTLY TRUE - ZohoMoney type exists but is not actually used/enforced by the proxy response mapper.

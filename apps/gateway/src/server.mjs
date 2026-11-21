@@ -466,6 +466,23 @@ export async function startGateway({ env = process.env, logger = console } = {})
     });
 
     const run = async () => {
+      const origin = req.headers['origin'];
+      const allowedOrigin = settings.appOrigin || 'http://localhost:5173';
+      if (origin) {
+        if (origin !== allowedOrigin) {
+          return sendError(res, 403, 'ORIGIN_NOT_ALLOWED', 'This origin is not allowed');
+        }
+        res.setHeader('access-control-allow-origin', origin);
+        res.setHeader('vary', 'Origin');
+        res.setHeader('access-control-allow-headers', 'Authorization, Content-Type, Idempotency-Key, X-Confirm-Action');
+        res.setHeader('access-control-allow-methods', 'GET, POST, PUT, OPTIONS');
+      }
+      if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return undefined;
+      }
+
       if (url.pathname === '/healthz') {
         return sendJson(res, 200, { ok: true, service: 'karm-gateway', time: new Date().toISOString() });
       }

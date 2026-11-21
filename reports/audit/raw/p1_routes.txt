@@ -1,0 +1,48 @@
+=== P1: Route Existence Table ===
+
+From apps/proxy/src/server.mjs entities object (lines 14-32):
+1. contacts - GET/POST/PUT via /api/v1/:entity and /api/v1/:entity/:id
+2. items - GET/POST/PUT
+3. taxes - GET/POST/PUT
+4. invoices - GET/POST/PUT + /email + /status/:status
+5. estimates - GET/POST/PUT
+6. salesorders - GET/POST/PUT
+7. deliverychallans - GET/POST/PUT
+8. creditnotes - GET/POST/PUT
+9. customerpayments - GET/POST/PUT
+10. purchaseorders - GET/POST/PUT
+11. bills - GET/POST/PUT
+12. vendorcredits - GET/POST/PUT
+13. vendorpayments - GET/POST/PUT
+14. expenses - GET/POST/PUT
+15. journals - GET/POST/PUT
+16. bankaccounts - GET/POST/PUT
+17. banktransactions - GET/POST/PUT
+
+Additional routes:
+- /api/v1/health (GET) - line 124
+- /api/v1/auth/session (POST) - line 142
+- /api/v1/organization (GET) - line 163
+- /api/v1/news (GET) - line 171
+- /api/v1/audit (GET) - line 176
+- /api/v1/search (GET) - line 182
+- /api/v1/goals (GET) - line 201
+- /api/v1/goals/feasibility (POST) - line 206
+- /api/v1/goals (POST) - line 217
+- /api/v1/goals/:id/progress (POST) - line 237
+- /api/v1/flux/briefing (GET) - line 264
+- /api/v1/flux/ask (POST) - line 268
+- /api/v1/tasks (GET/POST) - lines 323, 328
+- /api/v1/tasks/:id/status (POST) - line 343
+- /api/v1/documents (GET/POST) - lines 364, 369
+- /api/v1/automations (GET/POST) - lines 388, 393
+- /api/v1/automations/:id/enabled (POST) - line 415
+- /api/v1/write-previews (POST) - line 436
+- /api/v1/reports/:report (GET) - line 465 (profitandloss, balancesheet, cashflow, agedreceivables, agedpayables, taxsummary)
+- /api/v1/invoices/:id/email (POST) - line 551
+- /api/v1/invoices/:id/status/:status (POST) - line 572
+
+Agent routes: The gateway handles /api/v1/flux/* and /flux/* routes
+
+Total entities: 17 (3 core + 14 document kinds)
+Rulebook says 13 document kinds - the proxy has 14 document entities (invoices through banktransactions)

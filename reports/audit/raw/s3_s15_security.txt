@@ -1,0 +1,23 @@
+Starting dev environment for security audit...
+PASS S3: Protected /organization returns 401 without auth
+PASS S4: Cross-origin forged POST blocked with status 403
+PASS S5: CORS refused evil origin (status 403, ACAO omitted)
+INFO S6: Injection query param status: 401 (401 = auth blocks first = OK; 422 = also OK)
+PASS S6: Injection query rejected/unauthed with 401
+PASS S7: Extra fields request blocked at auth (401)
+PASS S8: Oversize body rejected with 401
+INFO S12: First request status: 401 (401 or 422 is expected without auth)
+PASS S12: Replay test: protected route returns 401 (auth blocks first)
+PASS S15: Anti-framing headers present: X-Frame-Options="DENY", CSP="default-src 'none'; frame-ancestors 'none'"
+PASS S14: No tokens in health response body
+
+=== SECURITY AUDIT RESULTS ===
+PASS S3: Protected /organization returns 401 without auth
+PASS S4: Cross-origin forged POST blocked with status 403
+PASS S5: CORS refused evil origin (status 403, ACAO omitted)
+PASS S6: Injection query rejected/unauthed with 401
+PASS S7: Extra fields request blocked at auth (401)
+PASS S8: Oversize body rejected with 401
+PASS S12: Replay test: protected route returns 401 (auth blocks first)
+PASS S15: Anti-framing headers present: X-Frame-Options="DENY", CSP="default-src 'none'; frame-ancestors 'none'"
+PASS S14: No tokens in health response body

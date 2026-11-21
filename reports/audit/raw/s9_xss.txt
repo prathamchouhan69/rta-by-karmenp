@@ -1,0 +1,11 @@
+=== S9: XSS Strings Show as Plain Text ===
+
+Test: POST invoice with customer_name "<script>alert(1)</script>"
+The data is stored and returned as JSON string.
+Frontend: React auto-escapes content in JSX.
+No dangerouslySetInnerHTML found in components.
+
+grep -r "dangerouslySetInnerHTML" apps/web/src/ --include="*.tsx"
+NO HITS
+
+PASS - XSS strings treated as plain text, React auto-escapes

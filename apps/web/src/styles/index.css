@@ -1,0 +1,483 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Syne:wght@600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   RTA by KARM — LIVING ORGANIC-TECH DESIGN SYSTEM (UK ENGLISH)
+   Typography, Iconography, Architecture & Cockpit Standards
+   ========================================================================== */
+
+:root {
+  /* Type Families */
+  --font-display: 'Syne', -apple-system, sans-serif;
+  --font-interface: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-numeric: 'JetBrains Mono', monospace;
+
+  /* Semantic Dark Cockpit Surfaces */
+  --bg-root: #06080d;
+  --bg-surface: #0b0f17;
+  --bg-elevated: #111723;
+  --bg-glass: rgba(13, 18, 28, 0.72);
+  --bg-hover: rgba(255, 255, 255, 0.04);
+  --bg-active: rgba(255, 255, 255, 0.08);
+
+  /* Typography Contrast Hierarchy */
+  --text-primary: #f1f5f9;       /* High-contrast crisp platinum */
+  --text-secondary: #94a3b8;     /* Balanced slate for effortless reading */
+  --text-tertiary: #64748b;      /* Supporting metadata */
+  --text-disabled: #475569;      /* Inactive elements */
+  --text-inverse: #06080d;       /* Dark text on light chips */
+
+  /* Precision Architectural Accents (Green strictly restricted < 1%) */
+  --accent-cyan: #00f2fe;        /* RTA electric intelligence core */
+  --accent-cyan-subtle: rgba(0, 242, 254, 0.12);
+  --accent-violet: #7000ff;      /* Deep cosmic resonance */
+  --accent-violet-subtle: rgba(112, 0, 255, 0.15);
+  --accent-magenta: #ff007f;     /* High-energy inflection */
+  --accent-amber: #f59e0b;       /* Operational caution / pending approvals */
+  --accent-crimson: #ef4444;     /* Critical risk / overdue alert */
+  --accent-sky: #38bdf8;         /* Verified state / primary positive signal */
+  --accent-gold: #fbbf24;        /* Milestone achievement */
+
+  /* Structural Borders */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-default: rgba(255, 255, 255, 0.13);
+  --border-focus: #00f2fe;
+
+  /* Motion Timing Tokens (Calm, Precise, Purposeful) */
+  --motion-instant: 80ms;
+  --motion-fast: 160ms;
+  --motion-normal: 260ms;
+  --motion-slow: 420ms;
+  --motion-cinematic: 680ms;
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Elevation Shadows & Glow Radii */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 1px rgba(0, 242, 254, 0.12);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.65), 0 0 2px rgba(0, 242, 254, 0.18);
+  --shadow-neon-cyan: 0 0 22px rgba(0, 242, 254, 0.28);
+  --shadow-neon-violet: 0 0 22px rgba(112, 0, 255, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-root);
+  color: var(--text-primary);
+  font-family: var(--font-interface);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Cosmos background with subtle organic nebula gradient */
+body {
+  background: 
+    radial-gradient(ellipse at 15% 5%, rgba(0, 242, 254, 0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 15%, rgba(112, 0, 255, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 90%, rgba(255, 0, 127, 0.03) 0%, transparent 60%),
+    #06080d;
+  background-attachment: fixed;
+}
+
+/* ==========================================================================
+   PART 1: RESPONSIVE TYPOGRAPHIC SCALE & DEVANAGARI INTEGRATION
+   ========================================================================== */
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.font-interface {
+  font-family: var(--font-interface);
+}
+
+.font-numeric {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Responsive Type Scale Classes */
+.type-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.type-h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+.type-h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.type-h3 {
+  font-family: var(--font-interface);
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.type-h4 {
+  font-family: var(--font-interface);
+  font-weight: 600;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.type-body {
+  font-family: var(--font-interface);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.type-body-sm {
+  font-family: var(--font-interface);
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.type-caption {
+  font-family: var(--font-interface);
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-tertiary);
+}
+
+.type-label {
+  font-family: var(--font-numeric);
+  font-size: 0.625rem; /* 10px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.type-button {
+  font-family: var(--font-interface);
+  font-size: 0.8125rem; /* 13px */
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.type-table {
+  font-family: var(--font-numeric);
+  font-size: 0.75rem; /* 12px */
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.4;
+}
+
+.type-financial {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.type-timestamp {
+  font-family: var(--font-numeric);
+  font-size: 0.6875rem; /* 11px */
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+}
+
+/* ==========================================================================
+   FLUX INTELLIGENCE TYPOGRAPHY (INTEGRATED INTO RTA BY KARM)
+   ========================================================================== */
+
+.type-flux-response {
+  font-family: var(--font-interface);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.65;
+  color: var(--text-primary);
+}
+
+.type-flux-guidance {
+  font-family: var(--font-interface);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+  color: #94a3b8;
+  border-left: 2px solid var(--accent-cyan);
+  padding-left: 0.75rem;
+}
+
+.type-flux-question {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.type-flux-action {
+  font-family: var(--font-numeric);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.type-flux-id {
+  font-family: var(--font-numeric);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  letter-spacing: 0.04em;
+}
+
+.type-flux-technical {
+  font-family: var(--font-numeric);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  color: #cbd5e1;
+}
+
+/* ==========================================================================
+   PART 2: PROPRIETARY KARM ICON LANGUAGE & MICRO-INTERACTIONS
+   ========================================================================== */
+
+/* Proprietary KARM Icon Geometry Styles */
+.karm-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--motion-fast) var(--ease-spring),
+              filter var(--motion-fast) var(--ease-smooth),
+              stroke var(--motion-fast) var(--ease-smooth);
+}
+
+.karm-icon-interactive {
+  cursor: pointer;
+}
+
+.karm-icon-interactive:hover {
+  transform: scale(1.08);
+}
+
+.karm-icon-interactive:active {
+  transform: scale(0.94);
+}
+
+/* Icon State Animations */
+@keyframes karmFluxPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(0, 242, 254, 0.4)); opacity: 0.85; }
+  50% { transform: scale(1.06); filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.85)) drop-shadow(0 0 14px rgba(112, 0, 255, 0.5)); opacity: 1; }
+}
+
+@keyframes karmSyncOrbit {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes karmAttentionPing {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.anim-karm-flux {
+  animation: karmFluxPulse 2.8s infinite ease-in-out;
+}
+
+.anim-karm-sync {
+  animation: karmSyncOrbit 1.2s infinite linear;
+}
+
+.anim-karm-attention {
+  animation: karmAttentionPing 2s infinite ease-in-out;
+}
+
+/* Glassmorphism panels */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  transition: border-color var(--motion-fast) var(--ease-smooth),
+              box-shadow var(--motion-fast) var(--ease-smooth);
+}
+
+.glass-panel:hover {
+  border-color: rgba(0, 242, 254, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 242, 254, 0.08);
+}
+
+.glass-panel-interactive {
+  cursor: pointer;
+  background: rgba(15, 22, 35, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  transition: all var(--motion-fast) var(--ease-spring);
+}
+
+.glass-panel-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 254, 0.15);
+}
+
+.glass-panel-interactive:active {
+  transform: translateY(0);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-root);
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Tesla Coil Arc & Pulse animations */
+@keyframes teslaArcGlow {
+  0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 6px #00f2fe); }
+  50% { opacity: 1; filter: drop-shadow(0 0 14px #00f2fe) drop-shadow(0 0 25px #7000ff); }
+}
+
+@keyframes blackHoleVortex {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.03); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1.02); }
+}
+
+@keyframes eelShockwave {
+  0% { transform: scale(0.9); opacity: 1; box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.8); }
+  70% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 0 14px rgba(0, 242, 254, 0); }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-tesla-arc {
+  animation: teslaArcGlow 1.2s infinite ease-in-out;
+}
+
+.anim-black-hole,
+.anim-blackhole-vortex {
+  animation: blackHoleVortex 20s infinite linear;
+}
+
+.anim-pulse-subtle {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+.anim-eel-pulse {
+  animation: eelShockwave 1.5s infinite cubic-bezier(0, 0.2, 0.8, 1);
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slideDown {
+  animation: slideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES (Night / Classic / Day)
+   ========================================================================== */
+
+[data-theme="classic"] {
+  --bg-root: #040507;
+  --bg-surface: #0a0c11;
+  --bg-elevated: #11141c;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --accent-cyan: #e2e8f0;
+  --accent-violet: #cbd5e1;
+}
+
+[data-theme="day"] {
+  --bg-root: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f8fafc;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-default: rgba(0, 0, 0, 0.14);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="day"] body {
+  background: #f1f5f9;
+}
+
+/* Reduced Motion Support (Accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

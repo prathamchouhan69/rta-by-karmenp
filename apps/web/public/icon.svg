@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="karm-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#4facfe" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#07090e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="karm-plasma" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="50%" stop-color="#7000ff"/>
+      <stop offset="100%" stop-color="#ff007f"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="24" fill="#07090e"/>
+  <circle cx="50" cy="50" r="42" fill="url(#karm-glow)"/>
+  <path d="M28 26 L28 74 M28 50 L72 26 M45 44 L72 74" 
+        stroke="url(#karm-plasma)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="72" cy="26" r="4" fill="#00f2fe"/>
+  <circle cx="72" cy="74" r="4" fill="#ff007f"/>
+</svg>

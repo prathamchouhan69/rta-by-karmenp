@@ -1,0 +1,11 @@
+=== S7: Extra Fields (total, balance, is_admin) Rejected 422 ===
+
+Test: POST /api/v1/invoices with extra field "is_admin": true
+curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -H "Idempotency-Key: test-extra" -d '{"customer_id":"c1","line_items":[{"item_id":"i1","quantity":"1","rate":"100"}],"is_admin":true}' http://127.0.0.1:8787/api/v1/invoices
+
+Result: 200 OK (extra field ACCEPTED, not rejected)
+
+The validateWriteBody only checks for computed fields (total, sub_total, tax_total, balance, round_off, tax_amount).
+Unknown/extra fields are NOT rejected.
+
+FAIL - Extra fields like is_admin are accepted, not rejected

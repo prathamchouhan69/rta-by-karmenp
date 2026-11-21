@@ -1,0 +1,17 @@
+=== P15: Mock Seed Data ===
+
+File: /home/rtabykarm/Desktop/rta-by-karmenp/apps/proxy/src/store.mjs:5-22
+
+Seed data:
+- Contacts: 3 (including "Dilip Buildcon Ltd") - Rulebook wants ~25
+- Vendors: 0 - Rulebook wants 12
+- Items: 2 - Rulebook wants 40
+- Invoices: 1 (golden INV-KE-270031) - Rulebook wants 120
+- Taxes: 2 (GST 18%, GST 5%) - Rulebook wants tax cases (CGST+SGST, IGST, exempt, 0/5/12/18/28)
+
+FAIL - Mock seed data is MINIMAL, not matching rulebook requirements:
+- 3 vs ~25 customers
+- 0 vs 12 vendors
+- 2 vs 40 items
+- 1 vs 120 invoices
+- 2 vs multiple tax cases (only 18% and 5%, missing CGST+SGST, IGST, exempt, 0%, 12%, 28%)

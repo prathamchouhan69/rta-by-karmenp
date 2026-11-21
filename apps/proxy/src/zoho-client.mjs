@@ -1,3 +1,21 @@
+// The law: a number on a KARM screen came from Zoho Books, exactly as Zoho sent it.
+// Lossless JSON parser: numbers are preserved as exact strings before parsing so no cents or paise are lost.
+const MONEY_KEYS = [
+  'total', 'sub_total', 'balance', 'tax_total', 'adjustment', 'rate', 'amount',
+  'bcy_total', 'bcy_balance', 'bcy_sub_total', 'bcy_rate', 'item_total',
+  'discount', 'discount_amount', 'tax_amount', 'tax_percentage', 'payment_made',
+  'credits_applied', 'write_off_amount', 'shipping_charge', 'quantity',
+  'outstanding_receivable_amount', 'outstanding_payable_amount', 'unused_credits_receivable_amount',
+  'outstanding', 'price', 'unit_price'
+];
+const MONEY_RE = new RegExp(`"(${MONEY_KEYS.join('|')})"\\s*:\\s*(-?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)(?=\\s*[,}\\]])`, 'g');
+
+export function parseLosslessZohoJson(text) {
+  if (typeof text !== 'string' || !text.trim()) return {};
+  const preserved = text.replace(MONEY_RE, '"$1":"$2"');
+  return JSON.parse(preserved);
+}
+
 const dataCenters = {
   au: 'www.zohoapis.com.au',
   ca: 'www.zohoapis.ca',
@@ -125,6 +143,11 @@ export class ZohoBooksClient {
   }
 
   async readJson(response) {
-    try { return await response.json(); } catch { return {}; }
+    try {
+      const text = await response.text();
+      return parseLosslessZohoJson(text);
+    } catch {
+      return {};
+    }
   }
 }

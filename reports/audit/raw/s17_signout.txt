@@ -1,0 +1,8 @@
+=== S17: Sign-Out Everywhere Kills Old Cookies ===
+
+No session cookies used (bearer tokens).
+Sign-out: Client deletes token.
+No server-side token revocation for proxy (stateless JWT).
+Flux: users.js has revoke functionality (owner can revoke sessions).
+
+PARTLY TRUE - Flux has session revocation, proxy tokens are stateless JWT (cannot be revoked server-side without blocklist)

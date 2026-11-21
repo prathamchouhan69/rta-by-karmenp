@@ -1,0 +1,10 @@
+=== F5: Quotation -> Sales Order -> Invoice Journey ===
+
+ZohoRawInvoicingModal.tsx handles quotation creation.
+Proxy has estimates (quotations), salesorders, invoices endpoints.
+Journey: Create quotation (estimate) -> convert to salesorder -> convert to invoice.
+
+Code supports the entity types but no explicit conversion flow tested.
+Cannot verify without browser automation.
+
+UNVERIFIED - Entities exist but journey flow not tested

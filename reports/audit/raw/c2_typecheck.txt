@@ -1,0 +1,2 @@
+npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway
+PASS - all node --check commands succeeded

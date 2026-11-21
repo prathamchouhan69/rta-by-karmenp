@@ -1,0 +1,19 @@
+=== P13: Body Limit 1MB, Unknown Fields Rejected, No Stack Traces ===
+
+Proxy (server.mjs:600-627):
+- Body limit: 1,000,000 bytes (1 MB) ✓ (checked at content-length and during streaming)
+- Content-Type: must be application/json ✓ (415 UNSUPPORTED_MEDIA_TYPE)
+- JSON parsing: try/catch returns 400 INVALID_JSON ✓
+- Body must be JSON object: returns 422 INVALID_BODY ✓
+- validateWriteBody: checks for computed fields (total, sub_total, etc.) returns 422 COMPUTED_FIELD ✓
+- NO check for unknown/extra fields (allows any fields not in computedFields)
+- Error responses: no stack traces, generic messages ✓
+
+Gateway (server.mjs:33-53):
+- Body limit: 2 MB (GATEWAY_BODY_LIMIT_BYTES default) ✓
+- Content-Type: must be application/json ✓
+- JSON parsing: try/catch returns 400 INVALID_JSON ✓
+- Body must be JSON object ✓
+- No stack traces in error responses ✓
+
+PARTLY TRUE - Body limits enforced, no stack traces, but unknown/extra fields NOT rejected (only computed fields checked)

@@ -46,7 +46,7 @@ export function createAuth({ setupCode, secret, required }) {
   };
 }
 
-export function createLoginLimiter({ maxAttempts = 8, windowMs = 60_000 } = {}) {
+export function createLoginLimiter({ maxAttempts = Number(process.env.OWNER_LOGIN_MAX_ATTEMPTS || 5), windowMs = 60_000 } = {}) {
   const attempts = new Map();
   const currentFor = (key) => {
     const now = Date.now();

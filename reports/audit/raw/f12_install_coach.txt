@@ -1,0 +1,6 @@
+=== F12: Install Coach ===
+
+grep -r "install\|Install\|coach\|Coach" apps/web/src/components/ --include="*.tsx"
+NO HITS
+
+FAIL - Install coach not implemented

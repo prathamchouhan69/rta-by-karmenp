@@ -1,0 +1,3 @@
+Sending 100 rapid requests to push rate limit...
+Results: {"ok":100,"r429":0,"r500":0,"other":0}
+Rate limit max is 600/min. 100 requests: No 429s yet (under limit), need 600+ to trigger

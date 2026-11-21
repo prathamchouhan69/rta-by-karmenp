@@ -1,0 +1,16 @@
+=== F16: Logo on Lock Screen Only, SHA-256 Match ===
+
+Logos in public/:
+- karm-logo-original.png: SHA256=58a991246518cf0586ea94c32351a847be30e3575c7423c7d8439fc049096702
+- karm-symbol-white.png: SHA256=922faf353877cf5e28f6e1cda60b9bd35a98f5357aff5dfad4979acce06be54d
+
+Logo usage in app (karm-symbol-white.png):
+- App.tsx:155 (watermark on ALL screens)
+- AppHeader.tsx:37 (header)
+- DynamicIsland.tsx:51 (dynamic island)
+- StarfishRadialFan.tsx:116 (navigation)
+- LoginScreen.tsx:57 (login screen)
+
+Rulebook: "shown only on lock screen, byte-identical to the file in assets/brand-original/ (compare SHA-256), or MISSING_LOGO handled honestly. Not redrawn."
+
+FAIL - Logo shown on ALL screens (not just lock screen), karm-symbol-white.png ≠ karm-logo-original.png, no lock screen exists

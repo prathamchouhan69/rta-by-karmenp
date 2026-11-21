@@ -1,0 +1,1 @@
+const assistantName = "BrainWise Assistant";

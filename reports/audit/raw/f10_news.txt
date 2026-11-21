@@ -1,0 +1,8 @@
+=== F10: News Caching and Offline Message ===
+
+Proxy /api/v1/news returns practice mode message.
+Flux briefing has caching (30 min mentioned in rulebook).
+DynamicIsland.tsx:117-123 shows "ZOHO BOOKS SOURCE" and "MONEY ARITHMETIC" status.
+TardigradeOfflineBanner.tsx shows offline state.
+
+PARTLY TRUE - News endpoint exists, offline banner exists, but 30-min caching not verified

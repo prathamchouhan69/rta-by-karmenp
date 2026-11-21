@@ -1,0 +1,6 @@
+=== M7: "Total will be calculated by Zoho Books" visible ===
+
+File: /home/rtabykarm/Desktop/rta-by-karmenp/apps/web/src/components/operations/ZohoRawInvoicingModal.tsx:234
+<span className="text-xs font-mono text-cyan-400">Total will be calculated by Zoho Books</span>
+
+PASS - Exact sentence visible in the invoicing modal during document editing

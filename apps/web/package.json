@@ -1,0 +1,30 @@
+{
+  "name": "@karm/web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "date-fns": "4.4.0",
+    "framer-motion": "14.14.0",
+    "lucide-react": "1.77.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "recharts": "3.11.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.3.3",
+    "autoprefixer": "10.7.0",
+    "postcss": "8.5.33",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.6.3",
+    "vite": "5.4.10"
+  }
+}

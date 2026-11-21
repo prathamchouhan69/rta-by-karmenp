@@ -1,0 +1,48 @@
+Checking 25 bad fixtures...
+  [FAIL as expected] bad-01-gpt4.js: hard-coded model identifier
+  [FAIL as expected] bad-02-claude.js: hard-coded model identifier
+  [FAIL as expected] bad-03-llama.js: hard-coded model identifier
+  [FAIL as expected] bad-04-gemini.js: hard-coded model identifier
+  [FAIL as expected] bad-05-mistral.js: hard-coded model identifier
+  [FAIL as expected] bad-06-openai-key.js: key-like secret
+  [FAIL as expected] bad-07-aws-key.js: key-like secret
+  [FAIL as expected] bad-08-slack-token.js: key-like secret
+  [FAIL as expected] bad-09-private-key.js: key-like secret
+  [FAIL as expected] bad-10-secret-key.js: key-like secret
+  [FAIL as expected] bad-11-todo.js: placeholder or unfinished code
+  [FAIL as expected] bad-12-fixme.js: placeholder or unfinished code
+  [FAIL as expected] bad-13-xxx.js: placeholder or unfinished code
+  [FAIL as expected] bad-14-lorem.js: placeholder or unfinished code
+  [FAIL as expected] bad-15-not-implemented.js: placeholder or unfinished code
+  [FAIL as expected] bad-16-forbidden-name1.js: forbidden assistant name
+  [FAIL as expected] bad-17-forbidden-name2.js: forbidden assistant name
+  [FAIL as expected] bad-18-localstorage.js: browser storage or eval
+  [FAIL as expected] bad-19-sessionstorage.js: browser storage or eval
+  [FAIL as expected] bad-20-eval.js: browser storage or eval
+  [FAIL as expected] bad-21-unauth-post.js: HTTP write verb outside allowed modules
+  [FAIL as expected] bad-22-unauth-put.js: HTTP write verb outside allowed modules
+  [FAIL as expected] bad-23-unauth-delete.js: HTTP write verb outside allowed modules, Zoho delete or payment call
+  [FAIL as expected] bad-24-unauth-patch.js: HTTP write verb outside allowed modules
+  [FAIL as expected] bad-25-zoho-payment.js: HTTP write verb outside allowed modules, Zoho delete or payment call
+
+Checking 15 good fixtures...
+  [PASS as expected] good-01.js
+  [PASS as expected] good-02.js
+  [PASS as expected] good-03.js
+  [PASS as expected] good-04.js
+  [PASS as expected] good-05.js
+  [PASS as expected] good-06.js
+  [PASS as expected] good-07.js
+  [PASS as expected] good-08.js
+  [PASS as expected] good-09.js
+  [PASS as expected] good-10.js
+  [PASS as expected] good-11.js
+  [PASS as expected] good-12.js
+  [PASS as expected] good-13.js
+  [PASS as expected] good-14.js
+  [PASS as expected] good-15.js
+
+=== SCANNER FIXTURE SELF-TEST SUMMARY ===
+Bad fixtures: 25/25 correctly caught
+Good fixtures: 15/15 cleanly passed
+Result: PASS (25 bad fixtures FAIL, 15 good fixtures PASS)

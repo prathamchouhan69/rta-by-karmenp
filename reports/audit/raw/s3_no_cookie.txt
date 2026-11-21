@@ -1,0 +1,13 @@
+=== S3: No Session Cookie -> 401 ===
+
+Proxy uses bearer token auth (Authorization header).
+No cookies set by proxy.
+Test: curl without auth header to protected route:
+curl -s http://127.0.0.1:8787/api/v1/invoices
+{"ok":false,"error":{"code":"NOT_FOUND","message":"No such endpoint"}}
+
+Via gateway /api/v1/ requires auth:
+curl -s http://127.0.0.1:8787/api/v1/invoices
+{"ok":false,"error":{"code":"AUTHENTICATION_REQUIRED","message":"Sign in to use this API"}}
+
+PASS - Protected routes return 401 without auth

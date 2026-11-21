@@ -1,0 +1,4 @@
+L2: 200 identical keyed POST requests at once...
+Status counts: {"201":19,"409":181}
+Unique response bodies: 2
+Unique 201 bodies: 1 (should be 1 if idempotency works)

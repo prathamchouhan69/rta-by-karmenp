@@ -1,0 +1,16 @@
+=== S10: SSRF Allow-List Only ===
+
+Proxy Zoho client (zoho-client.mjs):
+- Only calls Zoho APIs (dataCenters allow-list: au, ca, eu, in, jp, sa, uk, com)
+- URL constructed from validated resource path (line 102-103): if (!/^[a-z0-9/_-]+$/i.test(path)) throw Error
+- No user-controlled URLs fetched
+
+Flux public page reader (flux/src/tools/public-page-reader.js):
+- allowList of hosts (line 10): ['books.zoho.in', 'www.zohoapis.in', ...]
+- Rejects IPs, localhost, 169.254.169.254, file://, custom ports, parameterized URLs
+
+Gateway:
+- Proxies to proxy (localhost) and Flux (localhost)
+- No user-controlled URLs
+
+PASS - All outbound requests use allow-lists, localhost/metadata blocked

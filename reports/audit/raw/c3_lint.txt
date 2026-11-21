@@ -1,0 +1,2 @@
+npm run lint -w apps/proxy && npm run typecheck -w apps/gateway
+PASS - lint runs typecheck again (no separate linter like ESLint configured)

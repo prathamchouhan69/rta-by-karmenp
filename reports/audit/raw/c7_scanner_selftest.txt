@@ -1,0 +1,2 @@
+node tests/fixtures/scanner/test_scanner_fixtures.mjs
+PASS - 25/25 bad fixtures correctly caught, 15/15 good fixtures cleanly passed

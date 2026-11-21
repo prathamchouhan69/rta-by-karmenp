@@ -1,0 +1,17 @@
+=== P14: Default ZOHO_MODE=mock and PRACTICE MODE Banner ===
+
+Proxy (server.mjs:51):
+const mode = (env.ZOHO_MODE ?? 'mock').toLowerCase();
+Default: 'mock' ✓
+
+News endpoint (server.mjs:171-174):
+app.get('/api/v1/news', (c) => c.json({
+  ok: true,
+  data: [{ title: config.mode === 'mock' ? 'Practice mode is active' : 'Zoho Books is connected', url: '/settings', source: 'KARM OS' }]
+}))
+
+Returns "Practice mode is active" in mock mode ✓
+
+Flux config (apps/flux/src/config.js) - practice mode detected via ZOHO_MODE
+
+PASS - Default ZOHO_MODE=mock, practice mode banner shown in news endpoint

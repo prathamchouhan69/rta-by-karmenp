@@ -1,0 +1,14 @@
+=== F4: Documents 13 Kinds, PDF, T&C ===
+
+AccountingScreen.tsx handles documents. Document types in proxy (17 entities):
+- contacts, items, taxes
+- invoices, estimates, salesorders, deliverychallans, creditnotes, customerpayments
+- purchaseorders, bills, vendorcredits, vendorpayments
+- expenses, journals, bankaccounts, banktransactions
+
+ZohoRawInvoicingModal.tsx: T&C sets for quotation (8 clauses mentioned in rulebook, need to verify)
+PDF: Uses Zoho's own PDF via /api/v1/invoices/:id/pdf (not implemented in proxy, but gateway forwards to Flux)
+
+DOCUMENT_MATRIX.md: 20+ kinds counted (need to verify)
+
+PARTLY TRUE - Document types exist but PDF route and T&C clause count need verification
