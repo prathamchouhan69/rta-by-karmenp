@@ -128,7 +128,10 @@ export function buildExtendedRoutes(f) {
     R('POST', '/v1/health/water-target', async ({ body }) => health(waterTarget(parseInput(waterSchema, body))), { permission: 'health:read' }),
     R('POST', '/v1/health/macros', async ({ body }) => health(macros(parseInput(macrosSchema, body))), { permission: 'health:read' }),
     R('POST', '/v1/health/vitals-check', async ({ body }) => health(vitalsCheck(parseInput(vitalsCheckSchema, body))), { permission: 'health:read' }),
-    R('POST', '/v1/health/emergency-check', async ({ body }) => health(emergencyCheck(parseInput(emergencyCheckSchema, body).text)), { permission: 'health:read' }),
+    R('POST', '/v1/health/emergency-check', async ({ body }) => {
+      const result = emergencyCheck(parseInput(emergencyCheckSchema, body).text);
+      return health({ ...result, message: result.disclaimer });
+    }, { permission: 'health:read' }),
     R('POST', '/v1/health/lifestyle-plan', async ({ body }) => health(lifestylePlan(parseInput(lifestyleSchema, body))), { permission: 'health:read' }),
     R('POST', '/v1/health/heat-guidance', async ({ body }) => health(workforceHeatGuidance(parseInput(heatSchema, body))), { permission: 'health:read' }),
 

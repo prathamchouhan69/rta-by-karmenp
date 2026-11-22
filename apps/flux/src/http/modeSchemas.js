@@ -245,6 +245,23 @@ export const healthRulesSchema = z.object({
   }).strict()).max(200).default([]),
 }).strict();
 
+export const healthProfileSchema = z.object({
+  consent: z.literal(true),
+  weightKg: finite.min(20).max(500).optional(),
+  heightCm: finite.min(50).max(300).optional(),
+  ageYears: finite.min(1).max(120).optional(),
+  sex: z.enum(['male', 'female']).optional(),
+  goals: z.array(z.string().trim().max(80)).max(20).default([]),
+  allergies: z.array(z.string().trim().max(160)).max(20).default([]),
+  conditions: z.array(z.string().trim().max(160)).max(20).default([]),
+  medicines: z.array(z.string().trim().max(160)).max(20).default([]),
+  language: z.string().trim().max(10).default('en'),
+}).strict();
+
+export const emergencyCheckSchema = z.object({
+  text: z.string().trim().min(1).max(500),
+}).strict();
+
 export const meetingSchema = z.object({
   text: z.string().trim().min(1).max(20000),
   title: z.string().trim().max(120).optional(),

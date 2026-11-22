@@ -14,7 +14,7 @@ const SESSION_SEC = 12 * 3600;
 const AI = { name: 'ai', max: 30, windowMs: 60000 };
 
 export function buildRoutes(f) {
-  const { config, users, approvals, audit, registry, router, usage, hsn, docs, memory, orchestrator, board, briefing, limiter } = f;
+  const { config, users, approvals, audit, registry, router, usage, hsn, docs, memory, orchestrator, board, briefing, limiter, health } = f;
   const need = (b, ...keys) => { for (const k of keys) if (b[k] == null || b[k] === '') throw new HttpError(422, 'MISSING_FIELD', `${k} is required`); };
   const R = (method, path, handler, opts) => [method, path, handler, opts];
 
