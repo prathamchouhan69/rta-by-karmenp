@@ -233,7 +233,7 @@ test('board: cost shown first, large meetings need confirmation, advisors return
 });
 test('briefing over HTTP: built from Zoho, 13 sections, save and dismiss work, unverifiable sections are named', async () => {
   const { call, tok } = await boot(); const br = await call('POST', '/v1/briefing/run', { token: tok.owner, body: {} }); assert.equal(br.status, 200, JSON.stringify(br.body)); const b = br.body;
-  assert.equal(b.sections.length, 13); assert.ok(b.unverified.includes('Market and economy headlines')); assert.equal((await call('GET', '/v1/briefing/today', { token: tok.view })).status, 200);
+  assert.equal(b.sections.length, 13); assert.ok(b.unverified.includes('Market & Economy Headlines')); assert.equal((await call('GET', '/v1/briefing/today', { token: tok.view })).status, 200);
   assert.equal((await call('POST', `/v1/briefing/${b.date}/status`, { token: tok.view, body: { action: 'save' } })).body.status, 'saved'); assert.equal((await call('POST', `/v1/briefing/${b.date}/status`, { token: tok.view, body: { action: 'explode' } })).status, 422);
 });
 test('audit: every AI action and approval is recorded, the chain verifies over HTTP, and tampering is detected', async () => {
