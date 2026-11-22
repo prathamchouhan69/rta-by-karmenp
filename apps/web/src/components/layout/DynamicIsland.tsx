@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
-import { IconTeslaCoil, IconFlux, IconCheck, IconAlert } from '../common/Icons';
+import { IconTeslaCoil, IconFlux } from '../common/Icons';
 import { LogoParticle } from '../common/LogoParticle';
 
 export const DynamicIsland: React.FC = () => {
@@ -15,8 +15,8 @@ export const DynamicIsland: React.FC = () => {
   } = useApp();
 
   const isScanning = zohoScanState === 'scanning' || zohoScanState === 'syncing';
+  const [inputValue, setInputValue] = useState('');
 
-  // 3-Phase Tesla Rotating Field Motor Simulation (3 poles glowing in turn)
   const [activePole, setActivePole] = useState<number>(0);
 
   useEffect(() => {
@@ -26,6 +26,19 @@ export const DynamicIsland: React.FC = () => {
     }, 450);
     return () => clearInterval(interval);
   }, [reducedMotion, isOnline]);
+
+  const handleInputKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+      const val = e.currentTarget.value.trim();
+      setInputValue('');
+      // Use the triggerZohoLiveScan or a proper Flux query API
+      alert(`Flux Co-pilot: Ingested telemetry for "${val}". All data matches live Zoho Books and IoT beacons.`);
+    }
+  }, []);
+
+  const handleQuickQuery = useCallback((query: string) => {
+    alert(`Flux: ${query}`);
+  }, []);
 
   return (
     <aside 
@@ -42,9 +55,7 @@ export const DynamicIsland: React.FC = () => {
         }`}
       >
         {!isIslandExpanded ? (
-          // Collapsed Pill View: Flux Left, Life Scanning (Tesla 3-Phase Field) Right
           <div className="flex items-center gap-3.5">
-            {/* Left Side: Flux AI Brain Capsule */}
             <div className="flex items-center gap-2">
               <div className="relative flex items-center justify-center w-5 h-5">
                 <span className="absolute inset-0 rounded-full bg-cyan-500/20 animate-ping opacity-75" />
@@ -59,10 +70,8 @@ export const DynamicIsland: React.FC = () => {
               <span className="type-label text-cyan-300 font-bold tracking-wider">FLUX</span>
             </div>
 
-            {/* Separator Divider */}
             <div className="w-[1px] h-3 bg-white/20" />
 
-            {/* Right Side: Life Scanning (Tesla 3-Phase Rotating Field) */}
             <div className="flex items-center gap-2">
               <div className="relative flex items-center gap-1">
                 {[0, 1, 2].map((pole) => (
@@ -84,7 +93,6 @@ export const DynamicIsland: React.FC = () => {
             </div>
           </div>
         ) : (
-          // Expanded Island Flyout View
           <div className="space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2.5">
@@ -97,7 +105,6 @@ export const DynamicIsland: React.FC = () => {
                 </div>
               </div>
 
-              {/* Tesla 3-Phase Indicator */}
               <div className="flex items-center gap-1.5 bg-black/40 px-2.5 py-1 rounded-xl border border-white/10">
                 <div className="flex items-center gap-1">
                   {[0, 1, 2].map((pole) => (
@@ -113,7 +120,6 @@ export const DynamicIsland: React.FC = () => {
               </div>
             </div>
 
-            {/* Logo Particle Treatment (Video 05) - Fluid particle shaped from KARM logo */}
             <div className="p-2 rounded-2xl bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5 border border-white/5">
               <div className="flex items-center justify-center h-24">
                 <LogoParticle 
@@ -143,40 +149,34 @@ export const DynamicIsland: React.FC = () => {
               </div>
             </div>
 
-            {/* Interactive Flux Co-pilot Prompt */}
             <div className="space-y-2 pt-1">
               <div className="flex items-center gap-2 p-2.5 rounded-2xl bg-black/60 border border-white/10 focus-within:border-cyan-400/50 transition-colors">
                 <IconFlux size={15} color="#00f2fe" />
                 <input
                   type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleInputKeyDown}
                   placeholder="Ask Flux: 'cash balance', 'fleet status', 'pier caps'..."
                   className="w-full bg-transparent text-xs text-white outline-none placeholder-slate-500 font-interface"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && e.currentTarget.value) {
-                      const val = e.currentTarget.value;
-                      e.currentTarget.value = '';
-                      alert(`Flux Co-pilot: Ingested telemetry for "${val}". All data matches live Zoho Books and IoT beacons.`);
-                    }
-                  }}
                 />
               </div>
 
-              {/* Quick Prompt Pills */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] font-mono text-slate-400">
                 <button
-                  onClick={() => alert('Flux: Current HDFC Liquidity is ₹42,30,500.00 verbatim string from Zoho Books. Inflow trending at +₹1.24 L/day.')}
+                  onClick={() => handleQuickQuery('Current HDFC Liquidity is ₹42,30,500.00 verbatim string from Zoho Books. Inflow trending at +₹1.24 L/day.')}
                   className="px-2 py-1 rounded-lg bg-white/5 hover:bg-cyan-500/10 hover:text-cyan-300 border border-white/5 whitespace-nowrap transition-colors"
                 >
                   Cash Liquidity?
                 </button>
                 <button
-                  onClick={() => alert('Flux: 6 Transit Mixers active. MH-12-RN-4821 is 18 mins from Site Gamma carrying 32MT precast pier.')}
+                  onClick={() => handleQuickQuery('6 Transit Mixers active. MH-12-RN-4821 is 18 mins from Site Gamma carrying 32MT precast pier.')}
                   className="px-2 py-1 rounded-lg bg-white/5 hover:bg-cyan-500/10 hover:text-cyan-300 border border-white/5 whitespace-nowrap transition-colors"
                 >
                   Fleet Locations?
                 </button>
                 <button
-                  onClick={() => alert('Flux: 3 invoices overdue past 90 days totaling ₹28,40,000.00. Black Hole singular event horizon active.')}
+                  onClick={() => handleQuickQuery('3 invoices overdue past 90 days totaling ₹28,40,000.00. Black Hole singular event horizon active.')}
                   className="px-2 py-1 rounded-lg bg-white/5 hover:bg-cyan-500/10 hover:text-cyan-300 border border-white/5 whitespace-nowrap transition-colors"
                 >
                   Overdue Debt?

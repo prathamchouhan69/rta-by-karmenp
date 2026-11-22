@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import {
   Invoice, Bill, BankTransaction, Project, Task, FileItem,
   Vehicle, Employee, ClientAccount, AppNotification,
@@ -10,42 +10,11 @@ import { REFERENCES, ReferenceItem } from '../data/references';
 import { CHARTS, ChartItem } from '../data/charts';
 
 export type ScreenType =
-  // 9 Canonical Operating Sections (Hybrid Names)
-  | 'now'          // Now · Action Inbox
-  | 'ledger'       // Ledger · Zoho Books & Cash
-  | 'harvest'      // Harvest · Projects & Sites
-  | 'routes'       // Routes · Fleet & Logistics
-  | 'terrain'      // Terrain · Materials & Inventory
-  | 'gates'        // Gates · Statutory & Approvals
-  | 'aura'         // Aura · Health & Team
-  | 'ecosystems'   // Ecosystems · Clients & Network
-  | 'world'        // World · 3D Cosmos & Nature
-  // Aliases & Workflows
-  | 'login'
-  | 'home'
-  | 'business_os'
-  | 'nature_library'
-  | 'reference_detail'
-  | 'my_selections'
-  | 'projects'
-  | 'project_detail'
-  | 'tasks'
-  | 'task_detail'
-  | 'accounting'
-  | 'invoice_detail'
-  | 'files'
-  | 'file_detail'
-  | 'transportation'
-  | 'fleet_detail'
-  | 'human_resources'
-  | 'employee_detail'
-  | 'relationships'
-  | 'client_detail'
-  | 'charts_library'
-  | 'chart_detail'
-  | 'notifications'
-  | 'search'
-  | 'settings';
+  | 'now' | 'ledger' | 'harvest' | 'routes' | 'terrain' | 'gates' | 'aura' | 'ecosystems' | 'world'
+  | 'login' | 'home' | 'business_os' | 'nature_library' | 'reference_detail' | 'my_selections'
+  | 'projects' | 'project_detail' | 'tasks' | 'task_detail' | 'accounting' | 'invoice_detail'
+  | 'files' | 'file_detail' | 'transportation' | 'fleet_detail' | 'human_resources' | 'employee_detail'
+  | 'relationships' | 'client_detail' | 'charts_library' | 'chart_detail' | 'notifications' | 'search' | 'settings';
 
 export type ThemeMode = 'night' | 'classic' | 'day';
 
@@ -55,21 +24,13 @@ export interface AppContextType {
   navigateTo: (screen: ScreenType, entityId?: string | null) => void;
   goBack: () => void;
   screenHistory: { screen: ScreenType; entityId?: string | null }[];
-
-  // Visual Theme Modes (Night, Classic, Day)
   themeMode: ThemeMode;
   setThemeMode: (mode: ThemeMode) => void;
-
-  // Starfish Radial Navigation (N-2)
   isStarfishOpen: boolean;
   setIsStarfishOpen: (open: boolean) => void;
-
-  // Zoho Books Live Scanning State (Tesla Coil)
   zohoScanState: 'idle' | 'scanning' | 'syncing' | 'completed' | 'error';
   lastZohoScanTime: string;
   triggerZohoLiveScan: () => Promise<void>;
-
-  // Data Collections
   invoices: Invoice[];
   bills: Bill[];
   bankTransactions: BankTransaction[];
@@ -80,8 +41,6 @@ export interface AppContextType {
   employees: Employee[];
   clients: ClientAccount[];
   notifications: AppNotification[];
-
-  // Mutations
   clearNotifications: () => void;
   updateInvoiceStatus: (id: string, status: Invoice['status']) => void;
   updateTaskStatus: (id: string, status: Task['status']) => void;
@@ -90,32 +49,20 @@ export interface AppContextType {
   reconcileBankTransaction: (id: string) => void;
   exportToGoogleSheets: (sheetName: string, data: any[]) => void;
   syncWithGoogleCalendar: (taskId: string) => void;
-
-  // Selections & Autosave Notes
   savedSelections: { references: number[]; charts: number[] };
   toggleSaveReference: (num: number) => void;
   toggleSaveChart: (num: number) => void;
   notes: Record<string, string>;
   setNote: (key: string, text: string) => void;
   savingStatus: 'saved' | 'saving' | 'offline';
-
-  // System & Offline State (Tardigrade)
   isOnline: boolean;
   offlineQueueCount: number;
-
-  // Search & Spotlight
   isSpotlightOpen: boolean;
   setIsSpotlightOpen: (open: boolean) => void;
-
-  // Dynamic Island
   isIslandExpanded: boolean;
   setIsIslandExpanded: (expanded: boolean) => void;
-
-  // References & Charts master lookups
   references: ReferenceItem[];
   charts: ChartItem[];
-
-  // Accessibility & Preferences
   reducedMotion: boolean;
   setReducedMotion: (val: boolean) => void;
 }
@@ -129,7 +76,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     { screen: 'now' }
   ]);
 
-  // Visual Theme Mode (Night, Classic, Day)
   const [themeMode, setThemeModeState] = useState<ThemeMode>(() => {
     try {
       const saved = localStorage.getItem('karm_theme_mode');
@@ -139,26 +85,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
-  const setThemeMode = (mode: ThemeMode) => {
+  const setThemeMode = useCallback((mode: ThemeMode) => {
     setThemeModeState(mode);
     try {
       localStorage.setItem('karm_theme_mode', mode);
       document.documentElement.setAttribute('data-theme', mode);
     } catch {}
-  };
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode);
   }, [themeMode]);
 
-  // Starfish Radial Navigation
   const [isStarfishOpen, setIsStarfishOpen] = useState(false);
 
-  // Zoho live scanning state
   const [zohoScanState, setZohoScanState] = useState<'idle' | 'scanning' | 'syncing' | 'completed' | 'error'>('idle');
   const [lastZohoScanTime, setLastZohoScanTime] = useState<string>('Just now');
 
-  // Master collections
   const [invoices, setInvoices] = useState<Invoice[]>(INITIAL_INVOICES);
   const [bills, setBills] = useState<Bill[]>(INITIAL_BILLS);
   const [bankTransactions, setBankTransactions] = useState<BankTransaction[]>(INITIAL_BANK_TRANSACTIONS);
@@ -170,7 +113,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [clients, setClients] = useState<ClientAccount[]>(INITIAL_CLIENTS);
   const [notifications, setNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
 
-  // Selections & Notes
   const [savedSelections, setSavedSelections] = useState<{ references: number[]; charts: number[] }>(() => {
     try {
       const stored = localStorage.getItem('karm_selections');
@@ -196,9 +138,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isIslandExpanded, setIsIslandExpanded] = useState<boolean>(false);
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
 
-  // Debounced note save (800ms)
-  const noteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const setNote = (key: string, text: string) => {
+  const noteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const setNote = useCallback((key: string, text: string) => {
     setNotes(prev => {
       const next = { ...prev, [key]: text };
       setSavingStatus('saving');
@@ -213,11 +154,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }, 800);
       return next;
     });
-  };
+  }, []);
 
-  // Debounced selections save (500ms)
-  const selTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const toggleSaveReference = (num: number) => {
+  const selTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toggleSaveReference = useCallback((num: number) => {
     setSavedSelections(prev => {
       const has = prev.references.includes(num);
       const nextRefs = has ? prev.references.filter(n => n !== num) : [...prev.references, num];
@@ -234,9 +174,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }, 500);
       return next;
     });
-  };
+  }, []);
 
-  const toggleSaveChart = (num: number) => {
+  const toggleSaveChart = useCallback((num: number) => {
     setSavedSelections(prev => {
       const has = prev.charts.includes(num);
       const nextCharts = has ? prev.charts.filter(n => n !== num) : [...prev.charts, num];
@@ -253,15 +193,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }, 500);
       return next;
     });
-  };
+  }, []);
 
-  // Online / offline listeners (Tardigrade)
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
       setSavingStatus('saved');
       if (offlineQueueCount > 0) {
-        // Replay mutations
         setTimeout(() => setOfflineQueueCount(0), 1200);
       }
     };
@@ -277,7 +215,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, [offlineQueueCount]);
 
-  // Keyboard shortcut for Spotlight (Cmd+K / Ctrl+K)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -289,15 +226,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Navigation handlers
-  const navigateTo = (screen: ScreenType, entityId: string | null = null) => {
+  const navigateTo = useCallback((screen: ScreenType, entityId: string | null = null) => {
     setCurrentScreen(screen);
     setActiveEntityId(entityId);
     setScreenHistory(prev => [...prev, { screen, entityId }]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
-  const goBack = () => {
+  const goBack = useCallback(() => {
     if (screenHistory.length > 1) {
       const newHist = [...screenHistory];
       newHist.pop();
@@ -309,15 +245,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setCurrentScreen('home');
       setActiveEntityId(null);
     }
-  };
+  }, [screenHistory]);
 
-  // Tesla Coil live Zoho Books scanner
-  const triggerZohoLiveScan = async () => {
+  const scanTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triggerZohoLiveScan = useCallback(async () => {
     if (zohoScanState === 'scanning' || zohoScanState === 'syncing') return;
     setZohoScanState('scanning');
 
+    if (scanTimeoutRef.current) clearTimeout(scanTimeoutRef.current);
+
     try {
-      // First attempt backend fetch if available
       const res = await fetch('/api/v1/news').catch(() => null);
       if (res && res.ok) {
         setZohoScanState('syncing');
@@ -326,13 +263,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       // Practice fallback mode
     }
 
-    setTimeout(() => {
+    scanTimeoutRef.current = setTimeout(() => {
       setZohoScanState('syncing');
-      setTimeout(() => {
+      scanTimeoutRef.current = setTimeout(() => {
         setZohoScanState('completed');
         const now = new Date();
         setLastZohoScanTime(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`);
-        // Add fresh notification
         setNotifications(prev => [
           {
             id: 'notif-' + Date.now(),
@@ -346,26 +282,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           },
           ...prev
         ]);
-        setTimeout(() => setZohoScanState('idle'), 4000);
+        scanTimeoutRef.current = setTimeout(() => setZohoScanState('idle'), 4000);
       }, 1200);
     }, 1500);
-  };
+  }, [zohoScanState]);
 
-  // Specific domain mutations
-  const clearNotifications = () => {
+  useEffect(() => {
+    return () => {
+      if (scanTimeoutRef.current) clearTimeout(scanTimeoutRef.current);
+    };
+  }, []);
+
+  const clearNotifications = useCallback(() => {
     setNotifications([]);
-  };
+  }, []);
 
-  const updateInvoiceStatus = (id: string, status: Invoice['status']) => {
+  const updateInvoiceStatus = useCallback((id: string, status: Invoice['status']) => {
     setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, status, balance: status === 'paid' ? 0 : inv.balance } : inv));
-  };
+  }, []);
 
-  const updateTaskStatus = (id: string, status: Task['status']) => {
+  const updateTaskStatus = useCallback((id: string, status: Task['status']) => {
     setTasks(prev => prev.map(t => t.id === id ? { ...t, status } : t));
-  };
+  }, []);
 
-  const rebalanceTasksWithAntColony = () => {
-    // Stigmergic task distribution: allocate in_progress tasks equally
+  const rebalanceTasksWithAntColony = useCallback(() => {
     setTasks(prev => {
       const copy = [...prev];
       copy.forEach((t, i) => {
@@ -379,9 +319,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       });
       return copy;
     });
-  };
+  }, [employees]);
 
-  const restoreFileVersionWithJellyfish = (fileId: string, versionNum: number) => {
+  const restoreFileVersionWithJellyfish = useCallback((fileId: string, versionNum: number) => {
     setFiles(prev => prev.map(f => {
       if (f.id === fileId) {
         return {
@@ -396,13 +336,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return f;
     }));
-  };
+  }, []);
 
-  const reconcileBankTransaction = (id: string) => {
+  const reconcileBankTransaction = useCallback((id: string) => {
     setBankTransactions(prev => prev.map(b => b.id === id ? { ...b, status: 'reconciled' } : b));
-  };
+  }, []);
 
-  const exportToGoogleSheets = (sheetName: string, data: any[]) => {
+  const exportToGoogleSheets = useCallback((sheetName: string, data: any[]) => {
     const csvContent = 'data:text/csv;charset=utf-8,' +
       (data.length > 0 ? Object.keys(data[0]).join(',') + '\n' + data.map(row => Object.values(row).join(',')).join('\n') : '');
     const encodedUri = encodeURI(csvContent);
@@ -412,15 +352,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }, []);
 
-  const syncWithGoogleCalendar = (taskId: string) => {
+  const syncWithGoogleCalendar = useCallback((taskId: string) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
     const title = encodeURIComponent(`KARM: ${task.title}`);
     const details = encodeURIComponent(`Project: ${task.project_name}\nAssignee: ${task.assignee.name}`);
     window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`, '_blank');
-  };
+  }, [tasks]);
 
   return (
     <AppContext.Provider

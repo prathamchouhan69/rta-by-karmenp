@@ -1,4 +1,4 @@
-const CACHE_NAME = 'karm-os-cache-v2';
+const CACHE_NAME = 'karm-os-cache-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -32,23 +32,28 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
-  // For API/Flux routes, network first with cache fallback
+  // For API/Flux routes: NEVER cache API responses (KARM Law F11)
   if (url.pathname.startsWith('/api') || url.pathname.startsWith('/flux')) {
     event.respondWith(
       fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
+        .catch(() => {
+          // Return a network error response for offline API calls
+          return new Response(JSON.stringify({ 
+            ok: false, 
+            error: { 
+              code: 'OFFLINE', 
+              message: 'Network unavailable. Please check your connection.' 
+            } 
+          }), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+          });
         })
-        .catch(() => caches.match(event.request))
     );
     return;
   }
 
-  // For static assets, cache first with network update
+  // For static assets: cache first with network update
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {

@@ -18,6 +18,7 @@ export const LogoParticle: React.FC<LogoParticleProps> = ({
   className = '',
 }) => {
   const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: size, height: size });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const particlesRef = useRef<Array<{
@@ -47,17 +48,34 @@ export const LogoParticle: React.FC<LogoParticleProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const rect = entry.contentRect;
+        setDimensions({ width: rect.width, height: rect.height });
+      }
+    });
+    resizeObserver.observe(canvas);
+    setDimensions({ width: canvas.offsetWidth, height: canvas.offsetHeight });
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || dimensions.width === 0 || dimensions.height === 0) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.width = dimensions.width * dpr;
+    canvas.height = dimensions.height * dpr;
     ctx.scale(dpr, dpr);
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const maxRadius = Math.min(rect.width, rect.height) / 2 - 10;
+    const centerX = dimensions.width / 2;
+    const centerY = dimensions.height / 2;
+    const maxRadius = Math.min(dimensions.width, dimensions.height) / 2 - 10;
 
-    // Initialize particles in logo shape (KARM symbol approximation)
     particlesRef.current = Array.from({ length: particleCount }, (_, i) => {
       const angle = (i / particleCount) * Math.PI * 2;
       const radius = maxRadius * (0.3 + Math.random() * 0.7);
@@ -65,8 +83,8 @@ export const LogoParticle: React.FC<LogoParticleProps> = ({
       const targetY = centerY + Math.sin(angle) * radius;
       
       return {
-        x: centerX + (Math.random() - 0.5) * rect.width,
-        y: centerY + (Math.random() - 0.5) * rect.height,
+        x: centerX + (Math.random() - 0.5) * dimensions.width,
+        y: centerY + (Math.random() - 0.5) * dimensions.height,
         vx: 0,
         vy: 0,
         radius: 1.5 + Math.random() * 2,
@@ -106,7 +124,7 @@ export const LogoParticle: React.FC<LogoParticleProps> = ({
     const animate = () => {
       if (!ctx) return;
       
-      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
       particlesRef.current.forEach((p) => {
         let targetX = p.targetX;
@@ -125,25 +143,21 @@ export const LogoParticle: React.FC<LogoParticleProps> = ({
           }
         }
 
-        // Spring back to target position
         const springForce = 0.02;
         p.vx += (targetX - p.x) * springForce;
         p.vy += (targetY - p.y) * springForce;
 
-        // Damping
         p.vx *= 0.92;
         p.vy *= 0.92;
 
         p.x += p.vx;
         p.y += p.vy;
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `${p.color}${Math.round(p.alpha * 255).toString(16).padStart(2, '0')}`;
         ctx.fill();
 
-        // Draw connections to nearby particles
         if (!isReducedMotion) {
           particlesRef.current.forEach((p2) => {
             if (p === p2) return;
@@ -166,20 +180,30 @@ export const LogoParticle: React.FC<LogoParticleProps> = ({
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    if (!isReducedMotion) {
+      animate();
+    } else {
+      ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+      particlesRef.current.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.targetX, p.targetY, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `${p.color}${Math.round(p.alpha * 255).toString(16).padStart(2, '0')}`;
+        ctx.fill();
+      });
+    }
 
     return () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [particleCount, size, color, isReducedMotion]);
+  }, [particleCount, size, color, isReducedMotion, dimensions.width, dimensions.height]);
 
   return (
     <canvas
       ref={canvasRef}
-      width={size}
-      height={size}
+      width={dimensions.width}
+      height={dimensions.height}
       className={`${className} block`}
       aria-hidden="true"
       style={{ touchAction: 'none' }}
