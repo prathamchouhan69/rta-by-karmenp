@@ -182,7 +182,7 @@ async function createMigration(name) {
 }
 
 function computeChecksum(content) {
-  const { createHash } = await import('node:crypto');
+  const { createHash } = import('node:crypto');
   return createHash('sha256').update(content.trim()).digest('hex');
 }
 

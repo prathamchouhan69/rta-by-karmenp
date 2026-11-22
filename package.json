@@ -18,7 +18,7 @@
     "start": "node scripts/start-production.mjs",
     "build": "npm run build -w apps/web && npm run build -w apps/proxy && npm run build -w apps/gateway && npm run build -w tools/mock-zoho",
     "typecheck": "npm run typecheck -w apps/proxy && npm run typecheck -w apps/gateway",
-    "lint": "npm run lint -w apps/proxy && npm run typecheck -w apps/gateway",
+    "lint": "eslint . --ext .ts,.tsx,.js,.mjs",
     "test": "npm run test -w apps/proxy && npm run test -w apps/flux && npm run test -w apps/gateway && node --test scripts/*.test.mjs",
     "test:e2e": "node scripts/e2e-smoke.mjs",
     "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run test:e2e",
@@ -48,7 +48,12 @@
   },
   "devDependencies": {
     "@types/node": "22.13.4",
+    "@typescript-eslint/eslint-plugin": "^8.73.0",
+    "@typescript-eslint/parser": "^8.73.0",
     "concurrently": "9.1.2",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "3.5.1"
   }
 }
