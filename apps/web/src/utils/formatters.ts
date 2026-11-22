@@ -1,58 +1,73 @@
 // RTA by KARM — High-Craft Indian Financial & Operational Formatters (UK English)
+// MONEY LAW: All inputs are Zoho verbatim strings. No parseFloat, no Number(), no arithmetic.
+
+import { 
+  cleanMoneyString, 
+  groupIndian, 
+  formatCompactCr, 
+  formatCompactL, 
+  formatCompactK 
+} from './formatters-helpers';
 
 /**
- * Formats a numeric value into the Indian Rupee numbering system (Lakhs and Crores)
- * e.g. 1250000 -> ₹12,50,000
- * e.g. 4500000 with compact -> ₹45.00 L
- * e.g. 12500000 with compact -> ₹1.25 Cr
+ * Formats a Zoho verbatim money string into the Indian Rupee numbering system (Lakhs and Crores)
+ * e.g. "1250000" -> "₹12,50,000"
+ * e.g. "4500000" with compact -> "₹45.00 L"
+ * e.g. "12500000" with compact -> "₹1.25 Cr"
  */
-export function formatRupees(amount: number, compact: boolean = false): string {
-  if (isNaN(amount)) return '₹0';
+export function formatRupees(amount: string | number, compact: boolean = false): string {
+  const amountStr = typeof amount === 'number' ? String(amount) : amount;
+  const cleaned = cleanMoneyString(amount);
+  if (!cleaned) return '₹0';
+
+  const sign = cleaned.startsWith('-') ? '-' : '';
+  const abs = cleaned.replace(/^-/, '');
 
   if (compact) {
-    const abs = Math.abs(amount);
-    const sign = amount < 0 ? '-' : '';
-    if (abs >= 10000000) {
-      return `${sign}₹${(abs / 10000000).toFixed(2)} Cr`;
+    if (abs.length >= 9) { // >= 10,000,000 (1 Crore)
+      return `${sign}₹${formatCompactCr(abs)} Cr`;
     }
-    if (abs >= 100000) {
-      return `${sign}₹${(abs / 100000).toFixed(2)} L`;
+    if (abs.length >= 6) { // >= 100,000 (1 Lakh)
+      return `${sign}₹${formatCompactL(abs)} L`;
     }
-    if (abs >= 1000) {
-      return `${sign}₹${(abs / 1000).toFixed(1)} k`;
+    if (abs.length >= 4) { // >= 1,000
+      return `${sign}₹${formatCompactK(abs)} k`;
     }
-    return `${sign}₹${abs.toLocaleString('en-IN')}`;
+    return `${sign}₹${groupIndian(abs)}`;
   }
 
-  // Standard Indian comma grouping: 3 digits, then groups of 2 digits
-  return `₹${amount.toLocaleString('en-IN')}`;
+  return `₹${groupIndian(abs)}`;
 }
 
 /**
- * Deconstructs an amount into Lakhs / Crores unit pair for typographic display
+ * Deconstructs a Zoho verbatim money string into Lakhs / Crores unit pair for typographic display
  */
-export function formatLakhsCrores(amount: number): { value: string; unit: string; full: string } {
-  const abs = Math.abs(amount);
-  const sign = amount < 0 ? '-' : '';
+export function formatLakhsCrores(amount: string | number): { value: string; unit: string; full: string } {
+  const amountStr = typeof amount === 'number' ? String(amount) : amount;
+  const cleaned = cleanMoneyString(amount);
+  if (!cleaned) return { value: '0', unit: 'INR', full: '₹0' };
 
-  if (abs >= 10000000) {
+  const sign = cleaned.startsWith('-') ? '-' : '';
+  const abs = cleaned.replace(/^-/, '');
+
+  if (abs.length >= 9) { // >= 1 Crore
     return {
-      value: `${sign}${(abs / 10000000).toFixed(2)}`,
+      value: `${sign}${formatCompactCr(abs)}`,
       unit: 'Crore',
-      full: `${sign}₹${(abs / 10000000).toFixed(2)} Cr`
+      full: `${sign}₹${formatCompactCr(abs)} Cr`
     };
   }
-  if (abs >= 100000) {
+  if (abs.length >= 6) { // >= 1 Lakh
     return {
-      value: `${sign}${(abs / 100000).toFixed(2)}`,
+      value: `${sign}${formatCompactL(abs)}`,
       unit: 'Lakh',
-      full: `${sign}₹${(abs / 100000).toFixed(2)} L`
+      full: `${sign}₹${formatCompactL(abs)} L`
     };
   }
   return {
-    value: `${sign}${abs.toLocaleString('en-IN')}`,
+    value: `${sign}${groupIndian(abs)}`,
     unit: 'INR',
-    full: `${sign}₹${abs.toLocaleString('en-IN')}`
+    full: `${sign}₹${groupIndian(abs)}`
   };
 }
 
@@ -88,8 +103,17 @@ export function formatTimestampUK(dateStr?: string): string {
 
 /**
  * Formats percentages with tabular precision
+ * Input is a string representing the percentage value (e.g. "12.5" for 12.5%)
  */
-export function formatPercent(value: number, decimals: number = 1): string {
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${value.toFixed(decimals)}%`;
+export function formatPercent(value: string | number, decimals: number = 1): string {
+  const valueStr = typeof value === 'number' ? String(value) : value;
+  const cleaned = cleanMoneyString(valueStr);
+  if (!cleaned) return '0%';
+  const sign = valueStr.startsWith('-') ? '-' : (valueStr.startsWith('+') ? '+' : '+');
+  const abs = valueStr.replace(/^[+-]/, '');
+  const parts = abs.split('.');
+  const intPart = parts[0] || '0';
+  const decPart = parts[1] || '';
+  const paddedDec = decPart.padEnd(decimals, '0').slice(0, decimals);
+  return `${sign}${intPart}.${paddedDec}%`;
 }

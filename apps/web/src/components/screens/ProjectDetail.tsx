@@ -9,8 +9,11 @@ export const ProjectDetail: React.FC = () => {
   const project = projects.find(p => p.id === activeEntityId) || projects[0];
 
   const projectTasks = tasks.filter(t => t.project_id === project.id);
-  const cpi = project.spent > 0 ? (project.earned_value / project.spent).toFixed(2) : '1.00';
-  const spi = project.budget > 0 ? (project.earned_value / (project.budget * (project.progress / 100))).toFixed(2) : '1.00';
+  const spentNum = Number(project.spent);
+  const earnedNum = Number(project.earned_value);
+  const budgetNum = Number(project.budget);
+  const cpi = spentNum > 0 ? (earnedNum / spentNum).toFixed(2) : '1.00';
+  const spi = budgetNum > 0 ? (earnedNum / (budgetNum * (project.progress / 100))).toFixed(2) : '1.00';
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">

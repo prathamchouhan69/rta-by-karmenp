@@ -1,0 +1,197 @@
+# KARM OS = RTA by KARM — BACKEND AND FEATURES RULEBOOK
+
+This is the single source of truth for all compliance audits. Every check in the audit maps to a rule here.
+
+---
+
+## 0. GENERAL PRINCIPLES
+
+1. **Read-only audit**: The auditor must not change any app code, config, or tests. Only create reports under `reports/audit/`.
+2. **Truth**: PASS only if the check was actually run and the raw output saved. Never invent results.
+3. **Safety**: Use MOCK Zoho only (`ZOHO_MODE=mock`). Never call real Zoho. Never attack anything except localhost.
+4. **Secrets**: No keys, tokens, passwords, GSTIN, bank numbers in any report or log.
+5. **Money Law (KARM Law)**: Every ₹ is a Zoho string. The app never computes money figures — only displays Zoho's verbatim strings.
+6. **Scope**: Frontend visual design (colors, fonts, 3D, charts, mascot, atlas) is OUT OF SCOPE. Judge only backend, features, money correctness, security, PWA behavior.
+
+---
+
+## 1. BUILD AND STATIC CHECKS
+
+| ID | Rule |
+|----|------|
+| C1 | `npm ci` from lockfile must succeed (lockfile in sync with package.json) |
+| C2 | `npm run typecheck` must pass (zero errors) |
+| C3 | `npm run lint` must pass (zero warnings) — must run a real linter (ESLint), not just typecheck |
+| C4 | `npm run build` must pass (all workspaces) |
+| C5 | `npm run test` must pass (all workspaces); record totals; run coverage if configured |
+| C6 | `npm run scan:money` must pass (zero violations); scanner self-test: 25 bad fixtures FAIL, 15 good fixtures PASS |
+| C7 | Scanner self-test: bad fixtures (25) must be caught, good fixtures (15) must pass |
+| C8 | All `tsconfig.json` must have `strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true` |
+| C9 | All `package.json` must pin exact versions (no `^` or `~`); `package-lock.json` committed |
+| C10 | No `TODO`, `FIXME`, `lorem`, "rest of code" in source files (test fixtures exempt) |
+| C11 | No hard-coded secrets (keys, tokens, refresh tokens, GSTIN, bank numbers) in source, dist/, logs, reports |
+| C12 | `.gitignore` contains: `node_modules`, `dist`, `.env`, `.env.*`, `!.env.example`, `*.pem`, `*.key` |
+| C13 | `.env.example` exists with FAKE values only |
+| C14 | `npm run dev` starts proxy + mock + web without crashing (start, wait 20s, check, stop) |
+
+---
+
+## 2. THE LAW OF MONEY (KARM LAW — MOST IMPORTANT)
+
+| ID | Rule |
+|----|------|
+| M1 | Proxy parses Zoho responses with a **lossless JSON parser**. Show file and line. |
+| M2 | Money fields arrive as **exact TEXT** with trailing zeros intact (e.g., "100.50", "2.000"). |
+| M3 | Golden invoice `INV-KE-270031`: raw total `"64944.84"` and formatted `"₹64,944.84"` arrive unchanged through proxy. |
+| M4 | **Zero money maths in apps/web and packages/shared**: No `+ - * / %` on money-like names, no `parseFloat`, `parseInt`, `Number()`, `toFixed`, `Math.round`, `Intl.NumberFormat`, `toLocaleString`, no `reduce` that adds money. Only `packages/shared/src/groupDigits.ts` may do digit grouping — and only by string slicing. |
+| M5 | The **only code creating the `ZohoMoney` type value** is the proxy response mapper. |
+| M6 | A POST containing `total`, `sub_total`, `tax_total`, `balance`, `round_off`, or any tax amount is **rejected with 422**. |
+| M7 | While editing a document, **no total is shown** and the exact sentence **"Total will be calculated by Zoho Books"** is visible. |
+| M8 | The app **never chooses document numbers** — they come from Zoho Books only. |
+| M9 | The mock folder is **NOT imported** by `apps/web` or `apps/proxy`. |
+| M10 | Where Zoho has no endpoint (balance sheet, P&L, trial balance, audit trail), the app shows a **"Lives in Zoho Books" tile** with an **"Open in Zoho Books" link** — not its own sums. |
+
+---
+
+## 3. PROXY AND MOCK
+
+| ID | Rule |
+|----|------|
+| P1 | Every route in this rulebook exists: `/health`, `/organization`, `/contacts`, `/contacts/:id`, `/items`, `/taxes`, the 13 document kinds (GET/POST/PUT), status actions, `/pdf`, `/search`, `/news`, `/auth`, `/audit`, `/agent`. Make a table: route, exists?, tested? |
+| P2 | Contract test: call every route against the mock; record status codes. |
+| P3 | **Idempotency**: same POST twice with same `Idempotency-Key` → exactly ONE document. Same key 50× at once → ONE. 50 different keys → 50 documents. |
+| P4 | POST without `Idempotency-Key` → rejected. |
+| P5 | 401 from Zoho: **refresh once and retry once**, never loop (use mock failure switch). |
+| P6 | 429: backoff and friendly error. 500 and 8-second slow reply: friendly error, no crash, no duplicate. |
+| P7 | Timeout is 15s; retries **only for GET and keyed POST**. |
+| P8 | Logs contain **no request/response bodies and no tokens**. Read a real log sample. |
+| P9 | Audit log records every write: time **Asia/Kolkata**, device id, route, key, document id. |
+| P10 | Login: passphrase hashed with **scrypt or argon2id**; session cookie **HttpOnly, Secure, SameSite=Strict**; lockout after 5 wrong tries; CSRF token required on non-GET. |
+| P11 | Passkeys (WebAuthn) present, or record "not built". |
+| P12 | Headers on every response: `CSP`, `HSTS`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`; API has `Cache-Control: no-store`. CORS allows only the app origin. |
+| P13 | Body limit 1 MB; unknown fields rejected; error messages show no stack traces. |
+| P14 | Default `ZOHO_MODE=mock` and a **PRACTICE MODE banner** shows in mock mode. |
+| P15 | Mock seed data: ~25 customers incl. "Dilip Buildcon Ltd", 12 vendors, 40 items, 120 invoices; tax cases (CGST+SGST, IGST, exempt, 0/5/12/18/28%). |
+| P16 | `SETUP_ME.md` (6 steps), `LIVE_CHECKLIST.md` (20 items), `ENDPOINT_MAP.md`, `AGGREGATES_AVAILABLE.md`, `DOCUMENT_MATRIX.md`, `CYCLE_LEDGER.md` exist and are not empty. |
+
+---
+
+## 4. DOCUMENT KINDS (13 KINDS)
+
+| Kind | Entity | Notes |
+|------|--------|-------|
+| 1 | invoices | |
+| 2 | estimates | Quotations — T&C has 8 clauses |
+| 3 | salesorders | |
+| 4 | deliverychallans | |
+| 5 | creditnotes | |
+| 6 | customerpayments | |
+| 7 | purchaseorders | |
+| 8 | bills | |
+| 9 | vendorcredits | |
+| 10 | vendorpayments | |
+| 11 | expenses | |
+| 12 | journals | |
+| 13 | banktransactions | (or bankaccounts) |
+
+**Document Matrix**: `DOCUMENT_MATRIX.md` must count 20+ kinds.
+
+---
+
+## 5. FEATURES (tested via Playwright: iPhone 16 Pro, 402×874, touch, en-IN, Asia/Kolkata)
+
+| ID | Rule |
+|----|------|
+| F1 | All routes load with no console errors: `/today`, `/documents`, `/documents/:type`, `/documents/:type/:id`, `/customers`, `/vendors`, `/agent`, `/settings`, `/selftest`, `/lock` |
+| F2 | Top row sits below top safe inset; search left, sync label middle, agent right; **every tap target ≥ 44×44 CSS px** |
+| F3 | Lock screen: appears on open; hides content when locked; unlock works; locks after idle or background; **cache cleared on lock and sign-out** |
+| F4 | Documents: list, view, create, edit for all 13 kinds; 20+ kinds in `DOCUMENT_MATRIX.md`; PDF is Zoho's own PDF; T&C sets (3 per kind; quotation has 8 clauses) |
+| F5 | Journey: create quotation for "Dilip Buildcon Ltd" → sales order → invoice |
+| F6 | Journey: partial payment and credit note; **balance text equals Zoho's text** |
+| F7 | Offline queue: go offline, create 3 drafts, go online → exactly 3 documents. Kill network AFTER request sent BEFORE reply → exactly 1 document. Double-tap Save → 1 document. |
+| F8 | Search sheet finds a customer and an invoice number. |
+| F9 | Agent commands work **without AI**: "show unpaid invoices", "what is overdue" (shows Zoho's list, no summing). |
+| F10 | News: titles and links only, cached 30 min, shows calm message when network fails. |
+| F11 | PWA: manifest valid; icons exist (192, 512, maskable, **180**); iOS meta tags present (`viewport-fit=cover`, `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style=black-translucent`); production build opens offline (offline shell); **service worker does NOT cache API responses**. |
+| F12 | Install coach appears in Safari mode, hides in standalone. |
+| F13 | `/selftest` renders 11 rows and has **Copy and Share buttons**. |
+| F14 | Text size 200%: nothing clipped or overlapping on main screens. |
+| F15 | axe accessibility on every route: **0 serious and 0 critical violations**. |
+| F16 | Logo: shown **only on lock screen**, byte-identical to `assets/brand-original/` (compare SHA-256), or `MISSING_LOGO` handled honestly. Not redrawn. |
+
+---
+
+## 6. SECURITY (localhost only)
+
+| ID | Rule |
+|----|------|
+| S1 | `npm audit --omit=dev`: list high and critical findings. |
+| S2 | Secret scan of repo, dist/, source maps, logs, screenshots (file and line only). |
+| S3 | No session cookie → every protected route gives 401. |
+| S4 | Forged cross-site POST without CSRF token is blocked. |
+| S5 | CORS refuses another origin; no wildcard with credentials. |
+| S6 | Injection strings (SQL, NoSQL, command, path traversal) in fields and query params → rejected with 422. |
+| S7 | Extra fields (`total`, `balance`, `is_admin`) → rejected with 422. |
+| S8 | Oversize body, wrong content-type, deeply nested JSON → rejected safely. |
+| S9 | XSS strings (`<script>`, `<img onerror>`, `javascript:`) in customer name, notes, T&C, search, news title → show as plain text; no script runs. |
+| S10 | SSRF: URL-taking routes only use an allow-list; `127.0.0.1`, `169.254.169.254`, `file://` blocked. |
+| S11 | Changing document ids reaches only the owner's organisation. |
+| S12 | Old idempotency key replay creates nothing new. |
+| S13 | Changing `X-Forwarded-For` does not escape the rate limit. |
+| S14 | Zoho tokens never appear in responses, logs, IndexedDB, localStorage, or service worker caches. |
+| S15 | App cannot be put in an iframe. |
+| S16 | Lock-screen bypass attempts (routes, back button) show no data. |
+| S17 | Sign-out-everywhere kills old cookies. |
+| S18 | Brute-force login locks out after 5 tries. |
+
+Record each as **BLOCKED** (attack stopped = PASS) or **NOT BLOCKED** (= FAIL, with severity Critical/High/Medium/Low).
+
+---
+
+## 7. LOAD (short, mock only)
+
+| ID | Rule |
+|----|------|
+| L1 | 20 virtual users for 2 minutes (k6 or autocannon): record p95 latency, error rate, any 5xx, proxy memory at start and end. |
+| L2 | Idempotency storm: 200 identical keyed requests at once → exactly ONE document. |
+| L3 | Push past rate limit: friendly 429s, never 500s, no crash. |
+
+---
+
+## 8. COMPARE WITH BUILDER'S CLAIMS
+
+For every prompt (02, 03, 06, 08, 10, 11, 12, 13, 14) compare `STATUS.md`'s claim with audit findings. Mark each: **CONFIRMED**, **PARTLY TRUE**, **FALSE**, or **UNVERIFIABLE**.
+
+Check that every PASS the builder wrote has a raw output file that really exists, and spot-check three by re-running.
+
+Check `reports/cycles/` and `CYCLE_LEDGER.md`: do the cycle folders really exist?
+
+---
+
+## 9. REPORTS
+
+### AUDIT_FINDINGS.md
+One row per problem: ID, severity (Critical/High/Medium/Low), area, what RULEBOOK says, what app does, evidence file path, suggested fix. Sort Critical first. Money-law and security problems never lower than High.
+
+### AUDIT_REPORT.md
+Sections:
+1. Verdict in 5 lines (one of: **MATCHES THE RULEBOOK** / **MOSTLY MATCHES** / **DOES NOT MATCH**)
+2. Counts: total checks, PASS, FAIL, NOT RUN
+3. Table of every check: ID, name, PASS/FAIL/NOT RUN, evidence path
+4. Money-law result (own short section)
+5. Security result (own short section)
+6. Builder claims vs reality (from STEP 8)
+7. Things that need a human: real iPhone (Face ID, VoiceOver, real storage), real Zoho (LIVE_CHECKLIST.md), a human security reviewer
+8. Top 10 fixes to do first, in order
+
+Every number in the report must come from a raw file in `reports/audit/raw/`.
+
+---
+
+## DONE MEANS
+
+- [ ] No app file was changed (`git status` and `git diff --stat` clean except for `AUDIT_*.md` and `reports/audit/`)
+- [ ] Every check has PASS, FAIL or NOT RUN with an evidence path or a reason
+- [ ] `AUDIT_REPORT.md` and `AUDIT_FINDINGS.md` exist and contain no secret values
+- [ ] `PROGRESS.md` says every step is finished
+- [ ] Print a 10-line summary in the chat, then stop. **Do NOT start fixing anything.**

@@ -1,5 +1,7 @@
 // The law: a number on a KARM screen came from Zoho Books, exactly as Zoho sent it.
 // Lossless JSON parser: numbers are preserved as exact strings before parsing so no cents or paise are lost.
+import { createZohoMoney } from '@karm/shared';
+
 const MONEY_KEYS = [
   'total', 'sub_total', 'balance', 'tax_total', 'adjustment', 'rate', 'amount',
   'bcy_total', 'bcy_balance', 'bcy_sub_total', 'bcy_rate', 'item_total',
@@ -10,10 +12,34 @@ const MONEY_KEYS = [
 ];
 const MONEY_RE = new RegExp(`"(${MONEY_KEYS.join('|')})"\\s*:\\s*(-?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)(?=\\s*[,}\\]])`, 'g');
 
+function wrapMoneyValues(obj) {
+  if (obj === null || obj === undefined) return obj;
+  if (typeof obj === 'string') return obj;
+  if (typeof obj === 'number') return obj;
+  if (Array.isArray(obj)) {
+    return obj.map(wrapMoneyValues);
+  }
+  if (typeof obj === 'object') {
+    const result = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (MONEY_KEYS.includes(key) && typeof value === 'string') {
+        result[key] = createZohoMoney(value);
+      } else if (typeof value === 'object' && value !== null) {
+        result[key] = wrapMoneyValues(value);
+      } else {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+  return obj;
+}
+
 export function parseLosslessZohoJson(text) {
   if (typeof text !== 'string' || !text.trim()) return {};
   const preserved = text.replace(MONEY_RE, '"$1":"$2"');
-  return JSON.parse(preserved);
+  const parsed = JSON.parse(preserved);
+  return wrapMoneyValues(parsed);
 }
 
 const dataCenters = {

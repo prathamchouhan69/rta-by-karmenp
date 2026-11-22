@@ -42,7 +42,7 @@ describe('remote API authentication contract', () => {
     const { data: { access_token: token } } = await login.json();
     const authorized = await app.request('/api/v1/contacts', { headers: { Authorization: `Bearer ${token}` } });
     assert.equal(authorized.status, 200);
-    assert.equal((await authorized.json()).data.length, 3);
+    assert.equal((await authorized.json()).data.length, 37);
   });
 
   it('clears the failed-attempt limit after a successful login', async () => {

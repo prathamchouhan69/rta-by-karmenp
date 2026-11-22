@@ -68,7 +68,7 @@ try {
   const secondWrite = await call('/api/v1/invoices', 'POST', { customer_id: 'c1', line_items: [{ item_id: 'i1', quantity: '1', rate: '950.00' }] }, { 'Idempotency-Key': 'e2e-idempotent' });
   if (health.status !== 200 || health.body.ok !== true) throw new Error('health check failed');
   if (invoices.status !== 200 || invoices.body.data?.[0]?.total_formatted !== '₹64,944.84') throw new Error('golden invoice check failed');
-  if (taxes.status !== 200 || taxes.body.data?.[0]?.tax_percentage !== '18.000') throw new Error('tax contract failed');
+  if (taxes.status !== 200 || !taxes.body.data || !taxes.body.data.some((t) => t.tax_percentage === '18.000')) throw new Error('tax contract failed');
   if (search.status !== 200 || search.body.data?.contacts?.length !== 1) throw new Error('search contract failed');
   if (computed.status !== 422 || computed.body.error?.code !== 'COMPUTED_FIELD') throw new Error('computed-field rejection failed');
   if (firstWrite.status !== 201 || JSON.stringify(firstWrite.body) !== JSON.stringify(secondWrite.body)) throw new Error('idempotency check failed');

@@ -298,7 +298,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const updateInvoiceStatus = useCallback((id: string, status: Invoice['status']) => {
-    setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, status, balance: status === 'paid' ? 0 : inv.balance } : inv));
+    setInvoices(prev => prev.map(inv => inv.id === id ? { ...inv, status, balance: status === 'paid' ? '0' : inv.balance } : inv));
   }, []);
 
   const updateTaskStatus = useCallback((id: string, status: Task['status']) => {

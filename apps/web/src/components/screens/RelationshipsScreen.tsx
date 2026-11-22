@@ -8,7 +8,7 @@ import { IconCRM, IconCheck } from '../common/Icons';
 export const RelationshipsScreen: React.FC = () => {
   const { clients, navigateTo } = useApp();
 
-  const totalPipeline = clients.reduce((acc, c) => acc + c.deal_value, 0);
+  const totalPipeline = clients.reduce((acc, c) => acc + Number(c.deal_value), 0);
   const avgHealth = Math.round(clients.reduce((acc, c) => acc + c.health_score, 0) / clients.length);
 
   return (

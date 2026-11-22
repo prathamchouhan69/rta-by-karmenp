@@ -5,9 +5,9 @@ export interface Invoice {
   customer_name: string;
   date: string;
   due_date: string;
-  total: number;
+  total: string;
   total_formatted?: string;
-  balance: number;
+  balance: string;
   balance_formatted?: string;
   status: 'draft' | 'sent' | 'paid' | 'overdue' | 'void';
   currency_symbol: string;
@@ -24,9 +24,9 @@ export interface Bill {
   vendor_name: string;
   date: string;
   due_date: string;
-  total: number;
+  total: string;
   total_formatted?: string;
-  balance: number;
+  balance: string;
   balance_formatted?: string;
   status: 'draft' | 'open' | 'paid' | 'overdue';
   category: string;
@@ -38,7 +38,7 @@ export interface BankTransaction {
   account_name: string;
   payee: string;
   type: 'credit' | 'debit';
-  amount: number;
+  amount: string;
   status: 'reconciled' | 'unreconciled' | 'matched';
   reference_no: string;
 }
@@ -48,12 +48,12 @@ export interface Project {
   name: string;
   client: string;
   progress: number; // 0 - 100
-  budget: number;
-  spent: number;
+  budget: string;
+  spent: string;
   status: 'on_track' | 'at_risk' | 'delayed' | 'completed';
   start_date: string;
   end_date: string;
-  earned_value: number;
+  earned_value: string;
   milestones: { id: string; title: string; completed: boolean; due_date: string }[];
   tasks_count: number;
   delayed_days?: number;
@@ -112,7 +112,7 @@ export interface Employee {
   status: 'active' | 'on_leave' | 'remote';
   productivity_score: number;
   active_tasks: number;
-  monthly_payroll: number;
+  monthly_payroll: string;
 }
 
 export interface ClientAccount {
@@ -121,9 +121,9 @@ export interface ClientAccount {
   contact_person: string;
   email: string;
   health_score: number; // 0 - 100
-  deal_value: number;
+  deal_value: string;
   stage: 'lead' | 'proposal' | 'negotiation' | 'active' | 'renewal';
-  mrr: number;
+  mrr: string;
   partner_status: string;
 }
 
@@ -145,8 +145,8 @@ export const INITIAL_INVOICES: Invoice[] = [
     customer_name: 'Apex Hyperdynamics Corp',
     date: '2026-11-01',
     due_date: '2026-11-15',
-    total: 845000,
-    balance: 845000,
+    total: '845000',
+    balance: '845000',
     status: 'overdue',
     currency_symbol: '₹',
     risk_level: 'critical',
@@ -161,8 +161,8 @@ export const INITIAL_INVOICES: Invoice[] = [
     customer_name: 'Titanium Quantum Systems',
     date: '2026-11-05',
     due_date: '2026-11-20',
-    total: 1250000,
-    balance: 0,
+    total: '1250000',
+    balance: '0',
     status: 'paid',
     currency_symbol: '₹',
     risk_level: 'low',
@@ -176,8 +176,8 @@ export const INITIAL_INVOICES: Invoice[] = [
     customer_name: 'Starlight Orbital Logistics',
     date: '2026-11-10',
     due_date: '2026-11-25',
-    total: 420000,
-    balance: 420000,
+    total: '420000',
+    balance: '420000',
     status: 'sent',
     currency_symbol: '₹',
     risk_level: 'medium',
@@ -191,8 +191,8 @@ export const INITIAL_INVOICES: Invoice[] = [
     customer_name: 'Helios Semiconductor Lab',
     date: '2026-11-12',
     due_date: '2026-11-18',
-    total: 980000,
-    balance: 980000,
+    total: '980000',
+    balance: '980000',
     status: 'overdue',
     currency_symbol: '₹',
     risk_level: 'high',
@@ -206,8 +206,8 @@ export const INITIAL_INVOICES: Invoice[] = [
     customer_name: 'Nebula Biopharmaceutics',
     date: '2026-11-18',
     due_date: '2026-12-02',
-    total: 615000,
-    balance: 615000,
+    total: '615000',
+    balance: '615000',
     status: 'sent',
     currency_symbol: '₹',
     risk_level: 'low',
@@ -218,15 +218,15 @@ export const INITIAL_INVOICES: Invoice[] = [
 ];
 
 export const INITIAL_BILLS: Bill[] = [
-  { id: 'bill-101', bill_number: 'BILL-4819', vendor_name: 'CloudScale Infrastructure', date: '2026-11-02', due_date: '2026-11-16', total: 142000, balance: 0, status: 'paid', category: 'Hosting & Servers' },
-  { id: 'bill-102', bill_number: 'BILL-4820', vendor_name: 'Kyoto Precision Robotics', date: '2026-11-08', due_date: '2026-11-22', total: 530000, balance: 530000, status: 'open', category: 'Hardware Components' },
-  { id: 'bill-103', bill_number: 'BILL-4821', vendor_name: 'Optima Fuel & Energy Grid', date: '2026-11-14', due_date: '2026-11-28', total: 88500, balance: 88500, status: 'open', category: 'Fleet Operations' }
+  { id: 'bill-101', bill_number: 'BILL-4819', vendor_name: 'CloudScale Infrastructure', date: '2026-11-02', due_date: '2026-11-16', total: '142000', balance: '0', status: 'paid', category: 'Hosting & Servers' },
+  { id: 'bill-102', bill_number: 'BILL-4820', vendor_name: 'Kyoto Precision Robotics', date: '2026-11-08', due_date: '2026-11-22', total: '530000', balance: '530000', status: 'open', category: 'Hardware Components' },
+  { id: 'bill-103', bill_number: 'BILL-4821', vendor_name: 'Optima Fuel & Energy Grid', date: '2026-11-14', due_date: '2026-11-28', total: '88500', balance: '88500', status: 'open', category: 'Fleet Operations' }
 ];
 
 export const INITIAL_BANK_TRANSACTIONS: BankTransaction[] = [
-  { id: 'txn-501', date: '2026-11-20', account_name: 'HDFC Corporate Primary #4019', payee: 'Titanium Quantum Systems', type: 'credit', amount: 1250000, status: 'reconciled', reference_no: 'NEFT-8891024-HDFC' },
-  { id: 'txn-502', date: '2026-11-19', account_name: 'ICICI Current Operational #9912', payee: 'Kyoto Precision Robotics', type: 'debit', amount: 265000, status: 'unreconciled', reference_no: 'RTGS-019283-ICICI' },
-  { id: 'txn-503', date: '2026-11-18', account_name: 'HDFC Corporate Primary #4019', payee: 'State Tax Department (GSTN)', type: 'debit', amount: 184500, status: 'matched', reference_no: 'GST-PAY-NOV-2026' }
+  { id: 'txn-501', date: '2026-11-20', account_name: 'HDFC Corporate Primary #4019', payee: 'Titanium Quantum Systems', type: 'credit', amount: '1250000', status: 'reconciled', reference_no: 'NEFT-8891024-HDFC' },
+  { id: 'txn-502', date: '2026-11-19', account_name: 'ICICI Current Operational #9912', payee: 'Kyoto Precision Robotics', type: 'debit', amount: '265000', status: 'unreconciled', reference_no: 'RTGS-019283-ICICI' },
+  { id: 'txn-503', date: '2026-11-18', account_name: 'HDFC Corporate Primary #4019', payee: 'State Tax Department (GSTN)', type: 'debit', amount: '184500', status: 'matched', reference_no: 'GST-PAY-NOV-2026' }
 ];
 
 export const INITIAL_PROJECTS: Project[] = [
@@ -235,12 +235,12 @@ export const INITIAL_PROJECTS: Project[] = [
     name: 'Autonomous Fleet Telematics v4',
     client: 'Starlight Orbital Logistics',
     progress: 78,
-    budget: 4500000,
-    spent: 3420000,
+    budget: '4500000',
+    spent: '3420000',
     status: 'on_track',
     start_date: '2026-08-01',
     end_date: '2026-12-15',
-    earned_value: 3510000,
+    earned_value: '3510000',
     tasks_count: 24,
     milestones: [
       { id: 'm-1', title: 'Hardware Sensor Telemetry Bus', completed: true, due_date: '2026-09-15' },
@@ -254,13 +254,13 @@ export const INITIAL_PROJECTS: Project[] = [
     name: 'Tesla Resonant Energy Monitoring OS',
     client: 'Apex Hyperdynamics Corp',
     progress: 42,
-    budget: 6800000,
-    spent: 3900000,
+    budget: '6800000',
+    spent: '3900000',
     status: 'delayed',
     delayed_days: 9,
     start_date: '2026-09-10',
     end_date: '2027-01-20',
-    earned_value: 2856000,
+    earned_value: '2856000',
     tasks_count: 36,
     milestones: [
       { id: 'm-21', title: 'Power Grid Harmonic Sampling', completed: true, due_date: '2026-10-15' },
@@ -273,12 +273,12 @@ export const INITIAL_PROJECTS: Project[] = [
     name: 'Quantum Probability Risk Engine',
     client: 'Titanium Quantum Systems',
     progress: 91,
-    budget: 3200000,
-    spent: 2950000,
+    budget: '3200000',
+    spent: '2950000',
     status: 'on_track',
     start_date: '2026-07-01',
     end_date: '2026-11-30',
-    earned_value: 2912000,
+    earned_value: '2912000',
     tasks_count: 18,
     milestones: [
       { id: 'm-31', title: 'Mathematical Kernel Validation', completed: true, due_date: '2026-08-30' },
@@ -415,16 +415,16 @@ export const INITIAL_VEHICLES: Vehicle[] = [
 ];
 
 export const INITIAL_EMPLOYEES: Employee[] = [
-  { id: 'emp-01', name: 'Karmesh Patel', role: 'Chief Operating Officer & Architect', department: 'Executive', email: 'karmesh@karm.os', join_date: '2024-01-15', status: 'active', productivity_score: 98, active_tasks: 5, monthly_payroll: 350000 },
-  { id: 'emp-02', name: 'Arya Sharma', role: 'Staff Systems & Algorithm Lead', department: 'Engineering', email: 'arya@karm.os', join_date: '2024-06-01', status: 'active', productivity_score: 94, active_tasks: 4, monthly_payroll: 220000 },
-  { id: 'emp-03', name: 'Devika Rao', role: 'Principal Financial Controller', department: 'Finance', email: 'devika@karm.os', join_date: '2024-03-10', status: 'active', productivity_score: 96, active_tasks: 3, monthly_payroll: 240000 },
-  { id: 'emp-04', name: 'Vikram Joshi', role: 'Lead DevOps & Reliability', department: 'Infrastructure', email: 'vikram@karm.os', join_date: '2025-02-15', status: 'active', productivity_score: 91, active_tasks: 4, monthly_payroll: 190000 }
+  { id: 'emp-01', name: 'Karmesh Patel', role: 'Chief Operating Officer & Architect', department: 'Executive', email: 'karmesh@karm.os', join_date: '2024-01-15', status: 'active', productivity_score: 98, active_tasks: 5, monthly_payroll: '350000' },
+  { id: 'emp-02', name: 'Arya Sharma', role: 'Staff Systems & Algorithm Lead', department: 'Engineering', email: 'arya@karm.os', join_date: '2024-06-01', status: 'active', productivity_score: 94, active_tasks: 4, monthly_payroll: '220000' },
+  { id: 'emp-03', name: 'Devika Rao', role: 'Principal Financial Controller', department: 'Finance', email: 'devika@karm.os', join_date: '2024-03-10', status: 'active', productivity_score: 96, active_tasks: 3, monthly_payroll: '240000' },
+  { id: 'emp-04', name: 'Vikram Joshi', role: 'Lead DevOps & Reliability', department: 'Infrastructure', email: 'vikram@karm.os', join_date: '2025-02-15', status: 'active', productivity_score: 91, active_tasks: 4, monthly_payroll: '190000' }
 ];
 
 export const INITIAL_CLIENTS: ClientAccount[] = [
-  { id: 'client-01', name: 'Apex Hyperdynamics Corp', contact_person: 'Elena Rostova', email: 'elena@apex.co', health_score: 72, deal_value: 6800000, stage: 'active', mrr: 450000, partner_status: 'Strategic Prime' },
-  { id: 'client-02', name: 'Titanium Quantum Systems', contact_person: 'Dr. Marcus Vance', email: 'mvance@titanium-q.io', health_score: 96, deal_value: 8200000, stage: 'renewal', mrr: 680000, partner_status: 'Alliance Tier 1' },
-  { id: 'client-03', name: 'Starlight Orbital Logistics', contact_person: 'Farhan Siddiqui', email: 'farhan@starlight-logistics.com', health_score: 88, deal_value: 4500000, stage: 'active', mrr: 380000, partner_status: 'Ecosystem Partner' }
+  { id: 'client-01', name: 'Apex Hyperdynamics Corp', contact_person: 'Elena Rostova', email: 'elena@apex.co', health_score: 72, deal_value: '6800000', stage: 'active', mrr: '450000', partner_status: 'Strategic Prime' },
+  { id: 'client-02', name: 'Titanium Quantum Systems', contact_person: 'Dr. Marcus Vance', email: 'mvance@titanium-q.io', health_score: 96, deal_value: '8200000', stage: 'renewal', mrr: '680000', partner_status: 'Alliance Tier 1' },
+  { id: 'client-03', name: 'Starlight Orbital Logistics', contact_person: 'Farhan Siddiqui', email: 'farhan@starlight-logistics.com', health_score: 88, deal_value: '4500000', stage: 'active', mrr: '380000', partner_status: 'Ecosystem Partner' }
 ];
 
 export const INITIAL_NOTIFICATIONS: AppNotification[] = [
