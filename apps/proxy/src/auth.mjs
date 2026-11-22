@@ -7,12 +7,23 @@ const secureEqual = (left, right) => {
   return timingSafeEqual(a, b);
 };
 
-export function createAuth({ setupCode, secret, required }) {
+const COOKIE_NAME = 'karm_session';
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'strict',
+  maxAge: 60 * 60 * 12 * 1000, // 12 hours
+  path: '/'
+};
+
+export function createAuth({ setupCode, secret, required, appOrigin = 'https://localhost' }) {
   if (required && (!setupCode || !secret)) throw new Error('SETUP_CODE and SESSION_SECRET are required when API authentication is enabled');
   if (required && setupCode.length < 16) throw new Error('SETUP_CODE must contain at least 16 characters');
   if (required && setupCode.startsWith('replace-')) throw new Error('Replace the example SETUP_CODE before enabling authentication');
   if (secret && Buffer.byteLength(secret) < 32) throw new Error('SESSION_SECRET must contain at least 32 bytes');
   if (required && secret.startsWith('replace-')) throw new Error('Replace the example SESSION_SECRET before enabling authentication');
+
+  const isSecureOrigin = appOrigin.startsWith('https://');
 
   return {
     required,
@@ -26,6 +37,13 @@ export function createAuth({ setupCode, secret, required }) {
       const unsigned = `${header}.${payload}`;
       const signature = createHmac('sha256', secret).update(unsigned).digest('base64url');
       return { access_token: `${unsigned}.${signature}`, token_type: 'Bearer', expires_in: 43200 };
+    },
+    setSessionCookie(c, token) {
+      const cookieOptions = { ...COOKIE_OPTIONS, secure: isSecureOrigin };
+      c.header('Set-Cookie', `${COOKIE_NAME}=${token}; HttpOnly; ${cookieOptions.secure ? 'Secure; ' : ''}SameSite=${cookieOptions.sameSite}; Max-Age=${cookieOptions.maxAge / 1000}; Path=${cookieOptions.path}`);
+    },
+    clearSessionCookie(c) {
+      c.header('Set-Cookie', `${COOKIE_NAME}=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/`);
     },
     verifyToken(token) {
       if (!secret || typeof token !== 'string') return false;

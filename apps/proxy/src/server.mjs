@@ -58,7 +58,7 @@ export const serviceBase = (env = process.env) => {
   const authRequired = !isLoopback || mode === 'live' || Boolean(env.SETUP_CODE || env.SESSION_SECRET);
   if (Boolean(env.SETUP_CODE) !== Boolean(env.SESSION_SECRET)) throw new Error('Configure both SETUP_CODE and SESSION_SECRET, or neither');
   if (authRequired && (!env.SETUP_CODE || !env.SESSION_SECRET)) throw new Error('Non-local and live deployments require SETUP_CODE and SESSION_SECRET');
-  const auth = createAuth({ setupCode: env.SETUP_CODE, secret: env.SESSION_SECRET, required: authRequired });
+  const auth = createAuth({ setupCode: env.SETUP_CODE, secret: env.SESSION_SECRET, required: authRequired, appOrigin: env.APP_ORIGIN ?? 'http://localhost:5173' });
   const zoho = mode === 'live' ? new ZohoBooksClient(env) : null;
   return { mode, host, auth, zoho, env };
 };
@@ -105,9 +105,13 @@ app.use('*', async (c, next) => {
 app.use('/api/v1/*', async (c, next) => {
   const isHealth = c.req.path === '/api/v1/health';
   const isLogin = c.req.path === '/api/v1/auth/session' && c.req.method === 'POST';
-  if (isHealth || isLogin || !config.auth.required) return next();
+  const isSignout = c.req.path === '/api/v1/auth/signout' && c.req.method === 'POST';
+  if (isHealth || isLogin || isSignout || !config.auth.required) return next();
   const authorization = c.req.header('Authorization') ?? '';
-  const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+  const bearerToken = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+  const cookieHeader = c.req.header('Cookie') ?? '';
+  const cookieToken = cookieHeader.split('; ').find(c => c.startsWith('karm_session='))?.split('=')[1] ?? '';
+  const token = bearerToken || cookieToken;
   if (!config.auth.verifyToken(token)) return failure(c, 401, 'AUTHENTICATION_REQUIRED', 'Sign in to use this API');
   await next();
 });
@@ -157,7 +161,14 @@ app.post('/api/v1/auth/session', async (c) => {
     return failure(c, 401, 'INVALID_CREDENTIALS', 'The sign-in code is incorrect');
   }
   await loginLimiter.clear(rateLimitKey);
-  return c.json({ ok: true, data: config.auth.issueToken() });
+  const session = config.auth.issueToken();
+  config.auth.setSessionCookie(c, session.access_token);
+  return c.json({ ok: true, data: { ...session, message: 'Signed in successfully' } });
+});
+
+app.post('/api/v1/auth/signout', async (c) => {
+  config.auth.clearSessionCookie(c);
+  return c.json({ ok: true, data: { message: 'Signed out successfully' } });
 });
 
 app.get('/api/v1/organization', async (c) => {

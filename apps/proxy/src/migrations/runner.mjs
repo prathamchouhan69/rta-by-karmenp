@@ -1,4 +1,5 @@
 import { readFile, readdir, writeFile, access } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { resolve, join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createPool } from './postgres-store.mjs';
@@ -182,7 +183,6 @@ async function createMigration(name) {
 }
 
 function computeChecksum(content) {
-  const { createHash } = import('node:crypto');
   return createHash('sha256').update(content.trim()).digest('hex');
 }
 

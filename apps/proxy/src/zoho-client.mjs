@@ -145,12 +145,13 @@ export class ZohoBooksClient {
             ...(body === undefined ? {} : { 'Content-Type': 'application/json' })
           },
           ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-          signal: AbortSignal.timeout(30000)
+          signal: AbortSignal.timeout(15000)
         });
       } catch (error) {
         throw new ZohoApiError(`Zoho Books request failed: ${error.message}`, 502, 'ZOHO_UPSTREAM_UNAVAILABLE');
       }
       const payload = await this.readJson(response);
+      const isRetryableMethod = method === 'GET' || (method === 'POST' && body && typeof body === 'object' && body.idempotencyKey);
       if (response.status === 401 && attempt === 0) {
         this.accessToken = null;
         continue;

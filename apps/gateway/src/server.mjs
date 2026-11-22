@@ -452,6 +452,7 @@ export async function startGateway({ env = process.env, logger = console } = {})
     res.setHeader('referrer-policy', 'no-referrer');
     res.setHeader('x-frame-options', 'DENY');
     res.setHeader('permissions-policy', 'camera=(), microphone=(), geolocation=()');
+    res.setHeader('content-security-policy', "default-src 'none'; frame-ancestors 'none'");
     if (/^https:\/\//i.test(settings.appOrigin)) {
       res.setHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
     }

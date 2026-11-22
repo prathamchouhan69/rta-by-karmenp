@@ -18,6 +18,12 @@ after(async () => {
   await rm(dataDirectory, { recursive: true, force: true });
 });
 
+function extractToken(res) {
+  const cookieHeader = res.headers.get('set-cookie') ?? '';
+  const match = cookieHeader.match(/karm_session=([^;]+)/);
+  return match ? match[1] : null;
+}
+
 describe('remote API authentication contract', () => {
   it('requires owner login before returning business data', async () => {
     const health = await app.request('/api/v1/health');
@@ -39,7 +45,8 @@ describe('remote API authentication contract', () => {
       body: JSON.stringify({ setup_code: process.env.SETUP_CODE })
     });
     assert.equal(login.status, 200);
-    const { data: { access_token: token } } = await login.json();
+    const token = extractToken(login);
+    assert.ok(token);
     const authorized = await app.request('/api/v1/contacts', { headers: { Authorization: `Bearer ${token}` } });
     assert.equal(authorized.status, 200);
     assert.equal((await authorized.json()).data.length, 37);
@@ -55,7 +62,9 @@ describe('remote API authentication contract', () => {
     for (let attempt = 0; attempt < 7; attempt += 1) {
       assert.equal((await login('wrong-code')).status, 401);
     }
-    assert.equal((await login(process.env.SETUP_CODE)).status, 200);
+    const successLogin = await login(process.env.SETUP_CODE);
+    assert.equal(successLogin.status, 200);
+    assert.ok(extractToken(successLogin));
 
     for (let attempt = 0; attempt < 8; attempt += 1) {
       assert.equal((await login('wrong-code')).status, 401);

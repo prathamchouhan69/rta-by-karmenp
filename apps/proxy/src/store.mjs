@@ -228,7 +228,9 @@ export async function createStore(directory, databaseUrl, { seedPracticeData = t
       await persist();
     },
     async recordAudit(entry) {
-      state.audit.unshift({ ...entry, audit_id: randomUUID(), time: new Date().toISOString() });
+      const now = new Date();
+      const istTime = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString();
+      state.audit.unshift({ ...entry, audit_id: randomUUID(), time: istTime, device_id: entry.device_id || 'unknown', route: entry.route || 'unknown' });
       state.audit.length = Math.min(state.audit.length, 10000);
       await persist();
     },

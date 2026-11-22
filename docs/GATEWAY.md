@@ -2,6 +2,7 @@
 
 `apps/gateway` is the single production entry point. It serves the hardened `/api/v1`
 proxy API and the complete Flux API without collapsing either backend's security model.
+It does not serve a frontend or static files.
 
 ```
 API clients
@@ -39,15 +40,40 @@ clients.
 The BFF is deliberately narrow. All advanced Flux endpoints remain available under
 `/flux/v1/*` with the original Flux contract, so external clients can use the full API.
 
+## Frontend
+
+`apps/web` is the current React/Vite UI. It runs separately from the gateway:
+
+```bash
+npm run dev:web
+# Vite: http://127.0.0.1:3000
+# proxies /api and /flux to http://127.0.0.1:8787
+```
+
+Most `apps/web` screens still use bundled mock data. Its only live calls are
+`/api/v1/auth/session`, `/api/v1/news`, and `/api/v1/write-previews`; it does not call
+Flux chat or briefing endpoints. The earlier Next.js `apps/flux-ui` was removed in
+`3c1679e` and is not part of the current tree.
+
+The gateway, Docker image, Compose stack, and Caddyfile are API-only. The image does
+not copy `apps/web/dist`, Compose has no web service, and Caddy proxies only to
+`app:8787`; consequently `GET /` and `GET /login` return 404 in the container.
+Serving a production UI is a separate deployment decision and is not wired here.
+
 ## Auth bridge
 
 1. The owner signs in at `POST /api/v1/auth/session` with `SETUP_CODE`.
-2. The proxy returns its 12-hour HMAC bearer token.
-3. On a Flux request, the gateway verifies that token and mints a 12-hour Flux session
-   for `FLUX_OWNER_ID` (default `owner`).
-4. Flux checks the minted token against its own `FLUX_AUTH_SECRET`, loads the Flux user,
+2. The proxy returns its 12-hour HMAC bearer token and sets an HttpOnly,
+   `SameSite=Strict` `karm_session` cookie. The cookie is marked `Secure` when
+   `APP_ORIGIN` is HTTPS.
+3. The proxy accepts either `Authorization: Bearer <token>` or the session cookie.
+   `POST /api/v1/auth/signout` clears the cookie. The bearer response remains for API
+   clients that do not use cookies.
+4. On a Flux request, the gateway verifies the proxy token and mints a 12-hour Flux
+   session for `FLUX_OWNER_ID` (default `owner`).
+5. Flux checks the minted token against its own `FLUX_AUTH_SECRET`, loads the Flux user,
    and applies Flux RBAC and per-user rate limits.
-5. Audit rows are attributed to the real Flux user.
+6. Audit rows are attributed to the real Flux user.
 
 Direct Flux password login remains available at `POST /flux/v1/auth/login` for API
 clients. Production requires `FLUX_OWNER_PASSWORD` (at least 12 characters) for the
@@ -121,6 +147,14 @@ ZOHO_MODE=mock npm run dev
 # gateway :8787, Flux :8788, mock Zoho :4010
 ```
 
+The web UI is a separate process:
+
+```bash
+npm run dev:web
+# Vite :3000, proxies /api and /flux to :8787
+```
+
+`npm start` and the container serve only the API; they do not serve `apps/web`.
 The default local owner password is `karm-local-dev-owner`. The gateway keeps the
 existing owner password in sync with `FLUX_OWNER_PASSWORD`, so the default works even
 when `apps/gateway/.data/flux/users.json` already exists.
@@ -147,6 +181,11 @@ when `apps/gateway/.data/flux/users.json` already exists.
    `BACKUP_RETENTION_DAYS`. Keep `BACKUP_ENCRYPTION_KEY` separate from backup files.
 11. Rehearse a restore into a temporary database and temporary directory with
    `DATABASE_URL=... BACKUP_ENCRYPTION_KEY=... scripts/restore-rehearsal.sh backups/<backup-folder>`.
+
+The stack is API-only: the image does not copy `apps/web/dist`, Compose has no web
+service, and Caddy forwards only to `app:8787`. `GET /` and `GET /login` therefore
+return 404 over the public origin. Deploy `apps/web` separately or build a client
+against the API if a browser UI is required.
 
 The Caddy container obtains and renews the HTTPS certificate automatically after DNS
 and ports 80/443 are correct. `APP_ORIGIN` is derived from `CADDY_DOMAIN` and must be
