@@ -25,10 +25,12 @@ clients.
 
 | Route | Backend | Auth |
 |---|---|---|
-| `/api/v1/*` | Proxy | Proxy bearer token (unless local auth is disabled) |
-| `/api/v1/flux/status` | Gateway BFF | Proxy bearer token |
-| `/api/v1/flux/briefing` | Gateway BFF → Flux + proxy | Proxy bearer token |
-| `/api/v1/flux/ask` | Gateway BFF → Flux, deterministic fallback | Proxy bearer token |
+| `/api/v1/*` | Proxy | Proxy bearer token or `karm_session` cookie (unless local auth is disabled) |
+| `/api/v1/auth/session` | Proxy | Public; sets the session cookie and returns a bearer token |
+| `/api/v1/auth/signout` | Proxy | Public; clears the session cookie |
+| `/api/v1/flux/status` | Gateway BFF | Proxy bearer token or cookie |
+| `/api/v1/flux/briefing` | Gateway BFF → Flux + proxy | Proxy bearer token or cookie |
+| `/api/v1/flux/ask` | Gateway BFF → Flux, deterministic fallback | Proxy bearer token or cookie |
 | `/flux/health` | Flux | Public |
 | `/flux/v1/auth/login` | Flux | Public |
 | `/flux/v1/*` | Flux | Flux bearer token, or a proxy token bridged by the gateway |
@@ -206,7 +208,9 @@ npm run verify
 
 `npm test -w apps/gateway` covers the auth bridge, Flux RBAC, unified status, briefing
 fallback, measurement routing, chat fallback, readiness, and metrics. The proxy, Flux,
-gateway, and script suites run from the root `npm test` command.
+gateway, and script suites run from the root `npm test` command; the current counts are
+proxy 50, Flux 117, gateway 15, and scripts 2. `npm run build` builds `apps/web` as well
+as the API workspaces, but the container runtime does not include the web output.
 
 ## Operational limits
 
@@ -219,3 +223,6 @@ gateway, and script suites run from the root `npm test` command.
   or behind the reverse proxy.
 - Live Zoho writes remain opt-in and require the proxy's preview + approval token. The
   gateway does not add a write path.
+- No frontend is served by the gateway or container. `apps/web` is a local Vite app
+  and is mostly mock-data driven; production UI hosting and API URL configuration are
+  still open.

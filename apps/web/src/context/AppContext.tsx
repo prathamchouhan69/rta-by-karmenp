@@ -14,7 +14,7 @@ export type ScreenType =
   | 'login' | 'home' | 'business_os' | 'nature_library' | 'reference_detail' | 'my_selections'
   | 'projects' | 'project_detail' | 'tasks' | 'task_detail' | 'accounting' | 'invoice_detail'
   | 'files' | 'file_detail' | 'transportation' | 'fleet_detail' | 'human_resources' | 'employee_detail'
-  | 'relationships' | 'client_detail' | 'charts_library' | 'chart_detail' | 'notifications' | 'search' | 'settings';
+  | 'relationships' | 'client_detail' | 'charts_library' | 'chart_detail' | 'notifications' | 'search' | 'settings' | 'lock';
 
 export type ThemeMode = 'night' | 'classic' | 'day';
 
@@ -26,6 +26,8 @@ export interface AppContextType {
   screenHistory: { screen: ScreenType; entityId?: string | null }[];
   themeMode: ThemeMode;
   setThemeMode: (mode: ThemeMode) => void;
+  isLocked: boolean;
+  setIsLocked: (locked: boolean) => void;
   isStarfishOpen: boolean;
   setIsStarfishOpen: (open: boolean) => void;
   zohoScanState: 'idle' | 'scanning' | 'syncing' | 'completed' | 'error';
@@ -135,8 +137,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
   const [offlineQueueCount, setOfflineQueueCount] = useState<number>(0);
   const [isSpotlightOpen, setIsSpotlightOpen] = useState<boolean>(false);
+  const [isLocked, setIsLocked] = useState<boolean>(true);
   const [isIslandExpanded, setIsIslandExpanded] = useState<boolean>(false);
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
+  const autoLockTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const AUTO_LOCK_MS = 5 * 60 * 1000; // 5 minutes
+
+  const resetAutoLockTimer = useCallback(() => {
+    if (autoLockTimeoutRef.current) clearTimeout(autoLockTimeoutRef.current);
+    autoLockTimeoutRef.current = setTimeout(() => {
+      setIsLocked(true);
+    }, AUTO_LOCK_MS);
+  }, []);
+
+  useEffect(() => {
+    if (isLocked) {
+      if (autoLockTimeoutRef.current) clearTimeout(autoLockTimeoutRef.current);
+    } else {
+      resetAutoLockTimer();
+    }
+    return () => {
+      if (autoLockTimeoutRef.current) clearTimeout(autoLockTimeoutRef.current);
+    };
+  }, [isLocked, resetAutoLockTimer]);
+
+  useEffect(() => {
+    const handleActivity = () => {
+      if (!isLocked) resetAutoLockTimer();
+    };
+    window.addEventListener('mousemove', handleActivity);
+    window.addEventListener('keydown', handleActivity);
+    window.addEventListener('click', handleActivity);
+    window.addEventListener('touchstart', handleActivity);
+    return () => {
+      window.removeEventListener('mousemove', handleActivity);
+      window.removeEventListener('keydown', handleActivity);
+      window.removeEventListener('click', handleActivity);
+      window.removeEventListener('touchstart', handleActivity);
+    };
+  }, [isLocked, resetAutoLockTimer]);
 
   const noteTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const setNote = useCallback((key: string, text: string) => {
@@ -372,6 +411,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         screenHistory,
         themeMode,
         setThemeMode,
+        isLocked,
+        setIsLocked,
         isStarfishOpen,
         setIsStarfishOpen,
         zohoScanState,

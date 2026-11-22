@@ -3,6 +3,7 @@ import { AppProvider, useApp, ScreenType } from './context/AppContext';
 import { AppHeader, AppNavigation } from './components/layout/AppHeader';
 import { DynamicIsland } from './components/layout/DynamicIsland';
 import { FluxLoadingParticle } from './components/common/FluxLoadingParticle';
+import { LockScreen } from './components/screens/LockScreen';
 
 // Screens
 import { LoginScreen } from './components/screens/LoginScreen';
@@ -150,8 +151,9 @@ const ScreenRouter: React.FC = () => {
     }
   };
 
-  const isFluxActive = zohoScanState === 'scanning' || zohoScanState === 'syncing';
+const isFluxActive = zohoScanState === 'scanning' || zohoScanState === 'syncing';
   const isSaving = savingStatus === 'saving';
+  const { isLocked } = useApp();
 
   return (
     <div 
@@ -164,11 +166,14 @@ const ScreenRouter: React.FC = () => {
         aria-hidden="true"
       >
         <img 
-          src="/karm-symbol-white.png" 
+          src="/karm-logo-original.png" 
           alt="" 
           className="w-[500px] md:w-[700px] lg:w-[900px] max-w-none select-none opacity-[0.065] filter contrast-125" 
         />
       </div>
+
+      {/* Lock Screen Overlay */}
+      {isLocked && <LockScreen />}
 
       {/* Main Interactive Cockpit Stack */}
       <div className="relative z-10 flex flex-col flex-1 min-h-screen">
