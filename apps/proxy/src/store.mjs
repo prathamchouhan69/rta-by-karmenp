@@ -199,7 +199,19 @@ export async function createStore(directory, databaseUrl, { seedPracticeData = t
     async create(entity, body) {
       const id = randomUUID();
       const idKey = idKeys[entity] ?? `${entity.slice(0, -1)}_id`;
-      const record = { ...body, [idKey]: id, status: body.status ?? 'draft' };
+      let record = { ...body, [idKey]: id, status: body.status ?? 'draft' };
+      if (entity === 'invoices' && !record.invoice_number) {
+        const existing = state.records.invoices ?? [];
+        const nums = existing
+          .map((e) => {
+            const m = String(e.invoice_number ?? '').match(/INV-(\d{4})-(\d{4})/);
+            return m ? parseInt(m[2], 10) : 0;
+          })
+          .filter((n) => n > 0);
+        const next = nums.length ? Math.max(...nums) + 1 : 1;
+        const year = new Date().getFullYear();
+        record.invoice_number = `INV-${year}-${String(next).padStart(4, '0')}`;
+      }
       state.records[entity] ??= [];
       state.records[entity].unshift(record);
       await persist();
