@@ -88,6 +88,6 @@ test('meeting assistant: extracts actions, decisions and dates', () => {
   assert.strictEqual(r.ok, true);
   assert.strictEqual(r.date, '2026-11-04');
   assert.ok(r.actionItems.length >= 1);
-  assert.ok(r.decisions.some((d) => /supplier B/i.test(d)));
+  assert.ok(r.decisions.some((d) => /supplier B/i.test(d.text)));
   assert.ok(r.disclaimer.includes('Flux does not know your team'));
 });
