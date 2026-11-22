@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IconFiles, IconFolder, IconChevronRight, IconChevronDown } from '../common/Icons';
 
-interface GlassFolderCardProps {
+export interface GlassFolderCardProps {
   id: string;
   name: string;
   isFolder: boolean;
@@ -9,10 +9,11 @@ interface GlassFolderCardProps {
   children?: GlassFolderCardProps[] | undefined;
   size?: string | undefined;
   version?: string | undefined;
-  onClick?: () => void | undefined;
-  onOpen?: () => void | undefined;
-  depth?: number | undefined;
-  isOpen?: boolean | undefined;
+  status?: 'optimal' | 'warning' | 'critical' | 'idle' | 'active' | 'pending' | 'success' | 'error';
+  onClick?: () => void;
+  onOpen?: () => void;
+  depth?: number;
+  isOpen?: boolean;
 }
 
 const GLASS_STYLES = {

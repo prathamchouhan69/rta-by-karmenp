@@ -51,7 +51,8 @@ const ScreenRouter: React.FC = () => {
     reducedMotion, 
     themeMode,
     zohoScanState,
-    savingStatus
+    savingStatus,
+    isLocked
   } = useApp();
 
   // Handle Cmd+K global spotlight
@@ -151,9 +152,8 @@ const ScreenRouter: React.FC = () => {
     }
   };
 
-const isFluxActive = zohoScanState === 'scanning' || zohoScanState === 'syncing';
+  const isFluxActive = zohoScanState === 'scanning' || zohoScanState === 'syncing';
   const isSaving = savingStatus === 'saving';
-  const { isLocked } = useApp();
 
   return (
     <div 
@@ -165,10 +165,13 @@ const isFluxActive = zohoScanState === 'scanning' || zohoScanState === 'syncing'
         className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center overflow-hidden" 
         aria-hidden="true"
       >
+        <div className="absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-cyan-400/[0.055] blur-[140px]" />
+        <div className="absolute right-[-10%] top-1/3 h-[420px] w-[420px] rounded-full bg-indigo-500/[0.055] blur-[130px]" />
+        <div className="absolute bottom-[-18%] left-[-8%] h-[420px] w-[420px] rounded-full bg-[#d8b26a]/[0.035] blur-[130px]" />
         <img 
           src="/karm-logo-original.png" 
           alt="" 
-          className="w-[500px] md:w-[700px] lg:w-[900px] max-w-none select-none opacity-[0.065] filter contrast-125" 
+          className="w-[500px] md:w-[700px] lg:w-[900px] max-w-none select-none opacity-[0.05] filter contrast-125" 
         />
       </div>
 
@@ -202,8 +205,10 @@ const isFluxActive = zohoScanState === 'scanning' || zohoScanState === 'syncing'
         <div className="flex-1 flex flex-col lg:flex-row w-full max-w-[1700px] mx-auto">
           <AppNavigation />
 
-          <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">
-            {renderActiveScreen()}
+          <main className="flex-1 p-4 pb-28 md:p-6 md:pb-28 lg:p-8 lg:pb-10 overflow-y-auto">
+            <div key={currentScreen} className="karm-reveal">
+              {renderActiveScreen()}
+            </div>
           </main>
         </div>
 

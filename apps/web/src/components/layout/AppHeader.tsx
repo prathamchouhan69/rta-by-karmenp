@@ -23,7 +23,7 @@ export const AppHeader: React.FC = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#06080d]/85 backdrop-blur-2xl px-4 lg:px-8 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-[#05080f]/80 backdrop-blur-2xl px-4 lg:px-8 py-3 flex items-center justify-between shadow-[0_1px_0_rgba(255,255,255,0.035),0_18px_45px_rgba(0,0,0,0.32)]">
       {/* Brand & System Status */}
       <div className="flex items-center gap-3">
         <button 
@@ -32,7 +32,7 @@ export const AppHeader: React.FC = () => {
           aria-label="Return to Action Inbox"
         >
           {/* Official KARM Logo — Sculptural White / Platinum Spiral on Dark Cockpit Background */}
-          <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/10 p-1 flex items-center justify-center shadow-[0_0_16px_rgba(255,255,255,0.15)] group-hover:border-cyan-400/40 transition-colors">
+          <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-[#d8b26a]/25 p-1 flex items-center justify-center shadow-[0_0_18px_rgba(216,178,106,0.12)] group-hover:border-cyan-400/40 transition-colors">
             <img 
               src="/karm-symbol-white.png" 
               alt="RTA by KARM Official Symbol" 
@@ -44,14 +44,14 @@ export const AppHeader: React.FC = () => {
               <span className="font-display font-bold text-sm tracking-tight text-white group-hover:text-cyan-300 transition-colors">
                 RTA by KARM
               </span>
-              <span className="type-label px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-500/30">
+              <span className="karm-chip karm-chip-brass text-[9px]">
                 OS 2.4
               </span>
             </div>
             {/* Non-green connection telemetry with clear icon & text */}
             <p className="type-timestamp flex items-center gap-1.5 text-slate-400 mt-0.5">
               <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-sky-400 shadow-[0_0_6px_#38bdf8]' : 'bg-amber-400'}`} />
-              <span>{isOnline ? 'Tesla & Cosmos Live' : 'Tardigrade Offline Mode'}</span>
+              <span>{isOnline ? 'Systems online · Zoho linked' : 'Offline mode · local data'}</span>
             </p>
           </div>
         </button>
@@ -60,15 +60,16 @@ export const AppHeader: React.FC = () => {
       {/* Global Actions Bar */}
       <div className="flex items-center gap-2 md:gap-3">
         {/* Visual Theme Mode Switcher (Night / Classic / Day) */}
-        <div className="hidden sm:flex items-center bg-black/40 border border-white/10 rounded-xl p-0.5">
+        <div className="hidden sm:flex items-center bg-black/40 border border-white/10 rounded-xl p-0.5 shadow-inner">
           {(['night', 'classic', 'day'] as ThemeMode[]).map((mode) => (
             <button
               key={mode}
               onClick={() => setThemeMode(mode)}
+              aria-pressed={themeMode === mode}
               className={`px-2.5 py-1 text-[11px] font-interface capitalize rounded-lg transition-all ${
                 themeMode === mode
-                  ? 'bg-cyan-500/20 text-cyan-300 font-semibold shadow-[0_0_8px_rgba(0,242,254,0.2)]'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-cyan-500/20 to-indigo-500/15 text-cyan-200 font-semibold shadow-[0_0_10px_rgba(0,242,254,0.16)]'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               {mode}
@@ -79,7 +80,7 @@ export const AppHeader: React.FC = () => {
         {/* Spotlight Command Palette trigger (Cmd+K) */}
         <button
           onClick={() => setIsSpotlightOpen(true)}
-          className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-cyan-500/40 text-slate-300 text-xs transition-all hover:bg-white/[0.08]"
+          className="karm-sheen flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-cyan-500/40 text-slate-300 text-xs transition-all hover:bg-white/[0.08]"
           aria-label="Open Command Search (Command + K)"
         >
           <IconSearch size={14} className="text-cyan-400" />
@@ -93,7 +94,7 @@ export const AppHeader: React.FC = () => {
         <button
           onClick={() => triggerZohoLiveScan()}
           disabled={zohoScanState === 'scanning' || zohoScanState === 'syncing'}
-          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-cyan-950/70 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-900/60 type-button text-xs transition-all active:scale-95 disabled:opacity-50"
+          className="karm-sheen hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-cyan-950/60 border border-cyan-500/35 text-cyan-200 hover:bg-cyan-900/60 hover:border-cyan-400/60 type-button text-xs transition-all active:scale-95 disabled:opacity-50"
           title="Trigger live Tesla Coil scan of Zoho Books"
           aria-label="Synchronise Zoho Books"
         >
@@ -104,10 +105,10 @@ export const AppHeader: React.FC = () => {
         {/* Notifications Beacon */}
         <button
           onClick={() => navigateTo('notifications')}
-          className={`relative p-2 rounded-xl border transition-all ${
+          className={`relative karm-icon-button ${
             currentScreen === 'notifications'
-              ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400 shadow-[0_0_12px_rgba(0,242,254,0.2)]'
-              : 'bg-white/[0.04] border-white/10 text-slate-300 hover:bg-white/[0.08] hover:text-white'
+              ? '!border-cyan-500/60 !text-cyan-300 shadow-[0_0_14px_rgba(0,242,254,0.18)]'
+              : ''
           }`}
           title="Notifications & Alerts"
           aria-label={`Notifications, ${unreadCount} unread`}
@@ -123,10 +124,10 @@ export const AppHeader: React.FC = () => {
         {/* System Settings */}
         <button
           onClick={() => navigateTo('settings')}
-          className={`p-2 rounded-xl border transition-all ${
+          className={`karm-icon-button ${
             currentScreen === 'settings'
-              ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400 shadow-[0_0_12px_rgba(0,242,254,0.2)]'
-              : 'bg-white/[0.04] border-white/10 text-slate-300 hover:bg-white/[0.08] hover:text-white'
+              ? '!border-cyan-500/60 !text-cyan-300 shadow-[0_0_14px_rgba(0,242,254,0.18)]'
+              : ''
           }`}
           title="System Settings & Connections"
           aria-label="Open System Settings"

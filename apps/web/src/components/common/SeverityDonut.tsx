@@ -84,6 +84,11 @@ export const SeverityDonut: React.FC<SeverityDonutProps> = ({
     onSegmentClick?.(segment);
   };
 
+  // Calculate pie slice paths for custom SVG rendering
+  const totalValue = segments.reduce((sum, s) => sum + s.value, 0);
+  const outerRadius = Math.min(140, height / 2 - 20);
+  const chartRef = useRef<SVGSVGElement>(null);
+
   return (
     <div className={`w-full bg-[#07090e]/80 rounded-2xl p-4 border border-white/10 space-y-3 ${className}`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -92,16 +97,16 @@ export const SeverityDonut: React.FC<SeverityDonutProps> = ({
           {subtitle && <p className="text-[11px] text-slate-400 mt-0.5">{subtitle}</p>}
         </div>
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
-          <span className="px-2 py-0.5 rounded bg-white/5">Total: {formatValue(total)}</span>
+          <span className="px-2 py-0.5 rounded bg-white/5">Total: {formatValue(totalValue)}</span>
         </div>
       </div>
 
       <div style={{ width: '100%', height }}>
-        <ResponsiveContainer>
+        <svg viewBox="0 0 300 300" width="100%" height="100%" ref={chartRef}>
           <Pie
             data={segments.map((s) => ({ ...s, name: s.label }))}
-            cx="50%"
-            cy="50%"
+            cx="150"
+            cy="150"
             innerRadius={innerRadius}
             outerRadius={Math.min(140, height / 2 - 20)}
             paddingAngle={2}
@@ -117,8 +122,84 @@ export const SeverityDonut: React.FC<SeverityDonutProps> = ({
               />
             ))}
             <Tooltip content={<CustomTooltip />} />
+            {segments.map((segment, index) => {
+              const startAngle = -90 + (360 * segments.slice(0, index).reduce((sum, s) => sum + s.value, 0)) / totalValue;
+              const endAngle = startAngle + (360 * segment.value) / totalValue;
+              
+              const startAngleRad = (startAngle * Math.PI) / 180;
+              const endAngleRad = (endAngle * Math.PI) / 180;
+              const midAngle = (startAngleRad + endAngleRad) / 2;
+              
+              const innerX = Math.cos(startAngleRad) * innerRadius;
+              const innerY = Math.sin(startAngleRad) * innerRadius;
+              const outerX = Math.cos(startAngleRad) * outerRadius;
+              const outerY = Math.sin(startAngleRad) * outerRadius;
+              const innerXEnd = Math.cos(endAngleRad) * innerRadius;
+              const innerYEnd = Math.sin(endAngleRad) * innerRadius;
+              const outerXEnd = Math.cos(endAngleRad) * outerRadius;
+              const outerYEnd = Math.sin(endAngleRad) * outerRadius;
+              
+              const largeArcFlag = endAngle - startAngle > 180 ? 1 : 0;
+              
+              const path = `
+                M ${outerX} ${outerY}
+                A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 1 ${outerXEnd} ${outerYEnd}
+                L ${innerXEnd} ${innerYEnd}
+                A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${innerX} ${innerY}
+                Z
+              `;
+
+              const percentage = ((segment.value / totalValue) * 100).toFixed(1);
+              const cx = Math.cos(midAngle) * ((innerRadius + outerRadius) / 2);
+              const cy = Math.sin(midAngle) * ((innerRadius + outerRadius) / 2);
+
+              return (
+                <g>
+                  <path
+                    d={path}
+                    fill={segment.color}
+                    stroke="#05070a"
+                    strokeWidth={2}
+                    onClick={() => handleSegmentClick(segment)}
+                    onMouseEnter={() => setActiveSegment(segment.id)}
+                    onMouseLeave={() => setActiveSegment(null)}
+                    style={{
+                      cursor: onSegmentClick || segment.onClick ? 'pointer' : 'default',
+                      filter: activeSegment && activeSegment !== segment.id ? 'opacity(0.4)' : 'none',
+                      transition: 'filter 150ms ease',
+                    }}
+                  />
+                  {activeSegment === segment.id && !isReducedMotion && (
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      from={`0 0 0`}
+                      to={`8 0 0`}
+                      dur="0.15s"
+                      repeatCount="indefinite"
+                      values="0;8;-8;0"
+                      keyTimes="0;0.25;0.75;1"
+                      calcMode="spline"
+                    />
+                  )}
+                  <text
+                    x={cx}
+                    y={cy}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize="12"
+                    fontWeight="bold"
+                    pointerEvents="none"
+                    opacity={0.8}
+                  >
+                    {segment.label}
+                  </text>
+                </g>
+              );
+            })}
           </Pie>
-        </ResponsiveContainer>
+        </svg>
       </div>
 
       {showLegend && (
@@ -137,14 +218,14 @@ export const SeverityDonut: React.FC<SeverityDonutProps> = ({
                 ${!onSegmentClick && !segment.onClick ? 'opacity-60 cursor-default' : ''}
               `}
               aria-pressed={activeSegment === segment.id}
-              aria-label={`${segment.label}: ${formatValue(segment.value)} (${((segment.value / total) * 100).toFixed(1)}%)`}
+              aria-label={`${segment.label}: ${formatValue(segment.value)} (${((segment.value / totalValue) * 100).toFixed(1)}%)`}
             >
               <span
                 className="w-2.5 h-2.5 rounded-full"
                 style={{ backgroundColor: segment.color }}
               />
               <span className="text-white font-medium">{segment.label}</span>
-              <span className="text-slate-400">{((segment.value / total) * 100).toFixed(1)}%</span>
+              <span className="text-slate-400">{((segment.value / totalValue) * 100).toFixed(1)}%</span>
             </button>
           ))}
         </div>

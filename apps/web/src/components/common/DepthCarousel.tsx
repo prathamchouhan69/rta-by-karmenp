@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface DepthCarouselItem {
   id: string;
@@ -57,11 +57,11 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
     };
   }, [autoRotate, rotationInterval, items.length, isReducedMotion]);
 
-  const handleSelect = useCallback((index: number) => {
+  const handleSelect = (index: number) => {
     setSelectedIndex(index);
     onSelect?.(index);
     items[index]?.onSelect?.();
-  }, [items, onSelect]);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
@@ -199,7 +199,6 @@ export const DepthCarousel: React.FC<DepthCarouselProps> = ({
         onClick={() => handleSelect((selectedIndex - 1 + items.length) % items.length)}
         className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-cyan-500/30 transition-all flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
         aria-label="Previous"
-        disabled={isReducedMotion && false}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <polyline points="15 18 9 12 15 6" />

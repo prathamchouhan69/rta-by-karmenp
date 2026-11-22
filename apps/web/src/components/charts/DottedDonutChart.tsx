@@ -12,15 +12,6 @@ interface DottedDonutChartProps {
   innerRadius?: number;
 }
 
-const KARM_COLORS = [
-  '#00f2fe', // cyan
-  '#a855f7', // purple
-  '#facc15', // yellow/brass
-  '#10b981', // emerald
-  '#f97316', // orange
-  '#ec4899', // pink
-];
-
 export const DottedDonutChart: React.FC<DottedDonutChartProps> = ({
   data,
   title,
@@ -100,61 +91,79 @@ export const DottedDonutChart: React.FC<DottedDonutChartProps> = ({
 
       <div style={{ width: '100%', height }}>
         <ResponsiveContainer>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={innerRadius}
-            outerRadius={Math.min(140, height / 2 - 20)}
-            paddingAngle={3}
-            startAngle={-90}
-            endAngle={270}
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={entry.color}
-                stroke="#05070a"
-                strokeWidth={2}
-              />
-            ))}
-            <Tooltip content={<CustomTooltip />} />
-          </Pie>
+          <svg viewBox="0 0 300 300" width="100%" height="100%" ref={chartRef}>
+            <Pie
+              data={data}
+              cx="150"
+              cy="150"
+              innerRadius={innerRadius}
+              outerRadius={Math.min(140, height / 2 - 20)}
+              paddingAngle={3}
+              startAngle={-90}
+              endAngle={270}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  stroke="#05070a"
+                  strokeWidth={2}
+                />
+              ))}
+              <Tooltip content={<CustomTooltip />} />
+              {data.map((entry, index) => (
+                <path
+                  key={`arc-${index}`}
+                  fill={entry.color}
+                  stroke="#05070a"
+                  strokeWidth={2}
+                  onClick={() => handleSegmentClick(entry.name)}
+                  onMouseEnter={() => setActiveSegment(entry.name)}
+                  onMouseLeave={() => setActiveSegment(null)}
+                  style={{
+                    cursor: 'pointer',
+                    filter: activeSegment && activeSegment !== entry.name ? 'opacity(0.3)' : 'none',
+                    transition: 'filter 150ms ease',
+                  }}
+                />
+              ))}
+            </Pie>
+          </svg>
         </ResponsiveContainer>
-      </div>
 
-      <div className="flex flex-wrap gap-2 justify-center" role="list" aria-label="Legend">
-        {data.map((entry, index) => (
-          <button
-            key={`legend-${index}`}
-            onClick={() => handleSegmentClick(entry.name)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
-              activeSegment === entry.name
-                ? 'bg-white/10 shadow-[0_0_12px_rgba(255,255,255,0.1)]'
-                : 'bg-white/5 hover:bg-white/10'
-            }`}
-            aria-pressed={activeSegment === entry.name}
-            aria-label={`${entry.name}: ${formatValue(entry.value)}`}
-          >
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-            <span className="text-white font-medium">{entry.name}</span>
-            <span className="text-slate-400">{((entry.value / total) * 100).toFixed(1)}%</span>
-          </button>
-        ))}
-      </div>
-
-      {activeSegment && (
-        <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center text-xs text-slate-300" role="status" aria-live="polite">
-          Filtering by <span className="font-bold text-white">{activeSegment}</span>{' '}
-          <button
-            onClick={() => setActiveSegment(null)}
-            className="ml-2 text-cyan-400 hover:underline font-mono"
-            aria-label="Clear filter"
-          >
-            Clear filter
-          </button>
+        <div className="flex flex-wrap gap-2 justify-center" role="list" aria-label="Legend">
+          {data.map((entry, index) => (
+            <button
+              key={`legend-${index}`}
+              onClick={() => handleSegmentClick(entry.name)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
+                activeSegment === entry.name
+                  ? 'bg-white/10 shadow-[0_0_12px_rgba(255,255,255,0.1)]'
+                  : 'bg-white/5 hover:bg-white/10'
+              }`}
+              aria-pressed={activeSegment === entry.name}
+              aria-label={`${entry.name}: ${formatValue(entry.value)}`}
+            >
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+              <span className="text-white font-medium">{entry.name}</span>
+              <span className="text-slate-400">{((entry.value / total) * 100).toFixed(1)}%</span>
+            </button>
+          ))}
         </div>
-      )}
+
+        {activeSegment && (
+          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center text-xs text-slate-300" role="status" aria-live="polite">
+            Filtering by <span className="font-bold text-white">{activeSegment}</span>{' '}
+            <button
+              onClick={() => setActiveSegment(null)}
+              className="ml-2 text-cyan-400 hover:underline font-mono"
+              aria-label="Clear filter"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

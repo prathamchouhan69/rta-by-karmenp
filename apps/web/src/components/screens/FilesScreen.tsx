@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { ImmortalJellyfishRecovery } from '../nature/ImmortalJellyfishRecovery';
-import { GlassFolderCard } from '../common/GlassFolderCard';
+import { GlassFolderCard, type GlassFolderCardProps } from '../common/GlassFolderCard';
 import { CompactStatusDot } from '../common/CompactStatusDot';
 
 interface FileTreeItem {
@@ -9,10 +9,9 @@ interface FileTreeItem {
   name: string;
   isFolder: boolean;
   fileCount?: number | undefined;
-  children?: FileTreeItem[] | undefined;
+  children?: GlassFolderCardProps[] | undefined;
   size?: string | undefined;
   version?: string | undefined;
-  status?: 'optimal' | 'warning' | 'critical' | 'idle' | 'active' | 'pending' | 'success' | 'error' | undefined;
 }
 
 const MOCK_FILE_TREE: FileTreeItem[] = [
@@ -22,10 +21,10 @@ const MOCK_FILE_TREE: FileTreeItem[] = [
     isFolder: true,
     fileCount: 4,
     children: [
-      { id: 'f1', name: 'Financial_Audit_2026.pdf', isFolder: false, size: '2.4 MB', version: '3.0', status: 'optimal' },
-      { id: 'f2', name: 'Q3_Provisional_Tax_Calc.xlsx', isFolder: false, size: '1.1 MB', version: '2.0', status: 'warning' },
-      { id: 'f3', name: 'GSTR-3B_Filing_Receipt.pdf', isFolder: false, size: '856 KB', version: '1.0', status: 'success' },
-      { id: 'f4', name: 'Advance_Tax_Challan_Sept.pdf', isFolder: false, size: '432 KB', version: '1.0', status: 'optimal' },
+      { id: 'f1', name: 'Financial_Audit_2026.pdf', isFolder: false, size: '2.4 MB', version: '3.0' },
+      { id: 'f2', name: 'Q3_Provisional_Tax_Calc.xlsx', isFolder: false, size: '1.1 MB', version: '2.0' },
+      { id: 'f3', name: 'GSTR-3B_Filing_Receipt.pdf', isFolder: false, size: '856 KB', version: '1.0' },
+      { id: 'f4', name: 'Advance_Tax_Challan_Sept.pdf', isFolder: false, size: '432 KB', version: '1.0' },
     ],
   },
   {
@@ -34,9 +33,9 @@ const MOCK_FILE_TREE: FileTreeItem[] = [
     isFolder: true,
     fileCount: 3,
     children: [
-      { id: 'f5', name: 'Pier_Cap_Design_Drawing.dwg', isFolder: false, size: '12.3 MB', version: '5.0', status: 'active' },
-      { id: 'f6', name: 'Reinforcement_BBS_16mm.xlsx', isFolder: false, size: '2.1 MB', version: '3.0', status: 'optimal' },
-      { id: 'f7', name: 'Concrete_Mix_Design_M45.pdf', isFolder: false, size: '1.8 MB', version: '2.0', status: 'optimal' },
+      { id: 'f5', name: 'Pier_Cap_Design_Drawing.dwg', isFolder: false, size: '12.3 MB', version: '5.0' },
+      { id: 'f6', name: 'Reinforcement_BBS_16mm.xlsx', isFolder: false, size: '2.1 MB', version: '3.0' },
+      { id: 'f7', name: 'Concrete_Mix_Design_M45.pdf', isFolder: false, size: '1.8 MB', version: '2.0' },
     ],
   },
   {
@@ -45,8 +44,8 @@ const MOCK_FILE_TREE: FileTreeItem[] = [
     isFolder: true,
     fileCount: 2,
     children: [
-      { id: 'f8', name: 'Jindal_Steel_MSA_2026.pdf', isFolder: false, size: '3.2 MB', version: '1.0', status: 'optimal' },
-      { id: 'f9', name: 'UltraTech_Cement_Supply_Agreement.pdf', isFolder: false, size: '2.7 MB', version: '1.0', status: 'warning' },
+      { id: 'f8', name: 'Jindal_Steel_MSA_2026.pdf', isFolder: false, size: '3.2 MB', version: '1.0' },
+      { id: 'f9', name: 'UltraTech_Cement_Supply_Agreement.pdf', isFolder: false, size: '2.7 MB', version: '1.0' },
     ],
   },
   {
@@ -55,7 +54,6 @@ const MOCK_FILE_TREE: FileTreeItem[] = [
     isFolder: false,
     size: '8.9 MB',
     version: '1.0',
-    status: 'critical',
   },
 ];
 
@@ -125,7 +123,7 @@ export const FilesScreen: React.FC = () => {
             name={item.name}
             isFolder={item.isFolder}
             fileCount={item.fileCount}
-            children={item.children}
+            children={item.children ?? []}
             size={item.size}
             version={item.version}
             onClick={() => handleFileClick(item)}

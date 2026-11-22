@@ -18,7 +18,7 @@ interface RearrangeableMetricCardProps {
   onMove: (fromIndex: number, toIndex: number) => void;
   onAction?: () => void;
   actionLabel?: string;
-  isDragging?: boolean;
+  isDragging?: boolean | undefined;
 }
 
 export const RearrangeableMetricCard: React.FC<RearrangeableMetricCardProps> = ({

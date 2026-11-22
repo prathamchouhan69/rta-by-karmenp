@@ -40,6 +40,13 @@
   --accent-crimson: #ef4444;     /* Critical risk / overdue alert */
   --accent-sky: #38bdf8;         /* Verified state / primary positive signal */
   --accent-gold: #fbbf24;        /* Milestone achievement */
+  --accent-brass: #d8b26a;       /* KARM brass — premium dividers and seals */
+  --accent-brass-soft: rgba(216, 178, 106, 0.16);
+  --accent-indigo: #6366f1;      /* KARM indigo — depth and navigation */
+  --accent-indigo-soft: rgba(99, 102, 241, 0.14);
+  --surface-card: linear-gradient(155deg, rgba(18, 25, 39, 0.92), rgba(8, 12, 20, 0.94));
+  --surface-card-raised: linear-gradient(155deg, rgba(24, 33, 50, 0.94), rgba(9, 13, 22, 0.96));
+  --surface-inset: rgba(3, 6, 12, 0.55);
 
   /* Structural Borders */
   --border-subtle: rgba(255, 255, 255, 0.07);
@@ -83,12 +90,28 @@ html, body {
 
 /* Cosmos background with subtle organic nebula gradient */
 body {
-  background: 
-    radial-gradient(ellipse at 15% 5%, rgba(0, 242, 254, 0.06) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 15%, rgba(112, 0, 255, 0.07) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 90%, rgba(255, 0, 127, 0.03) 0%, transparent 60%),
-    #06080d;
+  background:
+    radial-gradient(ellipse at 12% -5%, rgba(0, 242, 254, 0.09) 0%, transparent 42%),
+    radial-gradient(ellipse at 92% 8%, rgba(99, 102, 241, 0.10) 0%, transparent 46%),
+    radial-gradient(ellipse at 55% 108%, rgba(216, 178, 106, 0.045) 0%, transparent 55%),
+    linear-gradient(180deg, #070a11 0%, #05070c 55%, #04060a 100%);
   background-attachment: fixed;
+}
+
+/* Fine cockpit grid and film grain — static, never animated. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 50% 20%, black 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 20%, black 0%, transparent 78%);
 }
 
 /* ==========================================================================
@@ -470,6 +493,304 @@ body {
 
 [data-theme="day"] body {
   background: #f1f5f9;
+}
+
+/* ==========================================================================
+   PART 3: PREMIUM COCKPIT COMPONENTS
+   Shared surfaces, controls, and reveal motion used across the app.
+   ========================================================================== */
+
+.karm-card {
+  position: relative;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--surface-card);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.045) inset,
+    0 18px 45px rgba(0, 0, 0, 0.28);
+  transition:
+    transform var(--motion-normal) var(--ease-spring),
+    border-color var(--motion-normal) var(--ease-smooth),
+    box-shadow var(--motion-normal) var(--ease-smooth),
+    background var(--motion-normal) var(--ease-smooth);
+}
+
+.karm-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.05), transparent 34%, transparent 72%, rgba(216, 178, 106, 0.035));
+  opacity: 0.8;
+}
+
+.karm-card-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(216, 178, 106, 0.28);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 24px 55px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(0, 242, 254, 0.05);
+}
+
+.karm-panel {
+  position: relative;
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(0, 242, 254, 0.045), transparent 38%),
+    radial-gradient(ellipse at 100% 0%, rgba(99, 102, 241, 0.05), transparent 40%),
+    linear-gradient(160deg, rgba(15, 21, 33, 0.9), rgba(6, 9, 15, 0.95));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 24px 60px rgba(0, 0, 0, 0.3);
+}
+
+.karm-kicker {
+  font-family: var(--font-numeric);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-brass);
+}
+
+.karm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.045);
+  font-family: var(--font-numeric);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.karm-chip-brass {
+  border-color: rgba(216, 178, 106, 0.3);
+  background: var(--accent-brass-soft);
+  color: #e8cd97;
+}
+
+.karm-chip-cyan {
+  border-color: rgba(0, 242, 254, 0.28);
+  background: rgba(0, 242, 254, 0.08);
+  color: #7df8ff;
+}
+
+.karm-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-family: var(--font-interface);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 0.65rem 0.95rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform var(--motion-fast) var(--ease-spring),
+    background var(--motion-fast) var(--ease-smooth),
+    border-color var(--motion-fast) var(--ease-smooth),
+    box-shadow var(--motion-fast) var(--ease-smooth);
+}
+
+.karm-button:active {
+  transform: scale(0.97);
+}
+
+.karm-button-primary {
+  background: linear-gradient(135deg, #8ff9ff 0%, #00d9e6 48%, #4f6bff 100%);
+  color: #031018;
+  box-shadow: 0 8px 24px rgba(0, 217, 230, 0.18);
+}
+
+.karm-button-primary:hover {
+  box-shadow: 0 10px 30px rgba(0, 217, 230, 0.3);
+  filter: brightness(1.04);
+}
+
+.karm-button-brass {
+  background: linear-gradient(135deg, #f0d9a4 0%, #d8b26a 55%, #b88a42 100%);
+  color: #1a1205;
+  box-shadow: 0 8px 24px rgba(216, 178, 106, 0.16);
+}
+
+.karm-button-brass:hover {
+  box-shadow: 0 10px 30px rgba(216, 178, 106, 0.28);
+  filter: brightness(1.04);
+}
+
+.karm-button-ghost {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text-secondary);
+}
+
+.karm-button-ghost:hover {
+  border-color: rgba(0, 242, 254, 0.3);
+  background: rgba(0, 242, 254, 0.07);
+  color: #d8fbff;
+}
+
+.karm-icon-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--motion-fast) var(--ease-spring);
+}
+
+.karm-icon-button:hover {
+  color: #fff;
+  border-color: rgba(0, 242, 254, 0.3);
+  background: rgba(0, 242, 254, 0.08);
+  transform: translateY(-1px);
+}
+
+.karm-icon-button:active {
+  transform: scale(0.94);
+}
+
+.karm-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(216, 178, 106, 0.22), rgba(255, 255, 255, 0.08), transparent);
+}
+
+.karm-hairline {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.karm-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.karm-sheen::after {
+  content: '';
+  position: absolute;
+  top: -80%;
+  left: -60%;
+  width: 40%;
+  height: 260%;
+  transform: rotate(18deg) translateX(-140%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.11), transparent);
+  transition: transform var(--motion-cinematic) var(--ease-smooth);
+  pointer-events: none;
+}
+
+.karm-sheen:hover::after {
+  transform: rotate(18deg) translateX(420%);
+}
+
+.karm-focus:focus-visible,
+.karm-card:focus-visible,
+.karm-button:focus-visible {
+  outline: 2px solid rgba(0, 242, 254, 0.7);
+  outline-offset: 3px;
+}
+
+.karm-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.28) transparent;
+}
+
+.karm-number {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.035em;
+}
+
+.karm-reveal {
+  animation: karmRiseIn 520ms var(--ease-spring) both;
+}
+
+.karm-stagger > * {
+  animation: karmRiseIn 520ms var(--ease-spring) both;
+}
+
+.karm-stagger > *:nth-child(1) { animation-delay: 40ms; }
+.karm-stagger > *:nth-child(2) { animation-delay: 90ms; }
+.karm-stagger > *:nth-child(3) { animation-delay: 140ms; }
+.karm-stagger > *:nth-child(4) { animation-delay: 190ms; }
+.karm-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.karm-stagger > *:nth-child(6) { animation-delay: 290ms; }
+.karm-stagger > *:nth-child(7) { animation-delay: 340ms; }
+.karm-stagger > *:nth-child(8) { animation-delay: 390ms; }
+
+.karm-map-surface {
+  background-color: #070b12;
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(0, 242, 254, 0.08), transparent 26%),
+    radial-gradient(circle at 82% 68%, rgba(99, 102, 241, 0.09), transparent 30%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: auto, auto, 72px 72px, 72px 72px;
+}
+
+@keyframes karmRiseIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes karmRouteDash {
+  to { stroke-dashoffset: -32; }
+}
+
+@keyframes karmSoftPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes karmPinRipple {
+  0% { transform: scale(0.65); opacity: 0.7; }
+  75% { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes karmDonutIn {
+  from { opacity: 0; transform: rotate(-16deg) scale(0.94); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+.karm-route-line {
+  stroke-dasharray: 6 8;
+  animation: karmRouteDash 2.4s linear infinite;
+}
+
+.karm-pin-ripple {
+  animation: karmPinRipple 2.6s ease-out infinite;
+}
+
+.karm-donut-enter {
+  animation: karmDonutIn 640ms var(--ease-spring) both;
+  transform-origin: center;
 }
 
 /* Reduced Motion Support (Accessibility) */

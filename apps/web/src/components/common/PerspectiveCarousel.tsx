@@ -186,16 +186,16 @@ export const PerspectiveCarousel: React.FC<PerspectiveCarouselProps> = ({
                       </div>
                     )}
                   </div>
-                </div>
 
-                {isSelected && (
-                  <div
-                    className="absolute inset-0 rounded-3xl pointer-events-none"
-                    style={{
-                      boxShadow: `inset 0 0 0 2px ${item.accentColor || '#00f2fe'}60`,
-                    }}
-                  />
-                )}
+                  {isSelected && (
+                    <div
+                      className="absolute inset-0 rounded-3xl pointer-events-none"
+                      style={{
+                        boxShadow: `inset 0 0 0 2px ${item.accentColor || '#00f2fe'}60`,
+                      }}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           );
