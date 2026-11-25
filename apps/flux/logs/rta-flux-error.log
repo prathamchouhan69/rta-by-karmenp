@@ -1,0 +1,816 @@
+2026-11-25 23:58:54 +05:30: node:events:505
+2026-11-25 23:58:54 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:58:54 +05:30:     ^
+2026-11-25 23:58:54 +05:30: 
+2026-11-25 23:58:54 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:58:54 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:58:54 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:58:54 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:58:54 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:58:54 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:58:54 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:58:54 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:58:54 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:58:54 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:58:54 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:58:54 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:58:54 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:58:54 +05:30:   errno: -98,
+2026-11-25 23:58:54 +05:30:   syscall: 'listen',
+2026-11-25 23:58:54 +05:30:   address: '::',
+2026-11-25 23:58:54 +05:30:   port: 8788
+2026-11-25 23:58:54 +05:30: }
+2026-11-25 23:58:54 +05:30: 
+2026-11-25 23:58:54 +05:30: Node.js v26.13.0
+2026-11-25 23:58:55 +05:30: node:events:505
+2026-11-25 23:58:55 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:58:55 +05:30:     ^
+2026-11-25 23:58:55 +05:30: 
+2026-11-25 23:58:55 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:58:55 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:58:55 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:58:55 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:58:55 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:58:55 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:58:55 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:58:55 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:58:55 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:58:55 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:58:55 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:58:55 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:58:55 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:58:55 +05:30:   errno: -98,
+2026-11-25 23:58:55 +05:30:   syscall: 'listen',
+2026-11-25 23:58:55 +05:30:   address: '::',
+2026-11-25 23:58:55 +05:30:   port: 8788
+2026-11-25 23:58:55 +05:30: }
+2026-11-25 23:58:55 +05:30: 
+2026-11-25 23:58:55 +05:30: Node.js v26.13.0
+2026-11-25 23:58:56 +05:30: node:events:505
+2026-11-25 23:58:56 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:58:56 +05:30:     ^
+2026-11-25 23:58:56 +05:30: 
+2026-11-25 23:58:56 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:58:56 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:58:56 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:58:56 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:58:56 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:58:56 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:58:56 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:58:56 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:58:56 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:58:56 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:58:56 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:58:56 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:58:56 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:58:56 +05:30:   errno: -98,
+2026-11-25 23:58:56 +05:30:   syscall: 'listen',
+2026-11-25 23:58:56 +05:30:   address: '::',
+2026-11-25 23:58:56 +05:30:   port: 8788
+2026-11-25 23:58:56 +05:30: }
+2026-11-25 23:58:56 +05:30: 
+2026-11-25 23:58:56 +05:30: Node.js v26.13.0
+2026-11-25 23:58:57 +05:30: node:events:505
+2026-11-25 23:58:57 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:58:57 +05:30:     ^
+2026-11-25 23:58:57 +05:30: 
+2026-11-25 23:58:57 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:58:57 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:58:57 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:58:57 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:58:57 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:58:57 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:58:57 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:58:57 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:58:57 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:58:57 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:58:57 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:58:57 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:58:57 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:58:57 +05:30:   errno: -98,
+2026-11-25 23:58:57 +05:30:   syscall: 'listen',
+2026-11-25 23:58:57 +05:30:   address: '::',
+2026-11-25 23:58:57 +05:30:   port: 8788
+2026-11-25 23:58:57 +05:30: }
+2026-11-25 23:58:57 +05:30: 
+2026-11-25 23:58:57 +05:30: Node.js v26.13.0
+2026-11-25 23:58:58 +05:30: node:events:505
+2026-11-25 23:58:58 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:58:58 +05:30:     ^
+2026-11-25 23:58:58 +05:30: 
+2026-11-25 23:58:58 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:58:58 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:58:58 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:58:58 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:58:58 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:58:58 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:58:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:58:58 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:58:58 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:58:58 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:58:58 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:58:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:58:58 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:58:58 +05:30:   errno: -98,
+2026-11-25 23:58:58 +05:30:   syscall: 'listen',
+2026-11-25 23:58:58 +05:30:   address: '::',
+2026-11-25 23:58:58 +05:30:   port: 8788
+2026-11-25 23:58:58 +05:30: }
+2026-11-25 23:58:58 +05:30: 
+2026-11-25 23:58:58 +05:30: Node.js v26.13.0
+2026-11-25 23:58:58 +05:30: node:events:505
+2026-11-25 23:58:58 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:58:58 +05:30:     ^
+2026-11-25 23:58:58 +05:30: 
+2026-11-25 23:58:58 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:58:58 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:58:58 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:58:58 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:58:58 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:58:58 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:58:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:58:58 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:58:58 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:58:58 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:58:58 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:58:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:58:58 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:58:58 +05:30:   errno: -98,
+2026-11-25 23:58:58 +05:30:   syscall: 'listen',
+2026-11-25 23:58:58 +05:30:   address: '::',
+2026-11-25 23:58:58 +05:30:   port: 8788
+2026-11-25 23:58:58 +05:30: }
+2026-11-25 23:58:58 +05:30: 
+2026-11-25 23:58:58 +05:30: Node.js v26.13.0
+2026-11-25 23:58:59 +05:30: node:events:505
+2026-11-25 23:58:59 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:58:59 +05:30:     ^
+2026-11-25 23:58:59 +05:30: 
+2026-11-25 23:58:59 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:58:59 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:58:59 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:58:59 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:58:59 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:58:59 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:58:59 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:58:59 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:58:59 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:58:59 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:58:59 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:58:59 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:58:59 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:58:59 +05:30:   errno: -98,
+2026-11-25 23:58:59 +05:30:   syscall: 'listen',
+2026-11-25 23:58:59 +05:30:   address: '::',
+2026-11-25 23:58:59 +05:30:   port: 8788
+2026-11-25 23:58:59 +05:30: }
+2026-11-25 23:58:59 +05:30: 
+2026-11-25 23:58:59 +05:30: Node.js v26.13.0
+2026-11-25 23:59:00 +05:30: node:events:505
+2026-11-25 23:59:00 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:00 +05:30:     ^
+2026-11-25 23:59:00 +05:30: 
+2026-11-25 23:59:00 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:00 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:00 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:00 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:00 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:00 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:00 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:00 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:00 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:00 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:00 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:00 +05:30:   errno: -98,
+2026-11-25 23:59:00 +05:30:   syscall: 'listen',
+2026-11-25 23:59:00 +05:30:   address: '::',
+2026-11-25 23:59:00 +05:30:   port: 8788
+2026-11-25 23:59:00 +05:30: }
+2026-11-25 23:59:00 +05:30: 
+2026-11-25 23:59:00 +05:30: Node.js v26.13.0
+2026-11-25 23:59:00 +05:30: node:events:505
+2026-11-25 23:59:00 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:00 +05:30:     ^
+2026-11-25 23:59:00 +05:30: 
+2026-11-25 23:59:00 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:00 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:00 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:00 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:00 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:00 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:00 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:00 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:00 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:00 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:00 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:00 +05:30:   errno: -98,
+2026-11-25 23:59:00 +05:30:   syscall: 'listen',
+2026-11-25 23:59:00 +05:30:   address: '::',
+2026-11-25 23:59:00 +05:30:   port: 8788
+2026-11-25 23:59:00 +05:30: }
+2026-11-25 23:59:00 +05:30: 
+2026-11-25 23:59:00 +05:30: Node.js v26.13.0
+2026-11-25 23:59:00 +05:30: node:events:505
+2026-11-25 23:59:00 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:00 +05:30:     ^
+2026-11-25 23:59:00 +05:30: 
+2026-11-25 23:59:00 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:00 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:00 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:00 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:00 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:00 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:00 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:00 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:00 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:00 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:00 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:00 +05:30:   errno: -98,
+2026-11-25 23:59:00 +05:30:   syscall: 'listen',
+2026-11-25 23:59:00 +05:30:   address: '::',
+2026-11-25 23:59:00 +05:30:   port: 8788
+2026-11-25 23:59:00 +05:30: }
+2026-11-25 23:59:00 +05:30: 
+2026-11-25 23:59:00 +05:30: Node.js v26.13.0
+2026-11-25 23:59:01 +05:30: node:events:505
+2026-11-25 23:59:01 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:01 +05:30:     ^
+2026-11-25 23:59:01 +05:30: 
+2026-11-25 23:59:01 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:01 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:01 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:01 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:01 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:01 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:01 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:01 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:01 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:01 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:01 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:01 +05:30:   errno: -98,
+2026-11-25 23:59:01 +05:30:   syscall: 'listen',
+2026-11-25 23:59:01 +05:30:   address: '::',
+2026-11-25 23:59:01 +05:30:   port: 8788
+2026-11-25 23:59:01 +05:30: }
+2026-11-25 23:59:01 +05:30: 
+2026-11-25 23:59:01 +05:30: Node.js v26.13.0
+2026-11-25 23:59:01 +05:30: node:events:505
+2026-11-25 23:59:01 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:01 +05:30:     ^
+2026-11-25 23:59:01 +05:30: 
+2026-11-25 23:59:01 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:01 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:01 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:01 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:01 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:01 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:01 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:01 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:01 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:01 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:01 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:01 +05:30:   errno: -98,
+2026-11-25 23:59:01 +05:30:   syscall: 'listen',
+2026-11-25 23:59:01 +05:30:   address: '::',
+2026-11-25 23:59:01 +05:30:   port: 8788
+2026-11-25 23:59:01 +05:30: }
+2026-11-25 23:59:01 +05:30: 
+2026-11-25 23:59:01 +05:30: Node.js v26.13.0
+2026-11-25 23:59:02 +05:30: node:events:505
+2026-11-25 23:59:02 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:02 +05:30:     ^
+2026-11-25 23:59:02 +05:30: 
+2026-11-25 23:59:02 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:02 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:02 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:02 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:02 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:02 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:02 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:02 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:02 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:02 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:02 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:02 +05:30:   errno: -98,
+2026-11-25 23:59:02 +05:30:   syscall: 'listen',
+2026-11-25 23:59:02 +05:30:   address: '::',
+2026-11-25 23:59:02 +05:30:   port: 8788
+2026-11-25 23:59:02 +05:30: }
+2026-11-25 23:59:02 +05:30: 
+2026-11-25 23:59:02 +05:30: Node.js v26.13.0
+2026-11-25 23:59:02 +05:30: node:events:505
+2026-11-25 23:59:02 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:02 +05:30:     ^
+2026-11-25 23:59:02 +05:30: 
+2026-11-25 23:59:02 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:02 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:02 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:02 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:02 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:02 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:02 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:02 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:02 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:02 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:02 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:02 +05:30:   errno: -98,
+2026-11-25 23:59:02 +05:30:   syscall: 'listen',
+2026-11-25 23:59:02 +05:30:   address: '::',
+2026-11-25 23:59:02 +05:30:   port: 8788
+2026-11-25 23:59:02 +05:30: }
+2026-11-25 23:59:02 +05:30: 
+2026-11-25 23:59:02 +05:30: Node.js v26.13.0
+2026-11-25 23:59:03 +05:30: node:events:505
+2026-11-25 23:59:03 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:03 +05:30:     ^
+2026-11-25 23:59:03 +05:30: 
+2026-11-25 23:59:03 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:03 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:03 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:03 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:03 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:03 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:03 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:03 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:03 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:03 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:03 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:03 +05:30:   errno: -98,
+2026-11-25 23:59:03 +05:30:   syscall: 'listen',
+2026-11-25 23:59:03 +05:30:   address: '::',
+2026-11-25 23:59:03 +05:30:   port: 8788
+2026-11-25 23:59:03 +05:30: }
+2026-11-25 23:59:03 +05:30: 
+2026-11-25 23:59:03 +05:30: Node.js v26.13.0
+2026-11-25 23:59:03 +05:30: node:events:505
+2026-11-25 23:59:03 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:03 +05:30:     ^
+2026-11-25 23:59:03 +05:30: 
+2026-11-25 23:59:03 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:03 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:03 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:03 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:03 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:03 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:03 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:03 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:03 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:03 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:03 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:03 +05:30:   errno: -98,
+2026-11-25 23:59:03 +05:30:   syscall: 'listen',
+2026-11-25 23:59:03 +05:30:   address: '::',
+2026-11-25 23:59:03 +05:30:   port: 8788
+2026-11-25 23:59:03 +05:30: }
+2026-11-25 23:59:03 +05:30: 
+2026-11-25 23:59:03 +05:30: Node.js v26.13.0
+2026-11-25 23:59:04 +05:30: node:events:505
+2026-11-25 23:59:04 +05:30:     throw er; // Unhandled 'error' event
+2026-11-25 23:59:04 +05:30:     ^
+2026-11-25 23:59:04 +05:30: 
+2026-11-25 23:59:04 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-25 23:59:04 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-25 23:59:04 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-25 23:59:04 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-25 23:59:04 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-25 23:59:04 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-25 23:59:04 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-25 23:59:04 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-25 23:59:04 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-25 23:59:04 +05:30: Emitted 'error' event on Server instance at:
+2026-11-25 23:59:04 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-25 23:59:04 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-25 23:59:04 +05:30:   code: 'EADDRINUSE',
+2026-11-25 23:59:04 +05:30:   errno: -98,
+2026-11-25 23:59:04 +05:30:   syscall: 'listen',
+2026-11-25 23:59:04 +05:30:   address: '::',
+2026-11-25 23:59:04 +05:30:   port: 8788
+2026-11-25 23:59:04 +05:30: }
+2026-11-25 23:59:04 +05:30: 
+2026-11-25 23:59:04 +05:30: Node.js v26.13.0
+2026-11-26 00:00:55 +05:30: node:events:505
+2026-11-26 00:00:55 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:55 +05:30:     ^
+2026-11-26 00:00:55 +05:30: 
+2026-11-26 00:00:55 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:55 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:55 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:55 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:55 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:55 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:55 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:55 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:55 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:55 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:55 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:55 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:55 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:55 +05:30:   errno: -98,
+2026-11-26 00:00:55 +05:30:   syscall: 'listen',
+2026-11-26 00:00:55 +05:30:   address: '::',
+2026-11-26 00:00:55 +05:30:   port: 8788
+2026-11-26 00:00:55 +05:30: }
+2026-11-26 00:00:55 +05:30: 
+2026-11-26 00:00:55 +05:30: Node.js v26.13.0
+2026-11-26 00:00:55 +05:30: node:events:505
+2026-11-26 00:00:55 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:55 +05:30:     ^
+2026-11-26 00:00:55 +05:30: 
+2026-11-26 00:00:55 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:55 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:55 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:55 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:55 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:55 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:55 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:55 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:55 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:55 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:55 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:55 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:55 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:55 +05:30:   errno: -98,
+2026-11-26 00:00:55 +05:30:   syscall: 'listen',
+2026-11-26 00:00:55 +05:30:   address: '::',
+2026-11-26 00:00:55 +05:30:   port: 8788
+2026-11-26 00:00:55 +05:30: }
+2026-11-26 00:00:55 +05:30: 
+2026-11-26 00:00:55 +05:30: Node.js v26.13.0
+2026-11-26 00:00:56 +05:30: node:events:505
+2026-11-26 00:00:56 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:56 +05:30:     ^
+2026-11-26 00:00:56 +05:30: 
+2026-11-26 00:00:56 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:56 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:56 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:56 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:56 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:56 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:56 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:56 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:56 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:56 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:56 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:56 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:56 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:56 +05:30:   errno: -98,
+2026-11-26 00:00:56 +05:30:   syscall: 'listen',
+2026-11-26 00:00:56 +05:30:   address: '::',
+2026-11-26 00:00:56 +05:30:   port: 8788
+2026-11-26 00:00:56 +05:30: }
+2026-11-26 00:00:56 +05:30: 
+2026-11-26 00:00:56 +05:30: Node.js v26.13.0
+2026-11-26 00:00:57 +05:30: node:events:505
+2026-11-26 00:00:57 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:57 +05:30:     ^
+2026-11-26 00:00:57 +05:30: 
+2026-11-26 00:00:57 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:57 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:57 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:57 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:57 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:57 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:57 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:57 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:57 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:57 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:57 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:57 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:57 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:57 +05:30:   errno: -98,
+2026-11-26 00:00:57 +05:30:   syscall: 'listen',
+2026-11-26 00:00:57 +05:30:   address: '::',
+2026-11-26 00:00:57 +05:30:   port: 8788
+2026-11-26 00:00:57 +05:30: }
+2026-11-26 00:00:57 +05:30: 
+2026-11-26 00:00:57 +05:30: Node.js v26.13.0
+2026-11-26 00:00:57 +05:30: node:events:505
+2026-11-26 00:00:57 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:57 +05:30:     ^
+2026-11-26 00:00:57 +05:30: 
+2026-11-26 00:00:57 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:57 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:57 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:57 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:57 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:57 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:57 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:57 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:57 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:57 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:57 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:57 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:57 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:57 +05:30:   errno: -98,
+2026-11-26 00:00:57 +05:30:   syscall: 'listen',
+2026-11-26 00:00:57 +05:30:   address: '::',
+2026-11-26 00:00:57 +05:30:   port: 8788
+2026-11-26 00:00:57 +05:30: }
+2026-11-26 00:00:57 +05:30: 
+2026-11-26 00:00:57 +05:30: Node.js v26.13.0
+2026-11-26 00:00:58 +05:30: node:events:505
+2026-11-26 00:00:58 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:58 +05:30:     ^
+2026-11-26 00:00:58 +05:30: 
+2026-11-26 00:00:58 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:58 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:58 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:58 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:58 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:58 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:58 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:58 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:58 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:58 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:58 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:58 +05:30:   errno: -98,
+2026-11-26 00:00:58 +05:30:   syscall: 'listen',
+2026-11-26 00:00:58 +05:30:   address: '::',
+2026-11-26 00:00:58 +05:30:   port: 8788
+2026-11-26 00:00:58 +05:30: }
+2026-11-26 00:00:58 +05:30: 
+2026-11-26 00:00:58 +05:30: Node.js v26.13.0
+2026-11-26 00:00:58 +05:30: node:events:505
+2026-11-26 00:00:58 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:58 +05:30:     ^
+2026-11-26 00:00:58 +05:30: 
+2026-11-26 00:00:58 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:58 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:58 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:58 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:58 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:58 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:58 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:58 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:58 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:58 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:58 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:58 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:58 +05:30:   errno: -98,
+2026-11-26 00:00:58 +05:30:   syscall: 'listen',
+2026-11-26 00:00:58 +05:30:   address: '::',
+2026-11-26 00:00:58 +05:30:   port: 8788
+2026-11-26 00:00:58 +05:30: }
+2026-11-26 00:00:58 +05:30: 
+2026-11-26 00:00:58 +05:30: Node.js v26.13.0
+2026-11-26 00:00:59 +05:30: node:events:505
+2026-11-26 00:00:59 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:59 +05:30:     ^
+2026-11-26 00:00:59 +05:30: 
+2026-11-26 00:00:59 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:59 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:59 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:59 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:59 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:59 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:59 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:59 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:59 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:59 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:59 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:59 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:59 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:59 +05:30:   errno: -98,
+2026-11-26 00:00:59 +05:30:   syscall: 'listen',
+2026-11-26 00:00:59 +05:30:   address: '::',
+2026-11-26 00:00:59 +05:30:   port: 8788
+2026-11-26 00:00:59 +05:30: }
+2026-11-26 00:00:59 +05:30: 
+2026-11-26 00:00:59 +05:30: Node.js v26.13.0
+2026-11-26 00:00:59 +05:30: node:events:505
+2026-11-26 00:00:59 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:00:59 +05:30:     ^
+2026-11-26 00:00:59 +05:30: 
+2026-11-26 00:00:59 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:00:59 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:00:59 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:00:59 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:00:59 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:00:59 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:00:59 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:00:59 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:00:59 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:00:59 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:00:59 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:00:59 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:00:59 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:00:59 +05:30:   errno: -98,
+2026-11-26 00:00:59 +05:30:   syscall: 'listen',
+2026-11-26 00:00:59 +05:30:   address: '::',
+2026-11-26 00:00:59 +05:30:   port: 8788
+2026-11-26 00:00:59 +05:30: }
+2026-11-26 00:00:59 +05:30: 
+2026-11-26 00:00:59 +05:30: Node.js v26.13.0
+2026-11-26 00:01:00 +05:30: node:events:505
+2026-11-26 00:01:00 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:00 +05:30:     ^
+2026-11-26 00:01:00 +05:30: 
+2026-11-26 00:01:00 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:00 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:00 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:00 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:00 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:00 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:00 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:00 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:00 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:00 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:00 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:00 +05:30:   errno: -98,
+2026-11-26 00:01:00 +05:30:   syscall: 'listen',
+2026-11-26 00:01:00 +05:30:   address: '::',
+2026-11-26 00:01:00 +05:30:   port: 8788
+2026-11-26 00:01:00 +05:30: }
+2026-11-26 00:01:00 +05:30: 
+2026-11-26 00:01:00 +05:30: Node.js v26.13.0
+2026-11-26 00:01:00 +05:30: node:events:505
+2026-11-26 00:01:00 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:00 +05:30:     ^
+2026-11-26 00:01:00 +05:30: 
+2026-11-26 00:01:00 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:00 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:00 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:00 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:00 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:00 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:00 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:00 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:00 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:00 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:00 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:00 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:00 +05:30:   errno: -98,
+2026-11-26 00:01:00 +05:30:   syscall: 'listen',
+2026-11-26 00:01:00 +05:30:   address: '::',
+2026-11-26 00:01:00 +05:30:   port: 8788
+2026-11-26 00:01:00 +05:30: }
+2026-11-26 00:01:00 +05:30: 
+2026-11-26 00:01:00 +05:30: Node.js v26.13.0
+2026-11-26 00:01:01 +05:30: node:events:505
+2026-11-26 00:01:01 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:01 +05:30:     ^
+2026-11-26 00:01:01 +05:30: 
+2026-11-26 00:01:01 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:01 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:01 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:01 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:01 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:01 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:01 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:01 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:01 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:01 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:01 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:01 +05:30:   errno: -98,
+2026-11-26 00:01:01 +05:30:   syscall: 'listen',
+2026-11-26 00:01:01 +05:30:   address: '::',
+2026-11-26 00:01:01 +05:30:   port: 8788
+2026-11-26 00:01:01 +05:30: }
+2026-11-26 00:01:01 +05:30: 
+2026-11-26 00:01:01 +05:30: Node.js v26.13.0
+2026-11-26 00:01:01 +05:30: node:events:505
+2026-11-26 00:01:01 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:01 +05:30:     ^
+2026-11-26 00:01:01 +05:30: 
+2026-11-26 00:01:01 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:01 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:01 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:01 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:01 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:01 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:01 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:01 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:01 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:01 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:01 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:01 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:01 +05:30:   errno: -98,
+2026-11-26 00:01:01 +05:30:   syscall: 'listen',
+2026-11-26 00:01:01 +05:30:   address: '::',
+2026-11-26 00:01:01 +05:30:   port: 8788
+2026-11-26 00:01:01 +05:30: }
+2026-11-26 00:01:01 +05:30: 
+2026-11-26 00:01:01 +05:30: Node.js v26.13.0
+2026-11-26 00:01:02 +05:30: node:events:505
+2026-11-26 00:01:02 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:02 +05:30:     ^
+2026-11-26 00:01:02 +05:30: 
+2026-11-26 00:01:02 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:02 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:02 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:02 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:02 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:02 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:02 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:02 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:02 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:02 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:02 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:02 +05:30:   errno: -98,
+2026-11-26 00:01:02 +05:30:   syscall: 'listen',
+2026-11-26 00:01:02 +05:30:   address: '::',
+2026-11-26 00:01:02 +05:30:   port: 8788
+2026-11-26 00:01:02 +05:30: }
+2026-11-26 00:01:02 +05:30: 
+2026-11-26 00:01:02 +05:30: Node.js v26.13.0
+2026-11-26 00:01:02 +05:30: node:events:505
+2026-11-26 00:01:02 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:02 +05:30:     ^
+2026-11-26 00:01:02 +05:30: 
+2026-11-26 00:01:02 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:02 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:02 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:02 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:02 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:02 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:02 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:02 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:02 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:02 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:02 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:02 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:02 +05:30:   errno: -98,
+2026-11-26 00:01:02 +05:30:   syscall: 'listen',
+2026-11-26 00:01:02 +05:30:   address: '::',
+2026-11-26 00:01:02 +05:30:   port: 8788
+2026-11-26 00:01:02 +05:30: }
+2026-11-26 00:01:02 +05:30: 
+2026-11-26 00:01:02 +05:30: Node.js v26.13.0
+2026-11-26 00:01:03 +05:30: node:events:505
+2026-11-26 00:01:03 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:03 +05:30:     ^
+2026-11-26 00:01:03 +05:30: 
+2026-11-26 00:01:03 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:03 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:03 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:03 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:03 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:03 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:03 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:03 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:03 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:03 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:03 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:03 +05:30:   errno: -98,
+2026-11-26 00:01:03 +05:30:   syscall: 'listen',
+2026-11-26 00:01:03 +05:30:   address: '::',
+2026-11-26 00:01:03 +05:30:   port: 8788
+2026-11-26 00:01:03 +05:30: }
+2026-11-26 00:01:03 +05:30: 
+2026-11-26 00:01:03 +05:30: Node.js v26.13.0
+2026-11-26 00:01:03 +05:30: node:events:505
+2026-11-26 00:01:03 +05:30:     throw er; // Unhandled 'error' event
+2026-11-26 00:01:03 +05:30:     ^
+2026-11-26 00:01:03 +05:30: 
+2026-11-26 00:01:03 +05:30: Error: listen EADDRINUSE: address already in use :::8788
+2026-11-26 00:01:03 +05:30:     at Server.setupListenHandle [as _listen2] (node:net:2390:16)
+2026-11-26 00:01:03 +05:30:     at listenInCluster (node:net:2499:12)
+2026-11-26 00:01:03 +05:30:     at Server.listen (node:net:2624:7)
+2026-11-26 00:01:03 +05:30:     at file:///home/rtabykarm/Desktop/rta-by-karmenp/apps/flux/src/server.js:10:8
+2026-11-26 00:01:03 +05:30:     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+2026-11-26 00:01:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-26 00:01:03 +05:30:     at async node:internal/modules/esm/loader:650:26
+2026-11-26 00:01:03 +05:30:     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+2026-11-26 00:01:03 +05:30: Emitted 'error' event on Server instance at:
+2026-11-26 00:01:03 +05:30:     at emitErrorNT (node:net:2478:8)
+2026-11-26 00:01:03 +05:30:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+2026-11-26 00:01:03 +05:30:   code: 'EADDRINUSE',
+2026-11-26 00:01:03 +05:30:   errno: -98,
+2026-11-26 00:01:03 +05:30:   syscall: 'listen',
+2026-11-26 00:01:03 +05:30:   address: '::',
+2026-11-26 00:01:03 +05:30:   port: 8788
+2026-11-26 00:01:03 +05:30: }
+2026-11-26 00:01:03 +05:30: 
+2026-11-26 00:01:03 +05:30: Node.js v26.13.0

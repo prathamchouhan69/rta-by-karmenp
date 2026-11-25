@@ -1,0 +1,172 @@
+# RTA by KARM - Prometheus Monitoring Configuration
+# Place at /etc/prometheus/prometheus.yml
+
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+  external_labels:
+    cluster: 'rta-karm'
+    environment: 'production'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter (host metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          instance: 'rta-karm-host'
+
+  # cAdvisor (container metrics)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          instance: 'rta-karm-containers'
+
+  # RTA Flux Backend
+  - job_name: 'rta-flux'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['flux:8788']
+        labels:
+          service: 'flux'
+          component: 'ai-backend'
+    metrics_path: /metrics
+    scrape_interval: 15s
+
+  # RTA Gateway
+  - job_name: 'rta-gateway'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['gateway:8787']
+        labels:
+          service: 'gateway'
+          component: 'api-gateway'
+    metrics_path: /metrics
+    scrape_interval: 15s
+
+  # Nginx (web)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
+        labels:
+          service: 'nginx'
+          component: 'web-proxy'
+
+  # PM2 Process Manager
+  - job_name: 'pm2'
+    static_configs:
+      - targets: ['pm2-exporter:9209']
+        labels:
+          service: 'pm2'
+          component: 'process-manager'
+
+  # Blackbox Exporter (endpoint probing)
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - https://rta-karm.com
+          - https://rta-karm.com/health
+          - https://api.rta-karm.com/health
+          - https://rta-karm.com:8787/readyz
+          - https://rta-karm.com:8788/health
+        labels:
+          service: 'endpoints'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+# Alerting rules (referenced in rule_files)
+# Create /etc/prometheus/rules/rta-karm.yml with:
+#
+# groups:
+#   - name: rta-karm-alerts
+#     rules:
+#       - alert: ServiceDown
+#         expr: up == 0
+#         for: 1m
+#         labels:
+#           severity: critical
+#         annotations:
+#           summary: "Service {{ $labels.job }} is down"
+#           description: "{{ $labels.job }} has been down for more than 1 minute."
+#
+#       - alert: HighErrorRate
+#         expr: |
+#           sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+#         for: 2m
+#         labels:
+#           severity: warning
+#         annotations:
+#           summary: "High error rate on {{ $labels.job }}"
+#           description: "Error rate is above 5% for {{ $labels.job }}"
+#
+#       - alert: HighLatency
+#         expr: |
+#           histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job)) > 2
+#         for: 5m
+#         labels:
+#           severity: warning
+#         annotations:
+#           summary: "High latency on {{ $labels.job }}"
+#           description: "95th percentile latency is above 2 seconds for {{ $labels.job }}"
+#
+#       - alert: HighMemoryUsage
+#         expr: |
+#           (container_memory_usage_bytes / container_spec_memory_limit_bytes) > 0.85
+#         for: 5m
+#         labels:
+#           severity: warning
+#         annotations:
+#           summary: "High memory usage on {{ $labels.container }}"
+#           description: "Memory usage is above 85% for {{ $labels.container }}"
+#
+#       - alert: DiskSpaceLow
+#         expr: |
+#           (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+#         for: 5m
+#         labels:
+#           severity: critical
+#         annotations:
+#           summary: "Disk space low on {{ $labels.instance }}"
+#           description: "Less than 10% disk space remaining on {{ $labels.instance }}"
+#
+#       - alert: FluxModelErrors
+#         expr: |
+#           increase(flux_model_errors_total[5m]) > 10
+#         for: 2m
+#         labels:
+#           severity: warning
+#         annotations:
+#           summary: "Flux model errors spike"
+#           description: "Flux model errors increased by more than 10 in 5 minutes"
+#
+#       - alert: ZohoSyncFailures
+#         expr: |
+#           increase(zoho_sync_failures_total[5m]) > 5
+#         for: 2m
+#         labels:
+#           severity: warning
+#         annotations:
+#           summary: "Zoho sync failures spike"
+#           description: "Zoho sync failures increased by more than 5 in 5 minutes"
