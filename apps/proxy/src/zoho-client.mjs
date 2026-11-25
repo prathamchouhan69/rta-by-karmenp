@@ -152,7 +152,7 @@ export class ZohoBooksClient {
       }
       const payload = await this.readJson(response);
       const isRetryableMethod = method === 'GET' || (method === 'POST' && body && typeof body === 'object' && body.idempotencyKey);
-      if (response.status === 401 && attempt === 0) {
+      if (response.status === 401 && attempt === 0 && isRetryableMethod) {
         this.accessToken = null;
         continue;
       }

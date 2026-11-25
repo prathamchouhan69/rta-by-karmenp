@@ -44,11 +44,13 @@ export {
   IconExport,
   type KarmIconProps,
 } from './Icons';
+export { InstallCoach } from './InstallCoach';
 export { LivesInZohoBooksTile } from './LivesInZohoBooksTile';
 export { LogoParticle } from './LogoParticle';
 export { MapTiles } from './MapTiles';
 export { PerspectiveCarousel } from './PerspectiveCarousel';
 export { RearrangeableMetricCard } from './RearrangeableMetricCard';
 export { ReferenceVideoPlayer } from './ReferenceVideoPlayer';
+export { SelfTestScreen } from '../screens/SelfTestScreen';
 export { SeverityDonut } from './SeverityDonut';
 export { TardigradeOfflineBanner } from './TardigradeOfflineBanner';

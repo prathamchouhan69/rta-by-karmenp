@@ -10,13 +10,13 @@ import { REFERENCES, ReferenceItem } from '../data/references';
 import { CHARTS, ChartItem } from '../data/charts';
 
 export type ScreenType =
-  | 'now' | 'ledger' | 'harvest' | 'routes' | 'terrain' | 'gates' | 'aura' | 'ecosystems' | 'world'
+  | 'dashboard' | 'now' | 'ledger' | 'harvest' | 'routes' | 'terrain' | 'gates' | 'aura' | 'ecosystems' | 'world'
   | 'login' | 'home' | 'business_os' | 'nature_library' | 'reference_detail' | 'my_selections'
   | 'projects' | 'project_detail' | 'tasks' | 'task_detail' | 'accounting' | 'invoice_detail'
   | 'files' | 'file_detail' | 'transportation' | 'fleet_detail' | 'human_resources' | 'employee_detail'
-  | 'relationships' | 'client_detail' | 'charts_library' | 'chart_detail' | 'notifications' | 'search' | 'settings' | 'lock';
+  | 'relationships' | 'client_detail' | 'charts_library' | 'chart_detail' | 'notifications' | 'search' | 'settings' | 'lock' | 'selftest' | 'flux-ai';
 
-export type ThemeMode = 'night' | 'classic' | 'day';
+export type ThemeMode = 'night' | 'classic' | 'day' | 'signal' | 'studio';
 
 export interface AppContextType {
   currentScreen: ScreenType;
@@ -67,6 +67,7 @@ export interface AppContextType {
   charts: ChartItem[];
   reducedMotion: boolean;
   setReducedMotion: (val: boolean) => void;
+  isStandalone: boolean;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -81,9 +82,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [themeMode, setThemeModeState] = useState<ThemeMode>(() => {
     try {
       const saved = localStorage.getItem('karm_theme_mode');
-      return (saved as ThemeMode) || 'night';
+      return (saved as ThemeMode) || 'signal';
     } catch {
-      return 'night';
+      return 'signal';
     }
   });
 
@@ -137,9 +138,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
   const [offlineQueueCount, setOfflineQueueCount] = useState<number>(0);
   const [isSpotlightOpen, setIsSpotlightOpen] = useState<boolean>(false);
-  const [isLocked, setIsLocked] = useState<boolean>(true);
+  const [isLocked, setIsLocked] = useState<boolean>(false);
   const [isIslandExpanded, setIsIslandExpanded] = useState<boolean>(false);
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
+  const [isStandalone, setIsStandalone] = useState<boolean>(() => window.matchMedia('(display-mode: standalone)').matches);
   const autoLockTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const AUTO_LOCK_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -451,7 +453,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         references: REFERENCES,
         charts: CHARTS,
         reducedMotion,
-        setReducedMotion
+        setReducedMotion,
+        isStandalone
       }}
     >
       {children}

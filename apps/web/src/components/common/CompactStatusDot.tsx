@@ -23,7 +23,7 @@ const STATUS_STYLES = {
   idle: 'bg-slate-500',
   active: 'bg-cyan-400 shadow-[0_0_8px_rgba(0,242,254,0.6)]',
   pending: 'bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.6)]',
-  success: 'bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.6)]',
+  success: 'bg-sky-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]',
   error: 'bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.6)]',
 };
 

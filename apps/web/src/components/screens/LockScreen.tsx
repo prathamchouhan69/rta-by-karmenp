@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
+import { IconLock, IconUnlock } from '../common/Icons';
 
 export const LockScreen: React.FC = () => {
   const { 
@@ -28,6 +29,9 @@ export const LockScreen: React.FC = () => {
   const AUTO_LOCK_MS = 5 * 60 * 1000;
   const MAX_ATTEMPTS = 5;
   const LOCKOUT_DURATION = 60 * 1000; // 1 minute
+
+  // In production, this would be a securely stored hash
+  const VALID_PASSCODE = '1234'; // In production, use secure hash comparison
 
   const resetAutoLockTimer = useCallback(() => {
     if (autoLockTimeoutRef.current) clearTimeout(autoLockTimeoutRef.current);
@@ -65,27 +69,30 @@ export const LockScreen: React.FC = () => {
     };
   }, [isLockedOut, lockoutTimer]);
 
-  // Clear all caches and data on lock
-  const clearAppData = useCallback(() => {
+  // Clear sensitive caches and data on lock
+  const clearSensitiveData = useCallback(() => {
     try {
+      // Clear sensitive app data but preserve user preferences
       localStorage.removeItem('karm_notes');
       localStorage.removeItem('karm_selections');
-      localStorage.removeItem('karm_theme_mode');
-      // Clear any other app-specific data
+      // Preserve theme preference
+      // localStorage.removeItem('karm_theme_mode'); // Keep theme
+      // Clear any other sensitive app-specific data
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('karm_')) localStorage.removeItem(key);
+        if (key.startsWith('karm_') && !key.includes('theme')) {
+          localStorage.removeItem(key);
+        }
       });
     } catch (e) {
-      console.warn('Failed to clear localStorage on lock:', e);
+      // Failed to clear sensitive data on lock - silent fail in production
     }
   }, []);
 
   const handleUnlock = useCallback(() => {
     if (isLockedOut) return;
     
-    const validCode = '1234'; // In production, this would be stored securely
-    
-    if (unlockCode === validCode) {
+    // In production, use secure hash comparison
+    if (unlockCode === VALID_PASSCODE) {
       setIsLocked(false);
       setUnlockCode('');
       setAttempts(0);

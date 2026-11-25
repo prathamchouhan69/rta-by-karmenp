@@ -4,7 +4,7 @@ import {
 } from 'recharts';
 
 const mockAgingData = [
-  { bucket: 'Current', amount: 84200, color: '#10b981' },
+  { bucket: 'Current', amount: 84200, color: '#22d3ee' },
   { bucket: '1-30 Days', amount: 32500, color: '#38bdf8' },
   { bucket: '31-60 Days', amount: 16800, color: '#f59e0b' },
   { bucket: '61-90 Days', amount: 9400, color: '#f97316' },
@@ -40,7 +40,7 @@ export const ReceivablesAgingChart: React.FC<{ height?: number }> = ({ height = 
                 backgroundColor: '#07090e',
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '12px',
-                fontFamily: 'monospace',
+                fontFamily: 'var(--font-numeric)',
                 fontSize: '11px',
                 color: '#fff'
               }}

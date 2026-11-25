@@ -54,7 +54,7 @@ export const TerrainScreen: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="type-label text-emerald-400">CANONICAL SECTION 5</span>
+            <span className="type-label text-sky-400">CANONICAL SECTION 5</span>
             <span className="text-[10px] text-slate-500 font-mono">/</span>
             <span className="text-[10px] text-slate-400 font-mono">RAW MATERIALS & STOCKYARD</span>
           </div>
@@ -66,7 +66,7 @@ export const TerrainScreen: React.FC = () => {
 
         <button
           onClick={() => {}}
-          className="type-button px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-semibold text-xs transition-all active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.3)] self-start md:self-auto"
+          className="type-button px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-black font-semibold text-xs transition-all active:scale-95 shadow-[0_0_15px_rgba(0,242,254,0.3)] self-start md:self-auto"
         >
           + Draft Material Indent
         </button>

@@ -1,241 +1,145 @@
-import React, { useEffect } from 'react';
-import { AppProvider, useApp, ScreenType } from './context/AppContext';
-import { AppHeader, AppNavigation } from './components/layout/AppHeader';
-import { DynamicIsland } from './components/layout/DynamicIsland';
-import { FluxLoadingParticle } from './components/common/FluxLoadingParticle';
-import { LockScreen } from './components/screens/LockScreen';
-
-// Screens
-import { LoginScreen } from './components/screens/LoginScreen';
-import { HomeCommandCenter } from './components/screens/HomeCommandCenter';
-import { NowScreen } from './components/screens/NowScreen';
-import { AccountingScreen } from './components/screens/AccountingScreen';
-import { InvoiceDetail } from './components/screens/InvoiceDetail';
-import { ProjectsScreen } from './components/screens/ProjectsScreen';
-import { ProjectDetail } from './components/screens/ProjectDetail';
-import { TasksScreen } from './components/screens/TasksScreen';
-import { TaskDetail } from './components/screens/TaskDetail';
-import { FilesScreen } from './components/screens/FilesScreen';
-import { FileDetail } from './components/screens/FileDetail';
-import { TransportationScreen } from './components/screens/TransportationScreen';
-import { FleetDetail } from './components/screens/FleetDetail';
-import { HRScreen } from './components/screens/HRScreen';
-import { EmployeeDetail } from './components/screens/EmployeeDetail';
-import { RelationshipsScreen } from './components/screens/RelationshipsScreen';
-import { ClientDetail } from './components/screens/ClientDetail';
-import { NatureLibraryScreen } from './components/screens/NatureLibraryScreen';
-import { ReferenceDetail } from './components/screens/ReferenceDetail';
-import { ChartsLibraryScreen } from './components/screens/ChartsLibraryScreen';
-import { ChartDetail } from './components/screens/ChartDetail';
-import { MySelectionsScreen } from './components/screens/MySelectionsScreen';
-import { NotificationsScreen } from './components/screens/NotificationsScreen';
-import { SearchScreen } from './components/screens/SearchScreen';
-import { SettingsScreen } from './components/screens/SettingsScreen';
-import { BusinessOSScreen } from './components/screens/BusinessOSScreen';
-import { TerrainScreen } from './components/screens/TerrainScreen';
-import { GatesScreen } from './components/screens/GatesScreen';
-import { AuraScreen } from './components/screens/AuraScreen';
-import { WorldScreen } from './components/screens/WorldScreen';
-
-// Navigation
-import { StarfishRadialFan } from './components/navigation/StarfishRadialFan';
-import { TardigradeOfflineBanner } from './components/common/TardigradeOfflineBanner';
-import { MobileBottomBar } from './components/layout/MobileBottomBar';
+import React from 'react';
+import { AppProvider, useApp } from './context/AppContext';
+import { AuthProvider, useAuth } from './app/auth';
+import { RouterProvider, useRouter } from './app/router';
+import { WorkspaceProvider } from './app/workspace';
+import { Shell } from './app/Shell';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 
-const ScreenRouter: React.FC = () => {
-  const { 
-    currentScreen, 
-    isSpotlightOpen, 
-    setIsSpotlightOpen, 
-    reducedMotion, 
-    themeMode,
-    zohoScanState,
-    savingStatus,
-    isLocked
-  } = useApp();
+import { LoginScreen } from './app/screens/Login';
+import { CommandDeckScreen } from './app/screens/CommandDeck';
+import { DashboardScreen } from './app/screens/Dashboard';
+import { MoneyScreen } from './app/screens/Money';
+import { ProjectsScreen } from './app/screens/Projects';
+import { FleetScreen } from './app/screens/Fleet';
+import { MaterialsScreen } from './app/screens/Materials';
+import { GatesScreen } from './app/screens/Gates';
+import { PeopleScreen } from './app/screens/People';
+import { ClientsScreen } from './app/screens/Clients';
+import { DocumentsScreen } from './app/screens/Documents';
+import { FluxScreen } from './app/screens/Flux';
+import { SettingsScreen } from './app/screens/Settings';
 
-  // Handle Cmd+K global spotlight
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setIsSpotlightOpen(!isSpotlightOpen);
-      }
-      if (e.key === 'Escape' && isSpotlightOpen) {
-        setIsSpotlightOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isSpotlightOpen, setIsSpotlightOpen]);
-
-  // If on login screen, render it full view
-  if (currentScreen === 'login') {
-    return <LoginScreen />;
-  }
-
-  const renderActiveScreen = () => {
-    switch (currentScreen) {
-      // 9 Canonical Sections (Hybrid Names)
-      case 'now':
-        return <NowScreen />;
-      case 'ledger':
-        return <AccountingScreen />;
-      case 'harvest':
-        return <ProjectsScreen />;
-      case 'routes':
-        return <TransportationScreen />;
-      case 'terrain':
-        return <TerrainScreen />;
-      case 'gates':
-        return <GatesScreen />;
-      case 'aura':
-        return <AuraScreen />;
-      case 'ecosystems':
-        return <RelationshipsScreen />;
-      case 'world':
-        // Embedded into Now and real operating screens
-        return <NowScreen />;
-
-      // Additional Modules & Workflows
-      case 'home':
-        return <HomeCommandCenter />;
-      case 'accounting':
-        return <AccountingScreen />;
-      case 'invoice_detail':
-        return <InvoiceDetail />;
-      case 'projects':
-        return <ProjectsScreen />;
-      case 'project_detail':
-        return <ProjectDetail />;
-      case 'tasks':
-        return <TasksScreen />;
-      case 'task_detail':
-        return <TaskDetail />;
-      case 'files':
-        return <FilesScreen />;
-      case 'file_detail':
-        return <FileDetail />;
-      case 'transportation':
-        return <TransportationScreen />;
-      case 'fleet_detail':
-        return <FleetDetail />;
-      case 'human_resources':
-        return <HRScreen />;
-      case 'employee_detail':
-        return <EmployeeDetail />;
-      case 'relationships':
-        return <RelationshipsScreen />;
-      case 'client_detail':
-        return <ClientDetail />;
-      case 'nature_library':
-        return <TerrainScreen />;
-      case 'reference_detail':
-        return <NowScreen />;
-      case 'charts_library':
-        return <AccountingScreen />;
-      case 'chart_detail':
-        return <AccountingScreen />;
-      case 'my_selections':
-        return <MySelectionsScreen />;
-      case 'notifications':
-        return <NotificationsScreen />;
-      case 'search':
-        return <SearchScreen />;
-      case 'settings':
-        return <SettingsScreen />;
-      case 'business_os':
-        return <BusinessOSScreen />;
-      default:
-        return <NowScreen />;
-    }
-  };
-
-  const isFluxActive = zohoScanState === 'scanning' || zohoScanState === 'syncing';
-  const isSaving = savingStatus === 'saving';
-
+const BootSplash: React.FC = () => {
+  const { themeMode } = useApp();
+  const studio = themeMode === 'studio' || themeMode === 'day';
   return (
-    <div 
-      data-theme={themeMode}
-      className={`min-h-screen bg-[#05070a] text-slate-100 flex flex-col relative selection:bg-cyan-500 selection:text-black ${reducedMotion ? 'reduce-motion' : ''}`}
+    <div
+      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6"
+      style={{ background: studio ? '#eee8f5' : '#07070b', color: studio ? '#221a2e' : '#f6f3ec' }}
+      role="status"
+      aria-live="polite"
+      aria-label="Opening the RTA by KARM workspace"
     >
-      {/* Official KARM Nautilus Logo Watermark at exactly 6.5% Opacity */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center overflow-hidden" 
-        aria-hidden="true"
-      >
-        <div className="absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-cyan-400/[0.055] blur-[140px]" />
-        <div className="absolute right-[-10%] top-1/3 h-[420px] w-[420px] rounded-full bg-indigo-500/[0.055] blur-[130px]" />
-        <div className="absolute bottom-[-18%] left-[-8%] h-[420px] w-[420px] rounded-full bg-[#d8b26a]/[0.035] blur-[130px]" />
-        <img 
-          src="/karm-logo-original.png" 
-          alt="" 
-          className="w-[500px] md:w-[700px] lg:w-[900px] max-w-none select-none opacity-[0.05] filter contrast-125" 
-        />
-      </div>
-
-      {/* Lock Screen Overlay */}
-      {isLocked && <LockScreen />}
-
-      {/* Main Interactive Cockpit Stack */}
-      <div className="relative z-10 flex flex-col flex-1 min-h-screen">
-        {/* iPhone Dynamic Island at top center */}
-        <DynamicIsland />
-
-        {/* Flux Loading Particle (Video 13) - Shows during active Flux states */}
-        {(isFluxActive || isSaving) && (
-          <div className="fixed top-20 md:top-24 left-1/2 -translate-x-1/2 z-40 pointer-events-none" aria-hidden="true">
-            <FluxLoadingParticle 
-              size={48} 
-              particleCount={12} 
-              isActive={isFluxActive || isSaving}
-              className="mx-auto"
-            />
-            <p className="text-center text-[10px] font-mono text-cyan-400 mt-1">
-              {isFluxActive ? 'Flux neural core active' : 'Saving...'}
-            </p>
-          </div>
-        )}
-
-        {/* Main Sticky Header */}
-        <AppHeader />
-
-        {/* Main Layout Body: Left Sidebar + Content Area */}
-        <div className="flex-1 flex flex-col lg:flex-row w-full max-w-[1700px] mx-auto">
-          <AppNavigation />
-
-          <main className="flex-1 p-4 pb-28 md:p-6 md:pb-28 lg:p-8 lg:pb-10 overflow-y-auto">
-            <div key={currentScreen} className="karm-reveal">
-              {renderActiveScreen()}
-            </div>
-          </main>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-80"
+        style={{
+          background: studio
+            ? 'radial-gradient(ellipse 70% 60% at 50% 0%, rgba(109,74,255,0.18), transparent 62%)'
+            : 'radial-gradient(ellipse 70% 60% at 50% 0%, rgba(34,211,238,0.14), transparent 62%)',
+        }}
+      />
+      <div className="relative flex flex-col items-center text-center">
+        <div
+          className="relative flex h-20 w-20 items-center justify-center rounded-[26px] border"
+          style={{
+            borderColor: studio ? 'rgba(51,30,82,0.14)' : 'rgba(255,255,255,0.1)',
+            background: studio ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.04)',
+          }}
+        >
+          <img src="/karm-symbol-white.png" alt="" className="h-12 w-12 object-contain" />
+          <span
+            className="absolute -right-1 -top-1 h-2 w-2 rounded-full"
+            style={{ background: studio ? '#6d4aff' : '#22d3ee', boxShadow: '0 0 12px rgba(34,211,238,0.5)' }}
+          />
         </div>
-
-        {/* Starfish Radial Fan Floating Controller (Bottom-Right) */}
-        <StarfishRadialFan />
-
-        {/* Mobile Thumb Navigation Dock */}
-        <MobileBottomBar />
-
-        {/* Tardigrade Cryptobiosis Sentinel & Offline Simulation */}
-        <TardigradeOfflineBanner />
-
-        {/* Cmd+K Spotlight Modal */}
-        {isSpotlightOpen && <SearchScreen />}
+        <div className="mt-6 text-[19px] font-extrabold tracking-[-0.05em]">
+          RTA <span className="font-medium opacity-60">by</span> KARM
+        </div>
+        <div
+          className="mt-1.5 font-mono text-[8px] uppercase tracking-[0.24em]"
+          style={{ color: studio ? '#6d4aff' : '#22d3ee' }}
+        >
+          living business operating system
+        </div>
+        <div className="mt-8 h-[2px] w-40 overflow-hidden rounded-full" style={{ background: studio ? 'rgba(51,30,82,0.1)' : 'rgba(255,255,255,0.08)' }}>
+          <span
+            className="block h-full w-1/3 rounded-full"
+            style={{
+              background: studio ? '#6d4aff' : '#22d3ee',
+              animation: 'k-loading 1.4s ease-in-out infinite',
+            }}
+          />
+        </div>
+        <p className="mt-4 text-[10px] opacity-50">Opening the operating deck…</p>
       </div>
     </div>
   );
 };
 
-export const App: React.FC = () => {
+const ScreenSwitch: React.FC = () => {
+  const { route } = useRouter();
+
+  switch (route.key) {
+    case 'dashboard':
+      return <DashboardScreen />;
+    case 'money':
+      return <MoneyScreen />;
+    case 'projects':
+      return <ProjectsScreen />;
+    case 'fleet':
+      return <FleetScreen />;
+    case 'materials':
+      return <MaterialsScreen />;
+    case 'gates':
+      return <GatesScreen />;
+    case 'people':
+      return <PeopleScreen />;
+    case 'clients':
+      return <ClientsScreen />;
+    case 'documents':
+      return <DocumentsScreen />;
+    case 'flux':
+      return <FluxScreen />;
+    case 'settings':
+      return <SettingsScreen />;
+    case 'today':
+    case 'login':
+    default:
+      return <CommandDeckScreen />;
+  }
+};
+
+const AuthenticatedWorkspace: React.FC = () => {
+  const { reducedMotion } = useApp();
   return (
-    <ErrorBoundary>
-      <AppProvider>
-        <ScreenRouter />
-      </AppProvider>
-    </ErrorBoundary>
+    <WorkspaceProvider>
+      <Shell>
+        <div key="workspace" className={reducedMotion ? 'reduce-motion' : ''}>
+          <ScreenSwitch />
+        </div>
+      </Shell>
+    </WorkspaceProvider>
   );
 };
+
+const Gate: React.FC = () => {
+  const { status } = useAuth();
+  if (status === 'booting') return <BootSplash />;
+  if (status !== 'authenticated') return <LoginScreen />;
+  return <AuthenticatedWorkspace />;
+};
+
+export const App: React.FC = () => (
+  <ErrorBoundary>
+    <AppProvider>
+      <AuthProvider>
+        <RouterProvider>
+          <Gate />
+        </RouterProvider>
+      </AuthProvider>
+    </AppProvider>
+  </ErrorBoundary>
+);
 
 export default App;

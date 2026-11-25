@@ -268,8 +268,8 @@ export const SearchScreen: React.FC = () => {
             {/* Tasks */}
             {matchingTasks.length > 0 && (
               <div className="space-y-1.5">
-                <span className="type-label text-emerald-400 flex items-center gap-1.5">
-                  <IconTasks size={13} color="#10b981" /> TASKS ({matchingTasks.length})
+                <span className="type-label text-sky-400 flex items-center gap-1.5">
+                  <IconTasks size={13} color="#22d3ee" /> TASKS ({matchingTasks.length})
                 </span>
                 {matchingTasks.map(t => (
                   <div

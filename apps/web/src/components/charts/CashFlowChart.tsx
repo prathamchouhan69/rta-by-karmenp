@@ -61,7 +61,7 @@ export const CashFlowChart: React.FC<{ height?: number }> = ({ height = 260 }) =
                 backgroundColor: '#07090e',
                 border: '1px solid rgba(0,242,254,0.3)',
                 borderRadius: '12px',
-                fontFamily: 'monospace',
+                fontFamily: 'var(--font-numeric)',
                 fontSize: '11px',
                 color: '#fff'
               }}

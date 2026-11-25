@@ -4,7 +4,7 @@ import {
   IconHome, IconAccounting, IconProjects, IconTasks, IconFiles,
   IconFleet, IconHR, IconCRM, IconNature, IconCharts,
   IconSearch, IconBell, IconSettings, IconTeslaCoil, IconFlux,
-  IconApprovals, IconInventory, IconLifeScan
+  IconApprovals, IconInventory, IconLifeScan, IconDashboard
 } from '../common/Icons';
 
 export const AppHeader: React.FC = () => {
@@ -144,6 +144,7 @@ export const AppNavigation: React.FC = () => {
 
   // The 8 Pure Operating Business Modules (Zero Distractions / Connected Intelligence Embedded)
   const navItems: { screen: ScreenType; label: string; icon: React.ReactNode; badge?: string }[] = [
+    { screen: 'dashboard', label: 'Dashboard · Command Center', icon: <IconDashboard size={17} />, badge: 'P0' },
     { screen: 'now', label: 'Now · Action Inbox', icon: <IconFlux size={17} />, badge: 'Daily' },
     { screen: 'ledger', label: 'Ledger · Zoho Books', icon: <IconAccounting size={17} />, badge: 'P1' },
     { screen: 'harvest', label: 'Harvest · Projects', icon: <IconProjects size={17} />, badge: 'P2' },

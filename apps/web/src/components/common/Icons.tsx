@@ -42,7 +42,7 @@ const resolveIconColor = (state?: KarmIconState, explicitColor?: string): string
     case 'warning':
       return '#f59e0b'; // Amber caution
     case 'success':
-      return '#38bdf8'; // Crisp Sky / Lapis (Non-green success state)
+      return '#22d3ee'; // Crisp Sky / Lapis — NO GREEN for success (Green Rule compliant)
     case 'flux-thinking':
       return '#00f2fe'; // Living pulse cyan
     case 'flux-responding':
@@ -725,6 +725,75 @@ export const IconFiles: React.FC<KarmIconProps> = ({
   );
 };
 
+/** Single File: Technical document with folded corner */
+export const IconFile: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'File',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M14 2.5H6C4.89543 2.5 4 3.39543 4 4.5V19.5C4 20.6046 4.89543 21.5 6 21.5H18C19.1046 21.5 20 20.6046 20 19.5V8.5L14 2.5Z" />
+      <path d="M14 2.5V8.5H20" />
+    </svg>
+  );
+};
+
+/** Download: Arrow down to tray */
+export const IconDownload: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Download',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+};
+
 /** Analytics & Charts Library: Multi-frequency waveform with coordinate anchors */
 export const IconCharts: React.FC<KarmIconProps> = ({
   size = 20,
@@ -1325,6 +1394,1326 @@ export const IconExport: React.FC<KarmIconProps> = ({
       <path d="M21 15V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V15" />
       <path d="M7 10L12 15L17 10" />
       <path d="M12 15V3" />
+    </svg>
+  );
+};
+export const IconDashboard: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Dashboard',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  );
+};
+
+/** Analytics / Charts */
+export const IconAnalytics: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Analytics',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M3 20.5H21" />
+      <path d="M5.5 17.5V12.5M10 17.5V8.5M14.5 17.5V14.5M19 17.5V5.5" strokeWidth={2} />
+      <path d="M5.5 10.5L10 6.5L14.5 11.5L19 3.5" strokeWidth={1.3} strokeDasharray="2 1" />
+      <circle cx="19" cy="3.5" r="1.5" fill={stroke} />
+    </svg>
+  );
+};
+
+/** Data Matrices / Grid */
+export const IconGrid: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Data Matrices',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  );
+};
+
+/** Systems / DNS */
+export const IconDns: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Systems',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 3v6M12 15v6M3 12h6M15 12h6" strokeWidth={2} />
+      <circle cx="12" cy="12" r="3" fill={stroke} fillOpacity={0.2} />
+    </svg>
+  );
+};
+
+/** Person / User */
+export const IconPerson: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Person',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+    </svg>
+  );
+};
+
+/** Power / Logout */
+export const IconPower: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Power',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 3v6" />
+      <path d="M9 12l3 3 3-3" strokeWidth={2} />
+    </svg>
+  );
+};
+
+/** Bolt / Lightning */
+export const IconBolt: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Lightning',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M13 2L3 14h9l-1 8 10-10h-9l1-8z" />
+    </svg>
+  );
+};
+
+/** Trending Up */
+export const IconTrendingUp: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Trending Up',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M23 6l-7 7-5-5-6 6" />
+    </svg>
+  );
+};
+
+/** Psychology / AI */
+export const IconPsychology: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Psychology / AI',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M12 2a10 10 0 1 0 10 10" />
+      <path d="M12 16v-4M12 8h.01" />
+      <path d="M16 12a4 4 0 1 1-8 0" />
+    </svg>
+  );
+};
+
+/** Lightbulb */
+export const IconLightbulb: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Lightbulb',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+      <path d="M12 2v6" />
+      <path d="M12 22v-6" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M8 14a4 4 0 1 1 8 0" />
+    </svg>
+  );
+};
+
+/** Auto Awesome / Magic */
+export const IconAutoAwesome: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Auto Awesome',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M12 2l2.5 7.5L22 9.5l-7 5 2 7.5L12 16.5l-7-5 7-5L2 9.5l7.5-2.5z" />
+    </svg>
+  );
+};
+
+/** Verified User */
+export const IconVerifiedUser: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Verified User',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+      <path d="M16 6l2 2 4-4" strokeWidth={2} />
+    </svg>
+  );
+};
+
+/** Arrow Upward */
+export const IconArrowUpward: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Arrow Upward',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M18 15L12 9L6 15" />
+      <path d="M12 3v18" strokeWidth={1.5} />
+    </svg>
+  );
+};
+
+/** More Vert */
+export const IconMoreVert: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'More Options',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <circle cx="12" cy="5" r="1.5" fill={stroke} />
+      <circle cx="12" cy="12" r="1.5" fill={stroke} />
+      <circle cx="12" cy="19" r="1.5" fill={stroke} />
+    </svg>
+  );
+};
+
+/** Arrow Forward */
+export const IconArrowForward: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Arrow Forward',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+  );
+};
+
+/** Notifications */
+export const IconNotifications: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Notifications',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M18 8.5C18 5.46243 15.3137 3 12 3C8.68629 3 6 5.46243 6 8.5C6 14.5 3.5 16.5 3.5 16.5H20.5C20.5 16.5 18 14.5 18 8.5Z" />
+      <path d="M13.73 20.5C13.35 21.16 12.72 21.6 12 21.6C11.28 21.6 10.65 21.16 10.27 20.5" />
+      <circle cx="12" cy="3" r="1" fill={stroke} />
+    </svg>
+  );
+};
+
+/** Terminal */
+export const IconTerminal: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Terminal',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M4 12l6 6 6-6" />
+      <path d="M4 12h16" />
+      <circle cx="20" cy="12" r="3" fill={stroke} fillOpacity={0.2} />
+    </svg>
+  );
+};
+export const IconArrowLeft: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Arrow Left',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+  );
+};
+
+/** Arrow Right */
+export const IconArrowRight: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Arrow Right',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M9 18l6-6-6-6" />
+    </svg>
+  );
+};
+
+/** Expand / Fullscreen */
+export const IconExpand: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Expand',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3" />
+    </svg>
+  );
+};
+export const IconMapPin: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Map Pin',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" fill={stroke} />
+    </svg>
+  );
+};
+
+/** Truck */
+export const IconTruck: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Truck',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+      <path d="M10 18h.01" />
+      <path d="M18 19h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 13.37 10H6a1 1 0 0 0-1 .924L4 17.4" />
+      <circle cx="17" cy="19" r="2" />
+      <circle cx="5" cy="19" r="2" />
+    </svg>
+  );
+};
+
+/** Building 2 */
+export const IconBuilding2: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Building',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+      <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+      <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+      <path d="M10 6h4" />
+      <path d="M10 10h4" />
+      <path d="M10 14h4" />
+      <path d="M10 18h4" />
+    </svg>
+  );
+};
+
+/** Lock State */
+export const IconLock: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Locked',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+};
+
+/** Unlock State */
+export const IconUnlock: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Unlocked',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      <path d="M12 17v-5" />
+      <path d="M9 14h6" />
+    </svg>
+  );
+};
+
+// --------------------------------------------------------------------------
+// ADDITIONAL MISSING ICONS FOR COMPLETE MODULE COVERAGE
+// --------------------------------------------------------------------------
+
+/** Messages / Communications: Speech bubble with telemetry pulse */
+export const IconMessages: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Messages',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+      <path d="M12 15v-6M9 12h6" strokeWidth={1.2} />
+    </svg>
+  );
+};
+
+/** Suppliers / Vendors: Factory with supply line */
+export const IconSuppliers: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Suppliers',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M3 20V10a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v10" />
+      <path d="M7 16v4M11 16v4M15 16v4" />
+      <path d="M17 14h6a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-6" />
+      <path d="M19 22v-4" strokeDasharray="2 2" />
+    </svg>
+  );
+};
+
+/** Reports / Analytics: Structured document with data hierarchy */
+export const IconReports: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Reports',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
+    </svg>
+  );
+};
+
+/** Filters / Query Refinement: Sieve / funnel with precision slots */
+export const IconFilters: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Filters',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+      <line x1="12" y1="22" x2="12" y2="15.5" />
+      <polyline points="5 18 12 15 19 18" />
+      <circle cx="12" cy="8" r="2" fill={stroke} fillOpacity={0.3} />
+    </svg>
+  );
+};
+
+/** Warning / Caution: Geometric alert prism with resonant edges */
+export const IconWarning: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Warning',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+};
+
+/** Success / Completion: Closed circuit with harmonic resonance */
+export const IconSuccess: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Success',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+};
+
+/** Error / Failure: Broken circuit with dissonance marker */
+export const IconError: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Error',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="15" y1="9" x2="9" y2="15" />
+      <line x1="9" y1="9" x2="15" y2="15" />
+    </svg>
+  );
+};
+
+/** Loading / Sync: Rotating harmonic spiral */
+export const IconLoading: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Loading',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+  );
+};
+
+/** Pressed State: Compressed geometric form */
+export const IconPressed: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Pressed',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <rect x="6" y="6" width="12" height="12" rx="2" />
+      <path d="M9 12h6" strokeWidth={2} />
+    </svg>
+  );
+};
+
+/** Selected State: Confirmed geometric closure */
+export const IconSelected: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Selected',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+};
+
+/** Disabled State: Muted geometric ghost */
+export const IconDisabled: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Disabled',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <rect x="4" y="4" width="16" height="16" rx="2" strokeDasharray="4 2" />
+      <line x1="4" y1="4" x2="20" y2="20" strokeWidth={1.2} />
+    </svg>
+  );
+};
+
+/** Flux Thinking: Living tetrahedron pulse */
+export const IconFluxThinking: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Flux Thinking',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M12 2.5L15.5 8.5L22 12L15.5 15.5L12 21.5L8.5 15.5L2 12L8.5 8.5L12 2.5Z" />
+      <circle cx="12" cy="12" r="1.5" fill={stroke} fillOpacity={0.4} />
+      <path d="M12 6V9M12 15V18M6 12H9M15 12H18" strokeWidth={1.2} />
+    </svg>
+  );
+};
+
+/** Flux Responding: Living tetrahedron with violet resonance */
+export const IconFluxResponding: React.FC<KarmIconProps> = ({
+  size = 20,
+  className = '',
+  state,
+  color,
+  strokeWidth = 1.75,
+  label = 'Flux Responding',
+  ariaHidden,
+  ...props
+}) => {
+  const stroke = resolveIconColor(state, color);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      role="img"
+      aria-label={label}
+      aria-hidden={ariaHidden ?? !label}
+      className={resolveIconClasses(state, className)}
+      {...props}
+    >
+      <path d="M12 2.5L15.5 8.5L22 12L15.5 15.5L12 21.5L8.5 15.5L2 12L8.5 8.5L12 2.5Z" />
+      <circle cx="12" cy="12" r="2.5" fill={stroke} fillOpacity={0.35} />
+      <path d="M12 5V19M5 12H19" strokeWidth={1.2} />
     </svg>
   );
 };

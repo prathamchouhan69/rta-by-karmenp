@@ -55,7 +55,7 @@ export const GatesScreen: React.FC = () => {
         </div>
 
         <div className="p-4 rounded-2xl bg-[#080d16] border border-white/10 space-y-1">
-          <span className="type-label text-emerald-400 block">GATE 4 · ISSUANCE & DISPATCH</span>
+          <span className="type-label text-sky-400 block">GATE 4 · ISSUANCE & DISPATCH</span>
           <h4 className="type-h4 text-white text-xs">Officer Two-Factor Seal</h4>
           <p className="type-timestamp text-slate-400">Final signature before external dispatch or email.</p>
         </div>
@@ -85,10 +85,10 @@ export const GatesScreen: React.FC = () => {
       />
 
       {/* Gate 4: Officer Two-Factor Seal Bill Approval Station */}
-      <div className="p-6 rounded-3xl bg-[#080d16] border border-emerald-500/30 space-y-4 shadow-xl">
+      <div className="p-6 rounded-3xl bg-[#080d16] border border-sky-500/30 space-y-4 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
           <div>
-            <span className="type-label text-emerald-400 block text-[10px]">GATE 4 STATION</span>
+            <span className="type-label text-sky-400 block text-[10px]">GATE 4 STATION</span>
             <h3 className="type-h3 text-white">Subcontractor Bill Sign-Off & Release Gate</h3>
           </div>
           <span className="type-timestamp text-slate-400 font-mono text-xs">
@@ -134,7 +134,7 @@ export const GatesScreen: React.FC = () => {
                     <button
                       onClick={() => handleApproveBill(b.id)}
                       disabled={isSigning}
-                      className="px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-semibold text-xs transition-all active:scale-95 disabled:opacity-50 flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 font-semibold text-xs transition-all active:scale-95 disabled:opacity-50 flex items-center gap-1.5"
                     >
                       {isSigning ? (
                         <span>Sealing Hash...</span>

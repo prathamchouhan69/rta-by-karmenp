@@ -12,7 +12,7 @@ export const TransportationScreen: React.FC = () => {
   const fleetNodes = [
     { id: 'v1', label: 'Pune Logistics Hub', x: 15, y: 55, active: true, color: '#00f2fe', metadata: [{ label: 'Fleet', value: '6 Vehicles' }, { label: 'Status', value: 'Operational' }] },
     { id: 'v2', label: 'JNPT Port Mumbai', x: 45, y: 35, active: true, color: '#a855f7', metadata: [{ label: 'Throughput', value: '2,400 TEU/day' }, { label: 'Status', value: 'Clear' }] },
-    { id: 'v3', label: 'Bengaluru Industrial Node', x: 65, y: 65, active: true, color: '#10b981', metadata: [{ label: 'Inbound', value: '18 loads' }, { label: 'Status', value: 'Processing' }] },
+    { id: 'v3', label: 'Bengaluru Industrial Node', x: 65, y: 65, active: true, color: '#22d3ee', metadata: [{ label: 'Inbound', value: '18 loads' }, { label: 'Status', value: 'Processing' }] },
     { id: 'v4', label: 'Delhi NCR Corridor', x: 85, y: 45, active: false, color: '#f43f5e', metadata: [{ label: 'Congestion', value: 'High' }, { label: 'ETA', value: '+4.2 hrs' }] },
     { id: 'v5', label: 'Site Gamma Quarry', x: 30, y: 75, active: true, color: '#facc15', metadata: [{ label: 'Aggregate', value: '320 MT ready' }, { label: 'Status', value: 'Loading' }] },
   ];

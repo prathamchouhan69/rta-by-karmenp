@@ -63,10 +63,10 @@ export const RelationshipsScreen: React.FC = () => {
 
         <div className="p-4 rounded-2xl bg-[#080d16] border border-white/10 space-y-1">
           <span className="type-label text-slate-400 block">SETTLEMENT HONOUR RATE</span>
-          <span className="type-financial text-xl md:text-2xl text-emerald-400 font-bold block">
+          <span className="type-financial text-xl md:text-2xl text-sky-400 font-bold block">
             94.1%
           </span>
-          <p className="type-timestamp text-emerald-300">Within 45 Days Term</p>
+          <p className="type-timestamp text-sky-300">Within 45 Days Term</p>
         </div>
       </div>
 

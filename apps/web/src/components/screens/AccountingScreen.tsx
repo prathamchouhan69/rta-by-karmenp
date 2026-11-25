@@ -35,7 +35,7 @@ export const AccountingScreen: React.FC = () => {
 
   // Dotted Donut data (Video 02)
   const invoiceStatusData = [
-    { name: 'Paid', value: invoices.filter(i => i.status === 'paid').length, color: '#10b981' },
+    { name: 'Paid', value: invoices.filter(i => i.status === 'paid').length, color: '#22d3ee' },
     { name: 'Overdue', value: invoices.filter(i => i.status === 'overdue').length, color: '#f43f5e' },
     { name: 'Draft', value: invoices.filter(i => i.status === 'draft').length, color: '#facc15' },
     { name: 'Sent', value: invoices.filter(i => i.status === 'sent').length, color: '#00f2fe' },
@@ -46,7 +46,7 @@ export const AccountingScreen: React.FC = () => {
     { id: 'critical', label: 'Critical', value: invoices.filter(i => i.status === 'overdue').length * 2, color: '#f43f5e', severity: 'critical' as const },
     { id: 'high', label: 'High', value: invoices.filter(i => i.status === 'sent').length + 1, color: '#f97316', severity: 'high' as const },
     { id: 'medium', label: 'Medium', value: invoices.filter(i => i.status === 'draft').length, color: '#facc15', severity: 'medium' as const },
-    { id: 'low', label: 'Low', value: invoices.filter(i => i.status === 'paid').length, color: '#10b981', severity: 'low' as const },
+    { id: 'low', label: 'Low', value: invoices.filter(i => i.status === 'paid').length, color: '#22d3ee', severity: 'low' as const },
   ].filter(d => d.value > 0);
 
   return (
