@@ -41,7 +41,19 @@ export function createFlux({ config, fetchFn = fetch, now = () => new Date(), sl
   const users = new Users(store); const limiter = new RateLimiter(() => now().getTime());
   const approvals = new Approvals({ store, secret: config.approvalSecret, audit, now: () => now().getTime() });
   const registry = new ModelRegistry(store), usage = new Usage(store, now), guard = new CostGuard({ registry });
-  const gateways = { openrouter: new Gateway({ name: 'openrouter', ...config.providers.openrouter, fetchFn }), omniroute: new Gateway({ name: 'omniroute', ...config.providers.omniroute, fetchFn }) };
+  const gateways = {
+    openrouter: new Gateway({ name: 'openrouter', ...config.providers.openrouter, fetchFn }),
+    omniroute: new Gateway({ name: 'omniroute', ...config.providers.omniroute, fetchFn }),
+    groq: new Gateway({ name: 'groq', ...config.providers.groq, fetchFn }),
+    google: new Gateway({ name: 'google', ...config.providers.google, fetchFn }),
+    mistral: new Gateway({ name: 'mistral', ...config.providers.mistral, fetchFn }),
+    deepseek: new Gateway({ name: 'deepseek', ...config.providers.deepseek, fetchFn }),
+    together: new Gateway({ name: 'together', ...config.providers.together, fetchFn }),
+    cerebras: new Gateway({ name: 'cerebras', ...config.providers.cerebras, fetchFn }),
+    cohere: new Gateway({ name: 'cohere', ...config.providers.cohere, fetchFn }),
+    openai: new Gateway({ name: 'openai', ...config.providers.openai, fetchFn }),
+    anthropic: new Gateway({ name: 'anthropic', ...config.providers.anthropic, fetchFn }),
+  };
   const router = new ModelRouter({ registry, gateways, usage, guard, audit, config, sleep, now: () => now().getTime() });
 
   const z = config.zoho;

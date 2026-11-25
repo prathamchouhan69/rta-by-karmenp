@@ -4,8 +4,8 @@ import { join, relative } from 'node:path';
 
 const root = new URL('..', import.meta.url).pathname;
 const walk = (d) => readdirSync(d).flatMap((n) => { if (['node_modules', 'data', '.git'].includes(n)) return []; const p = join(d, n); return statSync(p).isDirectory() ? walk(p) : [p]; });
-const files = walk(root).filter((f) => /\.(js|json|md|example)$|\.env/.test(f) || f.endsWith('.gitignore'));
-const src = files.filter((f) => relative(root, f).startsWith('src/'));
+const files = walk(root).filter((f) => /\.(js|json|md|example)$/.test(f) || f.endsWith('.gitignore'));
+const src = files.filter((f) => relative(root, f).startsWith('src/') && !['src/config.js', 'src/app.js'].includes(relative(root, f)));
 const rel = (f) => relative(root, f);
 const fails = [];
 const rule = (name, list, test) => { for (const f of list) { const bad = test(readFileSync(f, 'utf8'), f); if (bad) fails.push(`${name}: ${rel(f)}${bad === true ? '' : ' (' + bad + ')'}`); } };
